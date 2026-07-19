@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Brand } from '../../entities/brand.entity';
+import { localizeBrand, normalizeLang } from '../../i18n/content';
 
 @Injectable()
 export class BrandsService {
@@ -11,15 +12,17 @@ export class BrandsService {
     private readonly brandRepo: Repository<Brand>,
   ) {}
 
-  findAll() {
-    return this.brandRepo.find({ order: { sortOrder: 'ASC' } });
+  async findAll(lang?: string) {
+    const l = normalizeLang(lang);
+    const brands = await this.brandRepo.find({ order: { sortOrder: 'ASC' } });
+    return brands.map((b) => localizeBrand(b, l));
   }
 
-  async findOne(slug: string) {
+  async findOne(slug: string, lang?: string) {
     const brand = await this.brandRepo.findOne({ where: { slug } });
     if (!brand) {
       throw new NotFoundException(`Brand "${slug}" not found`);
     }
-    return brand;
+    return localizeBrand(brand, normalizeLang(lang));
   }
 }

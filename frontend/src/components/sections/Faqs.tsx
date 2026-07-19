@@ -1,13 +1,15 @@
 import type { Faq } from '../../types';
+import { useT } from '../../i18n/LanguageProvider';
 
 export default function Faqs({ faqs }: { faqs: Faq[] }) {
+  const t = useT();
   return (
     <section id="faqs" className="bg-white">
       <div className="section-container py-20 sm:py-24">
-        <h2 className="section-heading">FAQs</h2>
+        <h2 className="section-heading">{t('home.faqs.heading')}</h2>
         <div className="heading-rule" />
         <p className="mt-6 text-center text-sm text-neutral-500">
-          About Tokupack Campaign
+          {t('home.faqs.sub')}
         </p>
 
         <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-x-14 gap-y-8 md:grid-cols-2">

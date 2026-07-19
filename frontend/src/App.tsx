@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { api } from './lib/api';
 import type { Brand, EventInfo, Faq, SocialLink } from './types';
 import { useHashRoute } from './hooks/useHashRoute';
+import { useT, useLang } from './i18n/LanguageProvider';
 import CompetitionPage from './pages/CompetitionPage';
 import LocationPage from './pages/LocationPage';
 import VenueLayoutPage from './pages/VenueLayoutPage';
 import TokupackPage from './pages/TokupackPage';
+import BrandPage from './pages/BrandPage';
 
+import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Hero from './components/sections/Hero';
 import Countdown from './components/sections/Countdown';
@@ -17,6 +20,7 @@ import ParticipatingBrands from './components/sections/ParticipatingBrands';
 import FindTokupack from './components/sections/FindTokupack';
 import BookLivestream from './components/sections/BookLivestream';
 import ReserveLivestream from './components/sections/ReserveLivestream';
+import HomeLocation from './components/sections/HomeLocation';
 import Faqs from './components/sections/Faqs';
 import FollowUs from './components/sections/FollowUs';
 import Footer from './components/Footer';
@@ -28,13 +32,16 @@ export default function App() {
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [error, setError] = useState<string | null>(null);
   const route = useHashRoute();
+  const t = useT();
+  const { lang } = useLang();
 
   useEffect(() => {
+    // Refetch localized content whenever the language changes.
     Promise.all([
-      api.getEvent(),
-      api.getBrands(),
-      api.getFaqs(),
-      api.getSocialLinks(),
+      api.getEvent(lang),
+      api.getBrands(lang),
+      api.getFaqs(lang),
+      api.getSocialLinks(lang),
     ])
       .then(([e, b, f, s]) => {
         setEvent(e);
@@ -43,67 +50,72 @@ export default function App() {
         setSocials(s);
       })
       .catch((err) => setError(String(err)));
-  }, []);
+  }, [lang]);
 
-  // Standalone TokuPack request form page — self-contained.
+  let content: JSX.Element;
+
   if (route.startsWith('/tokupack')) {
-    return <TokupackPage />;
-  }
-
-  // Standalone competition page — self-contained, no event data required.
-  if (route.startsWith('/competition')) {
-    return <CompetitionPage />;
-  }
-
-  // Standalone access & information (location) page — self-contained.
-  if (route.startsWith('/location')) {
-    return <LocationPage />;
-  }
-
-  // Standalone venue layout + Best Content Award page — self-contained.
-  if (route.startsWith('/venue')) {
-    return <VenueLayoutPage />;
-  }
-
-  if (error) {
-    return (
+    // Standalone TokuPack request form page — self-contained.
+    content = <TokupackPage />;
+  } else if (route.startsWith('/brand/')) {
+    // Standalone per-brand page (#/brand/:slug) — self-contained.
+    const slug = route.slice('/brand/'.length).split(/[/?#]/)[0];
+    content = <BrandPage slug={slug} />;
+  } else if (route.startsWith('/competition')) {
+    // Standalone competition page — self-contained, no event data required.
+    content = <CompetitionPage />;
+  } else if (route.startsWith('/location')) {
+    // Standalone access & information (location) page — self-contained.
+    content = <LocationPage />;
+  } else if (route.startsWith('/venue')) {
+    // Standalone venue layout + Best Content Award page — self-contained.
+    content = <VenueLayoutPage />;
+  } else if (error) {
+    content = (
       <div className="flex min-h-screen items-center justify-center p-8 text-center">
         <div>
-          <p className="text-lg font-semibold">Couldn’t load the event data.</p>
+          <p className="text-lg font-semibold">{t('common.loadError')}</p>
           <p className="mt-2 text-sm text-neutral-500">{error}</p>
           <p className="mt-2 text-sm text-neutral-500">
-            Make sure the backend API is running.
+            {t('common.loadErrorHint')}
           </p>
         </div>
       </div>
     );
-  }
-
-  if (!event) {
-    return (
+  } else if (!event) {
+    content = (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-neutral-300 border-t-brand" />
       </div>
+    );
+  } else {
+    content = (
+      <>
+        <Navbar />
+        <main>
+          <Hero event={event} />
+          <Countdown event={event} />
+          <AboutEvent event={event} />
+          <CreatorSourcingDay event={event} />
+          <HowItWorks event={event} />
+          <ParticipatingBrands brands={brands} />
+          <FindTokupack />
+          <BookLivestream />
+          <ReserveLivestream event={event} />
+          <HomeLocation />
+          <Faqs faqs={faqs} />
+          <FollowUs socials={socials} />
+        </main>
+        <Footer event={event} />
+      </>
     );
   }
 
   return (
     <>
-      <Navbar />
-      <main>
-        <Hero event={event} />
-        <Countdown event={event} />
-        <AboutEvent event={event} />
-        <CreatorSourcingDay event={event} />
-        <HowItWorks event={event} />
-        <ParticipatingBrands brands={brands} />
-        <FindTokupack />
-        <BookLivestream />
-        <ReserveLivestream event={event} />
-        <Faqs faqs={faqs} />
-        <FollowUs socials={socials} />
-      </main>
-      <Footer event={event} />
+      <Sidebar />
+      {/* Offset content for the fixed left rail (narrower on mobile). */}
+      <div className="pl-16 md:pl-[76px]">{content}</div>
     </>
   );
 }

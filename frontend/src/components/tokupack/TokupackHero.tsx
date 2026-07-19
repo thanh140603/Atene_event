@@ -1,3 +1,5 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 const BRANDS = [
   'VT Cosmetics',
   'Purito',
@@ -14,6 +16,7 @@ const BRANDS = [
  * Introduces the TokuPack request form and lists the participating brands.
  */
 export default function TokupackHero() {
+  const t = useT();
   return (
     <section
       id="top"
@@ -33,14 +36,13 @@ export default function TokupackHero() {
 
       <div className="section-container relative py-20 text-center sm:py-24">
         <p className="text-xs font-semibold tracking-[0.3em] text-[#2f6bff] sm:text-sm">
-          CREATOR SOURCING DAY 2026 · TOKUPACK
+          {t('tokupack.hero.eyebrow')}
         </p>
         <h1 className="mx-auto mt-6 max-w-3xl text-2xl font-extrabold leading-snug tracking-tight text-neutral-900 sm:text-4xl">
-          受け取りたいTOKUPACKを教えてください
+          {t('tokupack.hero.title')}
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-neutral-600">
-          イベント当日に受け取りたいブランドと、今後ライブ配信してみたいブランドを
-          事前に教えてください。あなたにぴったりのK-Beauty体験をご用意します。
+          {t('tokupack.hero.subtitle')}
         </p>
 
         <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-medium text-neutral-500">

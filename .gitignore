@@ -24,3 +24,7 @@ npm-debug.log*
 
 # Postgres data (if bind-mounted locally)
 pgdata/
+
+# Large media — kept out of git (exceeds GitHub size limits).
+# Host externally or use Git LFS if these need to be versioned.
+**/public/vids/

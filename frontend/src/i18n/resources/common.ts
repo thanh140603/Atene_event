@@ -1,0 +1,107 @@
+import type { ResourcePack } from '../config';
+
+// Shared chrome: navigation labels, sidebar, footer, generic strings.
+export const common: ResourcePack = {
+  ja: {
+    nav: {
+      home: 'ホーム',
+      about: '概要',
+      how: '参加の流れ',
+      brands: 'ブランド',
+      tokupack: 'トクパック',
+      venue: '会場',
+      competition: 'コンペティション',
+      location: 'アクセス',
+      reserve: '予約',
+      faqs: 'よくある質問',
+      access: 'アクセス',
+      reserveSlot: '予約する',
+    },
+    sidebar: {
+      menu: 'メニュー',
+      close: '閉じる',
+      openMenu: 'メニューを開く',
+      closeMenu: 'メニューを閉じる',
+      expand: '{name}を開く',
+      collapse: '{name}を閉じる',
+      home: 'ホーム',
+      language: '言語',
+    },
+    footer: {
+      rights: '© 2026 ATENE. All rights reserved.',
+    },
+    common: {
+      backToEvent: '← イベントに戻る',
+      loadError: 'イベントデータを読み込めませんでした。',
+      loadErrorHint: 'バックエンドAPIが起動しているかご確認ください。',
+    },
+  },
+  en: {
+    nav: {
+      home: 'Home',
+      about: 'About',
+      how: 'How It Works',
+      brands: 'Brands',
+      tokupack: 'TokuPack',
+      venue: 'Venue',
+      competition: 'Competition',
+      location: 'Location',
+      reserve: 'Reserve',
+      faqs: 'FAQs',
+      access: 'Access',
+      reserveSlot: 'Reserve Slot',
+    },
+    sidebar: {
+      menu: 'Menu',
+      close: 'Close',
+      openMenu: 'Open menu',
+      closeMenu: 'Close menu',
+      expand: 'Expand {name}',
+      collapse: 'Collapse {name}',
+      home: 'Home',
+      language: 'Language',
+    },
+    footer: {
+      rights: '© 2026 ATENE. All rights reserved.',
+    },
+    common: {
+      backToEvent: '← Back to Event',
+      loadError: 'Couldn’t load the event data.',
+      loadErrorHint: 'Make sure the backend API is running.',
+    },
+  },
+  ko: {
+    nav: {
+      home: '홈',
+      about: '소개',
+      how: '참여 방법',
+      brands: '브랜드',
+      tokupack: '톡팩',
+      venue: '장소',
+      competition: '컴피티션',
+      location: '오시는 길',
+      reserve: '예약',
+      faqs: '자주 묻는 질문',
+      access: '오시는 길',
+      reserveSlot: '예약하기',
+    },
+    sidebar: {
+      menu: '메뉴',
+      close: '닫기',
+      openMenu: '메뉴 열기',
+      closeMenu: '메뉴 닫기',
+      expand: '{name} 펼치기',
+      collapse: '{name} 접기',
+      home: '홈',
+      language: '언어',
+    },
+    footer: {
+      rights: '© 2026 ATENE. All rights reserved.',
+    },
+    common: {
+      backToEvent: '← 이벤트로 돌아가기',
+      loadError: '이벤트 데이터를 불러오지 못했습니다.',
+      loadErrorHint: '백엔드 API가 실행 중인지 확인해 주세요.',
+    },
+  },
+};

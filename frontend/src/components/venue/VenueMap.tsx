@@ -1,3 +1,5 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 // Booth positions are expressed in the SVG viewBox coordinate system below
 // (800 × 470). The layout mirrors the reference floor map: a left/right anchor
 // booth, a 4×2 grid of brands in the middle, and an ENTER marker at the bottom.
@@ -80,22 +82,22 @@ function BoothTag({ cx, cy, w, h, lines, size = 12 }: Booth) {
 }
 
 export default function VenueMap() {
+  const t = useT();
   return (
     <section id="venue" className="bg-white">
       <div className="section-container py-20 sm:py-24">
-        <h2 className="section-heading">VENUE LAYOUT</h2>
+        <h2 className="section-heading">{t('venue.map.title')}</h2>
         <div className="heading-rule" />
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-neutral-600">
-          11ブランドの限定Tokupackが一堂に。会場マップで各ブランドのブースを確認して、
-          お気に入りを見つけましょう。
+          {t('venue.map.desc')}
         </p>
 
         <div className="mx-auto mt-14 max-w-4xl">
           <svg
             viewBox="0 0 800 470"
             role="img"
-            aria-label="Venue floor plan showing brand booths and the entrance"
+            aria-label={t('venue.map.svgLabel')}
             className="h-auto w-full"
             style={{ fontFamily: 'inherit' }}
           >

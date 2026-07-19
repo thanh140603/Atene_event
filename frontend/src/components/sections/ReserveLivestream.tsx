@@ -1,23 +1,42 @@
 import { useMemo, useState } from 'react';
 import type { EventInfo, Slot } from '../../types';
 import { api } from '../../lib/api';
+import { homeAssets } from '../../lib/homeAssets';
+import { useT, useLang } from '../../i18n/LanguageProvider';
+import type { Lang } from '../../i18n/config';
 
-const MONTHS = [
+const MONTHS_EN = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS_BY_LANG: Record<Lang, string[]> = {
+  en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  ja: ['日', '月', '火', '水', '木', '金', '土'],
+  ko: ['일', '월', '화', '수', '목', '금', '토'],
+};
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const toIso = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
 const prettyDate = (iso: string) => iso.replace(/-/g, '.');
 
-function monthLabel(iso: string) {
+function monthYear(iso: string, lang: Lang) {
   const [y, m] = iso.split('-').map(Number);
-  return `${MONTHS[m - 1]} ${y}`;
+  if (lang === 'ja') return `${y}年${m}月`;
+  if (lang === 'ko') return `${y}년 ${m}월`;
+  return `${MONTHS_EN[m - 1]} ${y}`;
+}
+
+function monthDay(iso: string, lang: Lang) {
+  const [, m, d] = iso.split('-').map(Number);
+  if (lang === 'ja') return `${m}月${d}日`;
+  if (lang === 'ko') return `${m}월 ${d}일`;
+  return `${MONTHS_EN[m - 1]} ${d}`;
 }
 
 export default function ReserveLivestream({ event }: { event: EventInfo }) {
+  const t = useT();
+  const { lang } = useLang();
+  const WEEKDAYS = WEEKDAYS_BY_LANG[lang];
   const start = event.campaignStart; // "2026-07-27"
   const end = event.campaignEnd; // "2026-08-26"
 
@@ -88,31 +107,50 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
 
   return (
     <section id="reserve" className="bg-white">
-      <div className="section-container grid grid-cols-1 gap-10 py-20 sm:py-24 lg:grid-cols-2">
+      {/* Banner */}
+      <div className="section-container pt-20 sm:pt-24">
+        <div className="relative overflow-hidden rounded-2xl">
+          <img
+            src={homeAssets.bookingBanner}
+            alt=""
+            aria-hidden
+            className="h-40 w-full object-cover sm:h-56"
+          />
+          <div className="absolute inset-0 flex flex-col justify-center bg-gradient-to-r from-white/90 via-white/60 to-transparent px-8 sm:px-12">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
+              {t('home.reserve.bannerKicker')}
+            </p>
+            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
+              {t('home.reserve.title')}
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <div className="section-container grid grid-cols-1 gap-10 pb-20 pt-12 sm:pb-24 lg:grid-cols-2">
         {/* ---- Calendar ---- */}
         <div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => changeMonth(-1)}
               className="text-neutral-400 transition hover:text-neutral-900"
-              aria-label="Previous month"
+              aria-label={t('home.reserve.prevMonth')}
             >
               ‹
             </button>
             <h3 className="rounded border border-brand px-2 py-1 text-xl font-extrabold tracking-tight">
-              {monthLabel(currentIso)}
+              {monthYear(currentIso, lang)}
             </h3>
             <button
               onClick={() => changeMonth(1)}
               className="text-neutral-400 transition hover:text-neutral-900"
-              aria-label="Next month"
+              aria-label={t('home.reserve.nextMonth')}
             >
               ›
             </button>
             <p className="ml-auto text-xs text-neutral-500">
-              Campaign period: {monthLabel(start).split(' ')[0]}{' '}
-              {Number(start.split('-')[2])} – {monthLabel(end).split(' ')[0]}{' '}
-              {Number(end.split('-')[2])}
+              {t('home.reserve.campaignPeriod')} {monthDay(start, lang)} –{' '}
+              {monthDay(end, lang)}
             </p>
           </div>
 
@@ -154,20 +192,19 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
         {/* ---- Booking panel ---- */}
         <div>
           <h3 className="text-xl font-bold tracking-tight">
-            Reserve Your Livestream
+            {t('home.reserve.title')}
           </h3>
           <p className="mt-2 max-w-md text-sm text-neutral-500">
-            Select date(s) from the calendar, then set your livestream time
-            window(s) and reserve a slot on the Atene TikTok shop.
+            {t('home.reserve.desc')}
           </p>
 
           <div className="mt-6 rounded-2xl border border-neutral-200 p-6 shadow-sm">
             {/* Selected dates */}
-            <p className="text-sm font-semibold">Selected Date(s)</p>
+            <p className="text-sm font-semibold">{t('home.reserve.selectedDates')}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {selectedDates.length === 0 ? (
                 <span className="text-xs text-neutral-400">
-                  Pick one or more highlighted days.
+                  {t('home.reserve.pickDays')}
                 </span>
               ) : (
                 selectedDates.map((d, i) => (
@@ -187,9 +224,9 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
             </div>
 
             {/* Time picker */}
-            <p className="mt-6 text-sm font-semibold">Livestream Period(s)</p>
+            <p className="mt-6 text-sm font-semibold">{t('home.reserve.periods')}</p>
             <p className="mt-1 text-xs text-neutral-400">
-              Select your desired livestream time.
+              {t('home.reserve.periodsHint')}
             </p>
 
             <div className="mt-3 flex items-center gap-2">
@@ -223,7 +260,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                 onClick={addSlot}
                 disabled={selectedDates.length === 0}
                 className="ml-1 flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 text-lg text-neutral-600 transition hover:border-neutral-900 hover:text-neutral-900 disabled:opacity-40"
-                aria-label="Add time slot"
+                aria-label={t('home.reserve.addSlot')}
               >
                 +
               </button>
@@ -244,7 +281,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                     <button
                       onClick={() => removeSlot(i)}
                       className="text-neutral-400 transition hover:text-brand"
-                      aria-label="Remove slot"
+                      aria-label={t('home.reserve.removeSlot')}
                     >
                       🗑
                     </button>
@@ -257,12 +294,12 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
               <div className="text-xs">
                 {status === 'done' && (
                   <span className="font-medium text-green-600">
-                    Reserved! We’ll be in touch.
+                    {t('home.reserve.reserved')}
                   </span>
                 )}
                 {status === 'error' && (
                   <span className="font-medium text-brand">
-                    Something went wrong. Try again.
+                    {t('home.reserve.errorMsg')}
                   </span>
                 )}
               </div>
@@ -271,7 +308,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                 disabled={selectedDates.length === 0 || status === 'saving'}
                 className="btn-pill bg-neutral-900 text-white hover:opacity-90 disabled:opacity-40"
               >
-                {status === 'saving' ? 'Booking…' : 'Book Live'}
+                {status === 'saving' ? t('home.reserve.booking') : t('home.reserve.bookLive')}
               </button>
             </div>
           </div>

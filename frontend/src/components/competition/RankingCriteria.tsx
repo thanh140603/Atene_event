@@ -1,3 +1,5 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 interface Row {
   rank: string;
   name: string;
@@ -13,29 +15,26 @@ const rows: Row[] = [
   { rank: '05', name: 'Creator E', gmv: '¥3.1M', pct: 52 },
 ];
 
-const criteria = [
-  'GMVは有効な（オーガニック）販売のみカウントされます。',
-  '同着の場合は、期間内の総GMVが多い方を上位とします。',
-  'それでも同じ場合は、ライブ配信の総数と転換率で判定します。',
-];
+const criteriaKeys = ['c1', 'c2', 'c3'];
 
 export default function RankingCriteria() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container py-20 sm:py-24">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
-              03 / Ranking
+              {t('competition.ranking.kicker')}
             </p>
             <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-              RANKING &amp;
+              {t('competition.ranking.title.l1')}
               <br />
-              CRITERIA
+              {t('competition.ranking.title.l2')}
             </h2>
           </div>
           <p className="max-w-xs text-xs leading-relaxed text-neutral-400 sm:text-right">
-            評価はシンプルに。GMVのスピードと総額で決まります。
+            {t('competition.ranking.intro')}
           </p>
         </div>
 
@@ -44,11 +43,11 @@ export default function RankingCriteria() {
           <div className="rounded-2xl bg-neutral-50 p-6 sm:p-8">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
-                Leaderboard — Live Preview
+                {t('competition.ranking.leaderboard')}
               </p>
               <span className="flex items-center gap-1.5 text-[11px] font-semibold text-brand">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                Tracking
+                {t('competition.ranking.tracking')}
               </span>
             </div>
 
@@ -80,21 +79,23 @@ export default function RankingCriteria() {
           {/* Evaluation */}
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-400">
-              Evaluation
+              {t('competition.ranking.evaluation')}
             </p>
             <h3 className="mt-4 text-xl font-bold leading-relaxed text-neutral-900 sm:text-2xl">
-              ¥5,000,000のGMVに最も早く到達した
+              {t('competition.ranking.evaluationHeading.pre')}
               <br className="hidden sm:block" />
-              上位5名が勝者です。
+              {t('competition.ranking.evaluationHeading.post')}
             </h3>
 
             <ol className="mt-8 space-y-5">
-              {criteria.map((c, i) => (
-                <li key={i} className="flex gap-4">
+              {criteriaKeys.map((key, i) => (
+                <li key={key} className="flex gap-4">
                   <span className="pt-0.5 text-xs font-bold text-brand">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <p className="text-sm leading-relaxed text-neutral-600">{c}</p>
+                  <p className="text-sm leading-relaxed text-neutral-600">
+                    {t(`competition.ranking.${key}`)}
+                  </p>
                 </li>
               ))}
             </ol>
@@ -102,10 +103,10 @@ export default function RankingCriteria() {
             <div className="mt-10 flex items-center justify-between rounded-2xl border border-brand/30 bg-brand/5 px-6 py-5">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brand">
-                  Top 5 Winners
+                  {t('competition.ranking.topWinners')}
                 </p>
                 <p className="mt-1 text-lg font-bold text-neutral-900">
-                  韓国5日間招待へ
+                  {t('competition.ranking.topWinnersBody')}
                 </p>
               </div>
               <span className="text-4xl font-extrabold tracking-tight text-brand">

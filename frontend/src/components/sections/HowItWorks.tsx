@@ -1,16 +1,16 @@
 import type { EventInfo } from '../../types';
+import { useT } from '../../i18n/LanguageProvider';
 
 export default function HowItWorks({ event }: { event: EventInfo }) {
+  const t = useT();
   return (
     <section id="how" className="bg-white">
       <div className="section-container py-20 sm:py-24">
-        <h2 className="section-heading">How It Works</h2>
+        <h2 className="section-heading">{t('home.how.heading')}</h2>
         <div className="heading-rule" />
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-neutral-600">
-          Creators who joined Creator Sourcing Day get exclusive access to
-          discover participating brands, experience Tokupack, and reserve their
-          livestream slot.
+          {t('home.how.intro')}
         </p>
 
         <div className="relative mt-16">

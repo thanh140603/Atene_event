@@ -1,25 +1,15 @@
+import { useT } from '../../i18n/LanguageProvider';
+import type { TFunc } from '../../i18n/LanguageProvider';
+
 interface Reward {
   n: string;
-  title: string;
-  body: string;
+  key: string;
 }
 
 const rewards: Reward[] = [
-  {
-    n: '01',
-    title: '韓国5日間招待旅行',
-    body: 'フライト・宿泊すべてATENEが負担。上位5名を限定招待し、K-Beautyの本場ソウルを巡ります。',
-  },
-  {
-    n: '02',
-    title: 'ブランドとの直接対談',
-    body: '現地でK-Beautyブランド担当者と直接ミーティング。次のコラボや商品企画につなげます。',
-  },
-  {
-    n: '03',
-    title: '優先コラボレーション',
-    body: 'TikTok Shop・ライブ配信・商品レビュー・SNS施策で、参加ブランドとの優先的な協業機会を獲得。',
-  },
+  { n: '01', key: 'r1' },
+  { n: '02', key: 'r2' },
+  { n: '03', key: 'r3' },
 ];
 
 // Varying bar widths (px) to fake a printed barcode on the ticket stub.
@@ -38,21 +28,25 @@ function PassField({ label, value }: { label: string; value: string }) {
   );
 }
 
-function BoardingPass() {
+function BoardingPass({ t }: { t: TFunc }) {
   return (
     <div className="mt-10 overflow-hidden rounded-3xl border border-neutral-200 shadow-sm">
       <div className="flex flex-col md:flex-row">
         {/* Main ticket */}
         <div className="flex-1 p-8 sm:p-10">
           <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
-            Boarding Pass — Creator Invitation
+            {t('competition.rewards.boardingPass.kicker')}
           </p>
 
           <div className="mt-6 flex items-center gap-4 sm:gap-6">
             <span className="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-5xl">
               TOKYO
             </span>
-            <span className="text-2xl text-brand sm:text-3xl" aria-hidden>
+            <span
+              className="text-2xl text-brand sm:text-3xl"
+              role="img"
+              aria-label={t('competition.rewards.boardingPass.planeAlt')}
+            >
               ✈
             </span>
             <span className="text-3xl font-extrabold tracking-tight text-brand sm:text-5xl">
@@ -61,14 +55,22 @@ function BoardingPass() {
           </div>
 
           <div className="mt-10 grid grid-cols-3 gap-4">
-            <PassField label="Duration" value="5 Days" />
-            <PassField label="Flight & Stay" value="Fully Covered" />
-            <PassField label="Passengers" value="Top 5 Creators" />
+            <PassField
+              label={t('competition.rewards.boardingPass.durationLabel')}
+              value={t('competition.rewards.boardingPass.durationValue')}
+            />
+            <PassField
+              label={t('competition.rewards.boardingPass.coverageLabel')}
+              value={t('competition.rewards.boardingPass.coverageValue')}
+            />
+            <PassField
+              label={t('competition.rewards.boardingPass.passengersLabel')}
+              value={t('competition.rewards.boardingPass.passengersValue')}
+            />
           </div>
 
           <p className="mt-8 max-w-lg text-xs leading-relaxed text-neutral-500">
-            ATENEと巡る韓国招待旅行。フライト・宿泊すべて負担で、
-            K-Beautyブランドとの対面ミーティングも実現します。
+            {t('competition.rewards.boardingPass.body')}
           </p>
         </div>
 
@@ -86,10 +88,10 @@ function BoardingPass() {
 
           <div className="text-center">
             <p className="text-3xl font-extrabold tracking-tight text-neutral-900">
-              TOP 5
+              {t('competition.rewards.boardingPass.stubTop')}
             </p>
             <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
-              GMV Rank
+              {t('competition.rewards.boardingPass.stubRank')}
             </p>
             <div className="mt-6 flex h-12 items-stretch justify-center gap-[2px]">
               {barcode.map((w, i) => (
@@ -108,45 +110,45 @@ function BoardingPass() {
 }
 
 export default function WhatYouCanWin() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container py-20 sm:py-24">
         <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
-          04 / Rewards
+          {t('competition.rewards.kicker')}
         </p>
         <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-5xl">
-          WHAT YOU
+          {t('competition.rewards.title.l1')}
           <br />
-          CAN WIN
+          {t('competition.rewards.title.l2')}
         </h2>
         <div className="mt-6 h-px w-full bg-neutral-200" />
 
         <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-400">
-          For The Top 5
+          {t('competition.rewards.forTop5')}
         </p>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-neutral-600">
-          単なる旅行招待ではありません。K-Beautyブランドと直接つながり、
-          次の活動機会を広げるための特別な招待状です。
+          {t('competition.rewards.lead')}
         </p>
 
-        <BoardingPass />
+        <BoardingPass t={t} />
 
         <div className="mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:grid-cols-3">
           {rewards.map((r) => (
             <div key={r.n} className="bg-white p-6">
               <p className="text-xs font-bold text-neutral-400">{r.n}</p>
               <p className="mt-3 text-base font-bold text-neutral-900">
-                {r.title}
+                {t(`competition.rewards.${r.key}.title`)}
               </p>
               <p className="mt-3 text-xs leading-relaxed text-neutral-500">
-                {r.body}
+                {t(`competition.rewards.${r.key}.body`)}
               </p>
             </div>
           ))}
         </div>
 
         <p className="mt-14 text-center text-[11px] font-semibold uppercase tracking-[0.4em] text-brand">
-          Entry Now Open
+          {t('competition.rewards.entryNowOpen')}
         </p>
       </div>
     </section>
