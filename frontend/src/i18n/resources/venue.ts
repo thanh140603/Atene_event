@@ -30,7 +30,8 @@ export const venue: ResourcePack = {
         howToTitle: '参加方法',
         step1: 'Creator Sourcing Dayに参加する',
         step2: 'イベントでお気に入りの瞬間を撮影したショート動画を、TikTokまたはInstagram Reelsに投稿する',
-        step3: '指定のハッシュタグ #CreatorSourcingDay #トクパック をつけて投稿し、Best Content Awardへエントリー',
+        step3: '【必須】指定ハッシュタグを付けて投稿 #ATENE #CreatorSourcingDay #トクパック',
+        step4: '公式アカウントをタグ付けする TikTok: @atene_cosmeticsjp Instagram: @atene_cosmetics.jp ・ @tokupack.official',
       },
       prizes: {
         heading: '賞品',
@@ -90,7 +91,8 @@ export const venue: ResourcePack = {
         howToTitle: 'How to participate',
         step1: 'Join Creator Sourcing Day',
         step2: 'Post a short video capturing your favorite moment at the event to TikTok or Instagram Reels',
-        step3: 'Post with the designated hashtags #CreatorSourcingDay #トクパック to enter the Best Content Award',
+        step3: '[Required] Post with designated hashtags: #ATENE #CreatorSourcingDay #トクパック',
+        step4: 'Tag the official accounts: TikTok: @atene_cosmeticsjp Instagram: @atene_cosmetics.jp ・ @tokupack.official',
       },
       prizes: {
         heading: 'Prizes',
@@ -150,7 +152,8 @@ export const venue: ResourcePack = {
         howToTitle: '참여 방법',
         step1: 'Creator Sourcing Day에 참여하기',
         step2: '이벤트에서 마음에 드는 순간을 촬영한 숏폼 영상을 TikTok 또는 Instagram Reels에 게시하기',
-        step3: '지정 해시태그 #CreatorSourcingDay #トクパック 를 달아 게시하고 Best Content Award에 응모',
+        step3: '[필수] 지정 해시태그를 달아 게시: #ATENE #CreatorSourcingDay #トクパック',
+        step4: '공식 계정 태그: TikTok: @atene_cosmeticsjp Instagram: @atene_cosmetics.jp ・ @tokupack.official',
       },
       prizes: {
         heading: '상품',

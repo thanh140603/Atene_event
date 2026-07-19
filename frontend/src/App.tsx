@@ -8,6 +8,7 @@ import LocationPage from './pages/LocationPage';
 import VenueLayoutPage from './pages/VenueLayoutPage';
 import TokupackPage from './pages/TokupackPage';
 import BrandPage from './pages/BrandPage';
+import ReservePage from './pages/ReservePage';
 
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
@@ -19,8 +20,6 @@ import HowItWorks from './components/sections/HowItWorks';
 import ParticipatingBrands from './components/sections/ParticipatingBrands';
 import FindTokupack from './components/sections/FindTokupack';
 import BookLivestream from './components/sections/BookLivestream';
-import ReserveLivestream from './components/sections/ReserveLivestream';
-import HomeLocation from './components/sections/HomeLocation';
 import Faqs from './components/sections/Faqs';
 import FollowUs from './components/sections/FollowUs';
 import Footer from './components/Footer';
@@ -36,7 +35,6 @@ export default function App() {
   const { lang } = useLang();
 
   useEffect(() => {
-    // Refetch localized content whenever the language changes.
     Promise.all([
       api.getEvent(lang),
       api.getBrands(lang),
@@ -55,21 +53,18 @@ export default function App() {
   let content: JSX.Element;
 
   if (route.startsWith('/tokupack')) {
-    // Standalone TokuPack request form page — self-contained.
     content = <TokupackPage />;
   } else if (route.startsWith('/brand/')) {
-    // Standalone per-brand page (#/brand/:slug) — self-contained.
     const slug = route.slice('/brand/'.length).split(/[/?#]/)[0];
     content = <BrandPage slug={slug} />;
   } else if (route.startsWith('/competition')) {
-    // Standalone competition page — self-contained, no event data required.
     content = <CompetitionPage />;
   } else if (route.startsWith('/location')) {
-    // Standalone access & information (location) page — self-contained.
     content = <LocationPage />;
   } else if (route.startsWith('/venue')) {
-    // Standalone venue layout + Best Content Award page — self-contained.
     content = <VenueLayoutPage />;
+  } else if (route.startsWith('/reserve')) {
+    content = <ReservePage />;
   } else if (error) {
     content = (
       <div className="flex min-h-screen items-center justify-center p-8 text-center">
@@ -101,8 +96,6 @@ export default function App() {
           <ParticipatingBrands brands={brands} />
           <FindTokupack />
           <BookLivestream />
-          <ReserveLivestream event={event} />
-          <HomeLocation />
           <Faqs faqs={faqs} />
           <FollowUs socials={socials} />
         </main>
@@ -114,7 +107,6 @@ export default function App() {
   return (
     <>
       <Sidebar />
-      {/* Offset content for the fixed left rail (narrower on mobile). */}
       <div className="pl-16 md:pl-[76px]">{content}</div>
     </>
   );

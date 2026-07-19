@@ -1,9 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import TokuPackLogo from './TokuPackLogo';
 import { useHashRoute } from '../hooks/useHashRoute';
-import { brands } from '../data/brands';
 import { useT, useLang } from '../i18n/LanguageProvider';
-import { LANGS, LANG_SHORT } from '../i18n/config';
+import { LANGS, LANG_SHORT, LANG_LABELS } from '../i18n/config';
 
 const stroke = {
   fill: 'none',
@@ -16,7 +15,6 @@ const stroke = {
 interface NavLink {
   labelKey: string;
   href: string;
-  /** route prefixes that mark this item active */
   match?: string[];
   children?: { label: string; href: string }[];
 }
@@ -24,17 +22,9 @@ interface NavLink {
 const nav: NavLink[] = [
   { labelKey: 'nav.home', href: '#top' },
   { labelKey: 'nav.tokupack', href: '#/tokupack', match: ['/tokupack'] },
-  {
-    labelKey: 'nav.brands',
-    href: '#brands',
-    match: ['/brand/'],
-    children: brands.map((b) => ({ label: b.name, href: `#/brand/${b.slug}` })),
-  },
   { labelKey: 'nav.competition', href: '#/competition', match: ['/competition'] },
   { labelKey: 'nav.venue', href: '#/venue', match: ['/venue'] },
-  { labelKey: 'nav.location', href: '#/location', match: ['/location'] },
-  { labelKey: 'nav.reserve', href: '#reserve' },
-  { labelKey: 'nav.faqs', href: '#faqs' },
+  { labelKey: 'nav.reserve', href: '#/reserve', match: ['/reserve'] },
 ];
 
 const socials = [
@@ -88,73 +78,71 @@ export default function Sidebar() {
   const t = useT();
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  // Close the menu whenever the route changes (i.e. a link was followed).
-  useEffect(() => {
-    setOpen(false);
-    setExpanded(null);
-  }, [route]);
+  const anyOpen = open || langOpen;
 
-  // Escape closes; lock body scroll while the overlay is open.
+  const closeAll = () => { setOpen(false); setLangOpen(false); setExpanded(null); };
+
+  useEffect(() => { closeAll(); }, [route]);
+
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
+    if (!anyOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeAll(); };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
-  }, [open]);
+  }, [anyOpen]);
 
   return (
     <>
-      {/* ---------- Fixed left rail (all sizes) ---------- */}
+      {/* ── Fixed left rail ── */}
       <aside className="fixed inset-y-0 left-0 z-[60] flex w-16 flex-col border-r border-neutral-200 bg-white md:w-[76px]">
+        {/* Logo */}
         <a
           href="#top"
           aria-label={t('sidebar.home')}
-          onClick={() => setOpen(false)}
+          onClick={closeAll}
           className="flex h-16 items-center justify-center border-b border-neutral-200"
         >
           <TokuPackLogo size={30} />
         </a>
 
-        {/* Menu toggle — hamburger ⇄ X */}
+        {/* Hamburger / X toggle — universal open/close */}
         <div className="flex flex-1 items-center justify-center">
           <button
             type="button"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            aria-label={open ? t('sidebar.closeMenu') : t('sidebar.openMenu')}
-            className="flex flex-col items-center gap-2 text-neutral-800 transition hover:text-brand"
+            onClick={() => {
+              if (anyOpen) { closeAll(); } else { setOpen(true); }
+            }}
+            aria-expanded={anyOpen}
+            aria-label={anyOpen ? t('sidebar.closeMenu') : t('sidebar.openMenu')}
+            className="flex flex-col items-center gap-1.5 text-neutral-800 transition hover:text-brand"
           >
-            {open ? (
-              <svg viewBox="0 0 24 24" width={24} height={24} {...stroke}>
+            {anyOpen ? (
+              <svg viewBox="0 0 24 24" width={20} height={20} {...stroke}>
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
             ) : (
-              <svg viewBox="0 0 24 24" width={24} height={24} {...stroke}>
+              <svg viewBox="0 0 24 24" width={20} height={20} {...stroke}>
                 <path d="M5 9h14M5 15h14" />
               </svg>
             )}
-            <span className="text-[9px] font-semibold uppercase tracking-widest">
-              {open ? t('sidebar.close') : t('sidebar.menu')}
-            </span>
           </button>
         </div>
 
-        {/* Dark quick-action box */}
+        {/* Dark quick-action strip */}
         <div className="flex flex-col bg-brand-dark text-white">
           <RailQuick
             href="#brands"
             label={t('nav.brands')}
-            onNavigate={() => setOpen(false)}
+            onNavigate={closeAll}
             icon={
-              <svg viewBox="0 0 24 24" width={18} height={18} {...stroke}>
+              <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
                 <path d="M12 3l9 4.5-9 4.5-9-4.5z" />
                 <path d="M3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5" />
               </svg>
@@ -163,57 +151,51 @@ export default function Sidebar() {
           <RailQuick
             href="#/location"
             label={t('nav.access')}
-            onNavigate={() => setOpen(false)}
+            onNavigate={closeAll}
             icon={
-              <svg viewBox="0 0 24 24" width={18} height={18} {...stroke}>
+              <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
                 <path d="M12 21s6.5-5.4 6.5-10.5A6.5 6.5 0 0 0 5.5 10.5C5.5 15.6 12 21 12 21z" />
                 <circle cx="12" cy="10.5" r="2.3" />
               </svg>
             }
           />
-          {/* Language switcher */}
-          <div className="flex flex-col items-center gap-1 py-3">
-            <svg viewBox="0 0 24 24" width={16} height={16} {...stroke} aria-hidden>
+          {/* Globe — opens language panel */}
+          <button
+            type="button"
+            onClick={() => { setLangOpen((o) => !o); setOpen(false); }}
+            aria-label={t('sidebar.language')}
+            className="flex flex-col items-center gap-1 py-2 transition hover:opacity-80"
+          >
+            <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
               <circle cx="12" cy="12" r="8.5" />
               <path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.6 0 17M12 3.5c-2.5 2.4-2.5 14.6 0 17" />
             </svg>
-            <div
-              className="flex flex-col items-center gap-0.5"
-              role="group"
-              aria-label={t('sidebar.language')}
-            >
-              {LANGS.map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`rounded px-2 py-0.5 text-[10px] font-bold transition ${
-                    lang === l
-                      ? 'bg-white text-brand-dark'
-                      : 'text-white/60 hover:text-white'
-                  }`}
-                >
-                  {LANG_SHORT[l]}
-                </button>
-              ))}
-            </div>
-          </div>
+            <span className="text-[9px] font-semibold tracking-wide">
+              {LANG_SHORT[lang]}
+            </span>
+          </button>
         </div>
       </aside>
 
-      {/* ---------- Full overlay menu ---------- */}
+      {/* ── Dim backdrop (click to close) ── */}
       <div
-        className={`fixed inset-y-0 right-0 left-16 z-[55] overflow-y-auto bg-white transition-all duration-300 md:left-[76px] ${
-          open
-            ? 'visible translate-x-0 opacity-100'
-            : 'invisible -translate-x-2 opacity-0'
+        className={`fixed inset-0 z-[54] bg-black/40 transition-opacity duration-300 ${
+          anyOpen ? 'visible opacity-100' : 'invisible opacity-0'
+        }`}
+        aria-hidden
+        onClick={closeAll}
+      />
+
+      {/* ── Main menu panel ── */}
+      <div
+        className={`fixed inset-y-0 left-16 z-[55] w-[300px] overflow-y-auto bg-white transition-transform duration-300 md:left-[76px] sm:w-[360px] ${
+          open ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-hidden={!open}
       >
-        <div className="mx-auto flex min-h-full max-w-4xl flex-col px-8 py-16 sm:px-12">
+        <div className="flex min-h-full flex-col px-8 py-12">
           <nav className="flex-1">
-            <ul className="space-y-1">
+            <ul className="space-y-0">
               {nav.map((item) => {
                 const active = isActive(item, route);
                 const isExpanded = expanded === item.labelKey;
@@ -223,11 +205,9 @@ export default function Sidebar() {
                     <div className="flex items-center justify-between">
                       <a
                         href={item.href}
-                        onClick={() => setOpen(false)}
-                        className={`block py-4 font-serif text-2xl font-semibold tracking-tight transition sm:text-3xl ${
-                          active
-                            ? 'text-brand'
-                            : 'text-neutral-900 hover:text-brand'
+                        onClick={closeAll}
+                        className={`block py-3.5 font-serif text-xl font-semibold tracking-tight transition sm:text-2xl ${
+                          active ? 'text-brand' : 'text-neutral-900 hover:text-brand'
                         }`}
                       >
                         {label}
@@ -235,18 +215,12 @@ export default function Sidebar() {
                       {item.children && (
                         <button
                           type="button"
-                          onClick={() =>
-                            setExpanded(isExpanded ? null : item.labelKey)
-                          }
-                          aria-label={
-                            isExpanded
-                              ? t('sidebar.collapse', { name: label })
-                              : t('sidebar.expand', { name: label })
-                          }
+                          onClick={() => setExpanded(isExpanded ? null : item.labelKey)}
+                          aria-label={isExpanded ? t('sidebar.collapse', { name: label }) : t('sidebar.expand', { name: label })}
                           aria-expanded={isExpanded}
-                          className="p-3 text-neutral-400 transition hover:text-neutral-900"
+                          className="p-2 text-neutral-400 transition hover:text-neutral-900"
                         >
-                          <svg viewBox="0 0 24 24" width={20} height={20} {...stroke}>
+                          <svg viewBox="0 0 24 24" width={18} height={18} {...stroke}>
                             <path d="M5 12h14" />
                             {!isExpanded && <path d="M12 5v14" />}
                           </svg>
@@ -255,13 +229,13 @@ export default function Sidebar() {
                     </div>
 
                     {item.children && isExpanded && (
-                      <ul className="grid grid-cols-1 gap-x-8 gap-y-1 pb-5 pl-1 sm:grid-cols-2">
+                      <ul className="grid grid-cols-1 gap-y-1 pb-4 pl-1 sm:grid-cols-2">
                         {item.children.map((c) => (
                           <li key={c.href}>
                             <a
                               href={c.href}
-                              onClick={() => setOpen(false)}
-                              className="block py-2 text-sm font-medium text-neutral-600 transition hover:text-brand"
+                              onClick={closeAll}
+                              className="block py-1.5 text-sm font-medium text-neutral-500 transition hover:text-brand"
                             >
                               {c.label}
                             </a>
@@ -275,8 +249,7 @@ export default function Sidebar() {
             </ul>
           </nav>
 
-          {/* Social row */}
-          <div className="mt-14 flex gap-3">
+          <div className="mt-10 flex flex-wrap gap-2.5">
             {socials.map((s) => (
               <a
                 key={s.name}
@@ -284,12 +257,38 @@ export default function Sidebar() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.name}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
               >
                 {s.icon}
               </a>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* ── Language panel ── */}
+      <div
+        className={`fixed inset-y-0 left-16 z-[55] w-[300px] bg-white transition-transform duration-300 md:left-[76px] sm:w-[360px] ${
+          langOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        aria-hidden={!langOpen}
+      >
+        <div className="flex h-full flex-col justify-center px-10">
+          <ul className="space-y-5">
+            {LANGS.map((l) => (
+              <li key={l}>
+                <button
+                  type="button"
+                  onClick={() => { setLang(l); closeAll(); }}
+                  className={`font-serif text-2xl font-bold tracking-tight transition sm:text-3xl ${
+                    lang === l ? 'text-brand' : 'text-neutral-900 hover:text-brand'
+                  }`}
+                >
+                  {LANG_LABELS[l]}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </>
@@ -311,7 +310,7 @@ function RailQuick({
     <a
       href={href}
       onClick={onNavigate}
-      className="flex flex-col items-center justify-center gap-1 border-b border-white/10 py-3 transition hover:opacity-80"
+      className="flex flex-col items-center justify-center gap-1 border-b border-white/10 py-2 transition hover:opacity-80"
     >
       {icon}
       <span className="text-[9px] font-semibold tracking-wide">{label}</span>

@@ -9,6 +9,7 @@ const steps: Step[] = [
   { n: '01', key: 'venue.overview.step1' },
   { n: '02', key: 'venue.overview.step2' },
   { n: '03', key: 'venue.overview.step3' },
+  { n: '04', key: 'venue.overview.step4' },
 ];
 
 export default function AwardOverview() {
@@ -36,23 +37,26 @@ export default function AwardOverview() {
         </div>
 
         {/* 参加方法 */}
-        <div className="mt-14 rounded-2xl border border-neutral-200 p-6 sm:p-8">
-          <div className="flex items-center gap-3">
-            <span className="h-[3px] w-8 rounded-full bg-brand" />
-            <p className="text-base font-bold text-neutral-900">
-              {t('venue.overview.howToTitle')}
-            </p>
-          </div>
+        <fieldset className="mt-14 border border-neutral-700">
+          <legend className="ml-6 flex items-center gap-2 px-1 text-sm font-bold text-neutral-900 sm:ml-8">
+            <span className="h-px w-5 bg-neutral-900" />
+            {t('venue.overview.howToTitle')}
+          </legend>
 
-          <ol className="mt-8 space-y-6">
-            {steps.map((s) => (
-              <li key={s.n} className="flex gap-4">
-                <span className="pt-0.5 text-xs font-bold text-brand">{s.n}</span>
-                <p className="text-sm leading-relaxed text-neutral-700">{t(s.key)}</p>
+          <ol className="pb-2">
+            {steps.map((s, i) => (
+              <li key={s.n} className="px-6 pt-5 sm:px-8">
+                <div className="flex gap-4">
+                  <span className="shrink-0 text-xs font-semibold text-neutral-500">{s.n}.</span>
+                  <p className="text-sm leading-relaxed text-neutral-700">{t(s.key)}</p>
+                </div>
+                {i < steps.length - 1 && (
+                  <div className="mt-5 border-b border-dashed border-neutral-400" />
+                )}
               </li>
             ))}
           </ol>
-        </div>
+        </fieldset>
       </div>
     </section>
   );

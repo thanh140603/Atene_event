@@ -25,7 +25,7 @@ export default function BookLivestream() {
         </p>
 
         <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="#reserve" className="btn-pill bg-brand text-white hover:opacity-90">
+          <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
             {t('home.book.bookBtn')}
           </a>
           <a

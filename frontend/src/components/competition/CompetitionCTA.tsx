@@ -25,7 +25,7 @@ export default function CompetitionCTA() {
         </div>
 
         <a
-          href="#reserve"
+          href="#/reserve"
           className="btn-pill mt-12 bg-brand px-8 py-4 text-base text-white shadow-lg shadow-brand/20 hover:opacity-90"
         >
           {t('competition.cta.book')}

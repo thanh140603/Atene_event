@@ -5,11 +5,6 @@ const links = [
   { href: '#about', key: 'nav.about' },
   { href: '#how', key: 'nav.how' },
   { href: '#brands', key: 'nav.brands' },
-  { href: '#/tokupack', key: 'nav.tokupack' },
-  { href: '#/venue', key: 'nav.venue' },
-  { href: '#/competition', key: 'nav.competition' },
-  { href: '#/location', key: 'nav.location' },
-  { href: '#reserve', key: 'nav.reserve' },
   { href: '#faqs', key: 'nav.faqs' },
 ];
 
@@ -35,7 +30,7 @@ export default function Navbar() {
             </a>
           ))}
         </nav>
-        <a href="#reserve" className="btn-pill bg-brand text-white hover:opacity-90">
+        <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
           {t('nav.reserveSlot')}
         </a>
       </div>
