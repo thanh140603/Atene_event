@@ -27,6 +27,9 @@ export const api = {
   createBooking: async (payload: {
     creatorName?: string;
     email?: string;
+    /** Google Sign-In ID token, verified server-side. */
+    credential?: string;
+    googleId?: string;
     dates: string[];
     slots: Slot[];
   }) => {

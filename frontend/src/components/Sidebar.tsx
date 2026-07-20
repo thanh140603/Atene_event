@@ -23,7 +23,6 @@ const nav: NavLink[] = [
   { labelKey: 'nav.home', href: '#top' },
   { labelKey: 'nav.tokupack', href: '#/tokupack', match: ['/tokupack'] },
   { labelKey: 'nav.competition', href: '#/competition', match: ['/competition'] },
-  { labelKey: 'nav.venue', href: '#/venue', match: ['/venue'] },
   { labelKey: 'nav.reserve', href: '#/reserve', match: ['/reserve'] },
 ];
 
@@ -138,8 +137,8 @@ export default function Sidebar() {
         {/* Dark quick-action strip */}
         <div className="flex flex-col bg-brand-dark text-white">
           <RailQuick
-            href="#brands"
-            label={t('nav.brands')}
+            href="#/venue"
+            label={t('nav.venue')}
             onNavigate={closeAll}
             icon={
               <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>

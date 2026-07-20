@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
-import type { EventInfo, Slot } from '../../types';
+import { useEffect, useMemo, useState } from 'react';
+import type { Brand, EventInfo, GoogleUser, Slot } from '../../types';
 import { api } from '../../lib/api';
 import { homeAssets } from '../../lib/homeAssets';
+import { useAuth } from '../../auth/AuthProvider';
+import { GOOGLE_CLIENT_ID, requestGoogleLogin } from '../../lib/google';
 import { useT, useLang } from '../../i18n/LanguageProvider';
 import type { Lang } from '../../i18n/config';
 
@@ -19,6 +21,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const toIso = (y: number, m: number, d: number) => `${y}-${pad(m + 1)}-${pad(d)}`;
 const prettyDate = (iso: string) => iso.replace(/-/g, '.');
 
+const hourSlot = (h: number) => ({ start: `${pad(h)}:00`, end: `${pad(h + 1)}:00` });
+
+// One-hour slots from 8:00 AM to 12:00 AM (midnight), grouped by time of day.
+const HOUR_GROUPS = [
+  { key: 'morning', hours: [8, 9, 10, 11].map(hourSlot) },
+  { key: 'afternoon', hours: [12, 13, 14, 15, 16, 17].map(hourSlot) },
+  { key: 'evening', hours: [18, 19, 20, 21, 22, 23].map(hourSlot) },
+] as const;
+
 function monthYear(iso: string, lang: Lang) {
   const [y, m] = iso.split('-').map(Number);
   if (lang === 'ja') return `${y}年${m}月`;
@@ -33,6 +44,14 @@ function monthDay(iso: string, lang: Lang) {
   return `${MONTHS_EN[m - 1]} ${d}`;
 }
 
+function StepBadge({ n }: { n: number }) {
+  return (
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-[10px] font-bold text-white">
+      {n}
+    </span>
+  );
+}
+
 export default function ReserveLivestream({ event }: { event: EventInfo }) {
   const t = useT();
   const { lang } = useLang();
@@ -44,13 +63,25 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
   const [month, setMonth] = useState(() => Number(start.split('-')[1]) - 1); // 0-based
 
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [activeDate, setActiveDate] = useState<string>('');
+  const [brandByDate, setBrandByDate] = useState<Record<string, string>>({});
   const [slots, setSlots] = useState<Slot[]>([]);
 
-  const [slotDate, setSlotDate] = useState<string>('');
-  const [startTime, setStartTime] = useState('18:00');
-  const [endTime, setEndTime] = useState('21:00');
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const { user, signIn } = useAuth();
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [modalBusy, setModalBusy] = useState(false);
 
   const [status, setStatus] = useState<'idle' | 'saving' | 'done' | 'error'>('idle');
+
+  useEffect(() => {
+    api.getBrands(lang).then(setBrands).catch(() => setBrands([]));
+  }, [lang]);
+
+  // Logging out shouldn't leave the previous account's "Reserved!" banner up.
+  useEffect(() => {
+    if (!user) setStatus((s) => (s === 'done' ? 'idle' : s));
+  }, [user]);
 
   const inCampaign = (iso: string) => iso >= start && iso <= end;
 
@@ -63,13 +94,23 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
     return arr;
   }, [year, month]);
 
+  // Clicking a day focuses it so the brand + time picker appear for that day.
   const toggleDate = (iso: string) => {
-    setSelectedDates((prev) =>
-      prev.includes(iso)
-        ? prev.filter((d) => d !== iso)
-        : [...prev, iso].sort(),
-    );
-    setSlotDate((cur) => cur || iso);
+    if (selectedDates.includes(iso)) {
+      const next = selectedDates.filter((d) => d !== iso);
+      setSelectedDates(next);
+      setSlots((s) => s.filter((x) => x.date !== iso));
+      setBrandByDate((b) => {
+        const clone = { ...b };
+        delete clone[iso];
+        return clone;
+      });
+      if (activeDate === iso) setActiveDate(next[next.length - 1] ?? '');
+    } else {
+      setSelectedDates([...selectedDates, iso].sort());
+      setActiveDate(iso);
+    }
+    if (status === 'done') setStatus('idle');
   };
 
   const changeMonth = (delta: number) => {
@@ -81,25 +122,110 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
     setYear(y);
   };
 
-  const addSlot = () => {
-    const date = slotDate || selectedDates[0];
-    if (!date) return;
-    setSlots((prev) => [...prev, { date, start: startTime, end: endTime }]);
+  const activeBrand = activeDate ? brandByDate[activeDate] ?? '' : '';
+
+  const setBrandForActive = (brand: string) => {
+    if (!activeDate) return;
+    setBrandByDate((b) => ({ ...b, [activeDate]: brand }));
+    // Keep any hours already chosen for this day, just re-tag them to the new brand.
+    setSlots((s) => s.map((x) => (x.date === activeDate ? { ...x, brand } : x)));
   };
 
-  const removeSlot = (idx: number) =>
-    setSlots((prev) => prev.filter((_, i) => i !== idx));
+  const isHourSelected = (startTime: string) =>
+    slots.some((s) => s.date === activeDate && s.start === startTime);
 
-  const book = async () => {
-    if (selectedDates.length === 0) return;
+  const toggleHour = (startTime: string, endTime: string) => {
+    if (!activeDate || !activeBrand) return;
+    if (isHourSelected(startTime)) {
+      setSlots((s) => s.filter((x) => !(x.date === activeDate && x.start === startTime)));
+    } else {
+      setSlots((s) => [...s, { date: activeDate, brand: activeBrand, start: startTime, end: endTime }]);
+    }
+  };
+
+  const clearActiveDay = () => {
+    if (!activeDate) return;
+    setSlots((s) => s.filter((x) => x.date !== activeDate));
+  };
+
+  const removeSlot = (date: string, startTime: string) =>
+    setSlots((s) => s.filter((x) => !(x.date === date && x.start === startTime)));
+
+  const grouped = useMemo(
+    () =>
+      selectedDates
+        .map((date) => ({
+          date,
+          brand: brandByDate[date] ?? '',
+          items: slots
+            .filter((s) => s.date === date)
+            .sort((a, b) => a.start.localeCompare(b.start)),
+        }))
+        .filter((g) => g.items.length > 0),
+    [selectedDates, brandByDate, slots],
+  );
+
+  const bookedDays = useMemo(() => new Set(slots.map((s) => s.date)).size, [slots]);
+
+  const canBook = slots.length > 0 && status !== 'saving';
+
+  const book = async (account: GoogleUser) => {
+    if (slots.length === 0) return;
     setStatus('saving');
     try {
-      await api.createBooking({ dates: selectedDates, slots });
+      await api.createBooking({
+        creatorName: account.name,
+        email: account.email,
+        credential: account.credential,
+        googleId: account.googleId,
+        dates: selectedDates,
+        slots,
+      });
       setStatus('done');
       setSelectedDates([]);
+      setActiveDate('');
+      setBrandByDate({});
       setSlots([]);
     } catch {
       setStatus('error');
+    }
+  };
+
+  // Everything is filled in first; sign-in is only requested at booking time.
+  const handleBookClick = () => {
+    if (slots.length === 0) return;
+    if (user) {
+      void book(user);
+    } else {
+      setShowSignIn(true);
+    }
+  };
+
+  // Open the Google popup from the dialog, then continue straight into the booking.
+  const loginAndBook = async () => {
+    if (!GOOGLE_CLIENT_ID) {
+      if (import.meta.env.DEV) {
+        const dev: GoogleUser = {
+          email: 'dev.creator@gmail.com',
+          name: 'Dev Creator',
+          credential: 'dev',
+        };
+        signIn(dev);
+        setShowSignIn(false);
+        void book(dev);
+      }
+      return;
+    }
+    setModalBusy(true);
+    try {
+      const account = await requestGoogleLogin();
+      signIn(account);
+      setShowSignIn(false);
+      void book(account);
+    } catch {
+      /* user closed the popup — leave the dialog open */
+    } finally {
+      setModalBusy(false);
     }
   };
 
@@ -168,21 +294,29 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
               const iso = toIso(year, month, day);
               const selectable = inCampaign(iso);
               const selected = selectedDates.includes(iso);
+              const isActive = activeDate === iso;
+              const hourCount = slots.filter((s) => s.date === iso).length;
               return (
                 <button
                   key={iso}
                   disabled={!selectable}
                   onClick={() => toggleDate(iso)}
                   className={[
-                    'flex h-14 items-start justify-start rounded-md p-2 text-sm transition',
+                    'relative flex h-14 items-start justify-start rounded-md p-2 text-sm transition',
                     selected
                       ? 'bg-brand font-bold text-white'
                       : selectable
                         ? 'bg-neutral-100 text-neutral-800 hover:bg-brand/10'
                         : 'bg-neutral-50 text-neutral-300',
+                    isActive ? 'ring-2 ring-neutral-900 ring-offset-1' : '',
                   ].join(' ')}
                 >
                   {day}
+                  {hourCount > 0 && (
+                    <span className="absolute bottom-1 right-1.5 rounded-full bg-white/25 px-1.5 text-[10px] font-semibold">
+                      {hourCount}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -199,92 +333,163 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
           </p>
 
           <div className="mt-6 rounded-2xl border border-neutral-200 p-6 shadow-sm">
-            {/* Selected dates */}
-            <p className="text-sm font-semibold">{t('home.reserve.selectedDates')}</p>
+            {/* Success banner */}
+            {status === 'done' && (
+              <div className="mb-5 flex items-center gap-2.5 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">
+                  ✓
+                </span>
+                {t('home.reserve.reserved')}
+              </div>
+            )}
+
+            {/* Step 1 — Selected dates */}
+            <div className="flex items-center gap-2">
+              <StepBadge n={1} />
+              <p className="text-sm font-semibold">{t('home.reserve.selectedDates')}</p>
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {selectedDates.length === 0 ? (
                 <span className="text-xs text-neutral-400">
                   {t('home.reserve.pickDays')}
                 </span>
               ) : (
-                selectedDates.map((d, i) => (
-                  <span
+                selectedDates.map((d) => (
+                  <button
                     key={d}
+                    onClick={() => setActiveDate(d)}
                     className={[
-                      'rounded-full px-3 py-1 text-xs font-medium',
-                      i === 0
+                      'rounded-full px-3 py-1 text-xs font-medium transition',
+                      activeDate === d
                         ? 'bg-neutral-900 text-white'
-                        : 'border border-neutral-300 text-neutral-700',
+                        : 'border border-neutral-300 text-neutral-700 hover:border-neutral-900',
                     ].join(' ')}
                   >
                     {prettyDate(d)}
-                  </span>
+                    {slots.some((s) => s.date === d) && (
+                      <span className={activeDate === d ? 'text-white/60' : 'text-neutral-400'}>
+                        {' '}· {slots.filter((s) => s.date === d).length}
+                      </span>
+                    )}
+                  </button>
                 ))
               )}
             </div>
 
-            {/* Time picker */}
-            <p className="mt-6 text-sm font-semibold">{t('home.reserve.periods')}</p>
-            <p className="mt-1 text-xs text-neutral-400">
-              {t('home.reserve.periodsHint')}
-            </p>
+            {/* Step 2 — Per-day: brand first, then hours */}
+            {activeDate && (
+              <div className="mt-6 rounded-xl border border-neutral-200 p-4">
+                <div className="flex items-center gap-2">
+                  <StepBadge n={2} />
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                    {t('home.reserve.editingDay')} {prettyDate(activeDate)}
+                  </p>
+                </div>
 
-            <div className="mt-3 flex items-center gap-2">
-              {selectedDates.length > 1 && (
-                <select
-                  value={slotDate}
-                  onChange={(e) => setSlotDate(e.target.value)}
-                  className="rounded-md bg-neutral-100 px-2 py-2 text-sm"
-                >
-                  {selectedDates.map((d) => (
-                    <option key={d} value={d}>
-                      {prettyDate(d)}
-                    </option>
+                {/* Brand */}
+                <p className="mt-4 text-sm font-semibold">{t('home.reserve.chooseBrand')}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {brands.map((b) => {
+                    const sel = activeBrand === b.name;
+                    return (
+                      <button
+                        key={b.slug}
+                        onClick={() => setBrandForActive(b.name)}
+                        className={[
+                          'rounded-full border px-3.5 py-1.5 text-xs font-medium transition',
+                          sel
+                            ? 'border-brand bg-brand text-white shadow-sm'
+                            : 'border-neutral-200 bg-white text-neutral-700 hover:border-brand hover:text-brand',
+                        ].join(' ')}
+                      >
+                        {b.name}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Hours */}
+                <div className="mt-5 flex items-baseline justify-between">
+                  <p className="text-sm font-semibold">{t('home.reserve.selectHours')}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[11px] text-neutral-400">{t('home.reserve.hoursRange')}</p>
+                    {slots.some((s) => s.date === activeDate) && (
+                      <button
+                        onClick={clearActiveDay}
+                        className="text-[11px] font-medium text-neutral-500 underline transition hover:text-brand"
+                      >
+                        {t('home.reserve.clearDay')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className={activeBrand ? '' : 'pointer-events-none opacity-40'}>
+                  {HOUR_GROUPS.map((g) => (
+                    <div key={g.key} className="mt-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
+                        {t(`home.reserve.${g.key}`)}
+                      </p>
+                      <div className="mt-1.5 grid grid-cols-4 gap-2 sm:grid-cols-6">
+                        {g.hours.map((h) => {
+                          const sel = isHourSelected(h.start);
+                          return (
+                            <button
+                              key={h.start}
+                              onClick={() => toggleHour(h.start, h.end)}
+                              className={[
+                                'rounded-md py-2 text-xs font-medium transition',
+                                sel
+                                  ? 'bg-brand text-white shadow-sm'
+                                  : 'bg-neutral-100 text-neutral-700 hover:bg-brand/10',
+                              ].join(' ')}
+                            >
+                              {h.start}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   ))}
-                </select>
-              )}
-              <input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="rounded-md bg-neutral-100 px-3 py-2 text-sm"
-              />
-              <span className="text-neutral-400">→</span>
-              <input
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="rounded-md bg-neutral-100 px-3 py-2 text-sm"
-              />
-              <button
-                onClick={addSlot}
-                disabled={selectedDates.length === 0}
-                className="ml-1 flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 text-lg text-neutral-600 transition hover:border-neutral-900 hover:text-neutral-900 disabled:opacity-40"
-                aria-label={t('home.reserve.addSlot')}
-              >
-                +
-              </button>
-            </div>
+                </div>
+                {!activeBrand && (
+                  <p className="mt-2 text-[11px] text-neutral-400">
+                    {t('home.reserve.chooseBrandFirst')}
+                  </p>
+                )}
+              </div>
+            )}
 
-            {/* Saved slots */}
-            {slots.length > 0 && (
+            {/* Summary */}
+            {grouped.length > 0 && (
               <ul className="mt-4 space-y-2">
-                {slots.map((s, i) => (
+                {grouped.map((g) => (
                   <li
-                    key={i}
-                    className="flex items-center justify-between rounded-md border border-neutral-200 px-3 py-2 text-sm"
+                    key={g.date}
+                    className="rounded-md border border-neutral-200 px-3 py-2 text-sm"
                   >
-                    <span className="text-neutral-700">
-                      {prettyDate(s.date)} <span className="text-neutral-300">|</span>{' '}
-                      {s.start} – {s.end}
-                    </span>
-                    <button
-                      onClick={() => removeSlot(i)}
-                      className="text-neutral-400 transition hover:text-brand"
-                      aria-label={t('home.reserve.removeSlot')}
-                    >
-                      🗑
-                    </button>
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-neutral-800">
+                        {prettyDate(g.date)}
+                      </span>
+                      <span className="text-xs font-medium text-brand">{g.brand}</span>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {g.items.map((s) => (
+                        <span
+                          key={s.start}
+                          className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-700"
+                        >
+                          {s.start}–{s.end}
+                          <button
+                            onClick={() => removeSlot(s.date, s.start)}
+                            className="text-neutral-400 transition hover:text-brand"
+                            aria-label={t('home.reserve.removeSlot')}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -292,20 +497,23 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
 
             <div className="mt-6 flex items-center justify-between">
               <div className="text-xs">
-                {status === 'done' && (
-                  <span className="font-medium text-green-600">
-                    {t('home.reserve.reserved')}
-                  </span>
-                )}
                 {status === 'error' && (
                   <span className="font-medium text-brand">
                     {t('home.reserve.errorMsg')}
                   </span>
                 )}
+                {status !== 'error' && slots.length > 0 && (
+                  <span className="font-medium text-neutral-600">
+                    {t('home.reserve.totalSummary', {
+                      hours: slots.length,
+                      days: bookedDays,
+                    })}
+                  </span>
+                )}
               </div>
               <button
-                onClick={book}
-                disabled={selectedDates.length === 0 || status === 'saving'}
+                onClick={handleBookClick}
+                disabled={!canBook}
                 className="btn-pill bg-neutral-900 text-white hover:opacity-90 disabled:opacity-40"
               >
                 {status === 'saving' ? t('home.reserve.booking') : t('home.reserve.bookLive')}
@@ -314,6 +522,48 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
           </div>
         </div>
       </div>
+
+      {/* Sign-in dialog — shown only when Book Live is clicked while signed out. */}
+      {showSignIn && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-neutral-900/50 p-4 backdrop-blur-sm"
+          onClick={() => setShowSignIn(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 className="text-lg font-bold tracking-tight">
+              {t('home.reserve.signInPromptTitle')}
+            </h4>
+            <p className="mt-2 text-sm text-neutral-500">
+              {t('home.reserve.signInPromptDesc', {
+                hours: slots.length,
+                days: bookedDays,
+              })}
+            </p>
+            <div className="mt-5">
+              <button
+                onClick={loginAndBook}
+                disabled={modalBusy}
+                className="btn-pill w-full bg-neutral-900 text-white hover:opacity-90 disabled:opacity-50"
+              >
+                {modalBusy ? t('nav.loggingIn') : t('nav.logInAndBook')}
+              </button>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowSignIn(false)}
+                className="text-xs font-medium text-neutral-500 underline transition hover:text-neutral-900"
+              >
+                {t('home.reserve.cancel')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

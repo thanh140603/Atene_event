@@ -16,6 +16,10 @@ export const common: ResourcePack = {
       faqs: 'よくある質問',
       access: 'アクセス',
       reserveSlot: '予約する',
+      logIn: 'ログイン',
+      logOut: 'ログアウト',
+      loggingIn: 'ログイン中…',
+      logInAndBook: 'ログインして予約',
     },
     sidebar: {
       menu: 'メニュー',
@@ -50,6 +54,10 @@ export const common: ResourcePack = {
       faqs: 'FAQs',
       access: 'Access',
       reserveSlot: 'Reserve Slot',
+      logIn: 'Log in',
+      logOut: 'Log out',
+      loggingIn: 'Logging in…',
+      logInAndBook: 'Log in & book',
     },
     sidebar: {
       menu: 'Menu',
@@ -84,6 +92,10 @@ export const common: ResourcePack = {
       faqs: '자주 묻는 질문',
       access: '오시는 길',
       reserveSlot: '예약하기',
+      logIn: '로그인',
+      logOut: '로그아웃',
+      loggingIn: '로그인 중…',
+      logInAndBook: '로그인 후 예약',
     },
     sidebar: {
       menu: '메뉴',

@@ -4,7 +4,7 @@ import { useT } from '../../i18n/LanguageProvider';
 
 export default function Faqs({ faqs }: { faqs: Faq[] }) {
   const t = useT();
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<number | null>(null);
 
   return (
     <section id="faqs" className="bg-white">

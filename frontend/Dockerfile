@@ -4,6 +4,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# Vite inlines VITE_* vars at build time, so they must be present here.
+ARG VITE_VIDEO_BASE_URL
+ENV VITE_VIDEO_BASE_URL=$VITE_VIDEO_BASE_URL
+ARG VITE_GOOGLE_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 RUN npm run build
 
 # ---- Serve stage ----

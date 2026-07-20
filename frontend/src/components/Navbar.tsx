@@ -1,4 +1,5 @@
 import TokuPackLogo from './TokuPackLogo';
+import AccountButton from './AccountButton';
 import { useT } from '../i18n/LanguageProvider';
 
 const links = [
@@ -30,9 +31,12 @@ export default function Navbar() {
             </a>
           ))}
         </nav>
-        <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
-          {t('nav.reserveSlot')}
-        </a>
+        <div className="flex items-center gap-4">
+          <AccountButton />
+          <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
+            {t('nav.reserveSlot')}
+          </a>
+        </div>
       </div>
     </header>
   );

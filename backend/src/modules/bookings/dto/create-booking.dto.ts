@@ -13,6 +13,9 @@ export class SlotDto {
   date: string;
 
   @IsString()
+  brand: string;
+
+  @IsString()
   start: string;
 
   @IsString()
@@ -27,6 +30,15 @@ export class CreateBookingDto {
   @IsOptional()
   @IsEmail()
   email?: string;
+
+  /** Google Sign-In ID token (JWT). Verified server-side to confirm the Gmail account. */
+  @IsOptional()
+  @IsString()
+  credential?: string;
+
+  @IsOptional()
+  @IsString()
+  googleId?: string;
 
   @IsArray()
   @ArrayNotEmpty()

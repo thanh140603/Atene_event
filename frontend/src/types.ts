@@ -66,8 +66,21 @@ export interface SocialLink {
 
 export interface Slot {
   date: string;
+  /** Brand name the creator wants to livestream in this hour. */
+  brand: string;
   start: string;
   end: string;
+}
+
+/** The signed-in Gmail identity returned by Google Sign-In. */
+export interface GoogleUser {
+  email: string;
+  name: string;
+  picture?: string;
+  /** Google account subject id (stable per account). */
+  googleId?: string;
+  /** Google OAuth access token, forwarded to the backend with the booking. */
+  credential: string;
 }
 
 export interface TokupackApplicationInput {

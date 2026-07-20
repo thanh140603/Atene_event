@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import TokuPackLogo from '../components/TokuPackLogo';
+import AccountButton from '../components/AccountButton';
 import ReserveLivestream from '../components/sections/ReserveLivestream';
 import { useT, useLang } from '../i18n/LanguageProvider';
 import { api } from '../lib/api';
@@ -25,12 +26,15 @@ export default function ReservePage() {
               {t('nav.reserve')}
             </span>
           </a>
-          <a
-            href="#/"
-            className="text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
-          >
-            {t('common.backToEvent')}
-          </a>
+          <div className="flex items-center gap-5">
+            <AccountButton />
+            <a
+              href="#/"
+              className="text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
+            >
+              {t('common.backToEvent')}
+            </a>
+          </div>
         </div>
       </header>
 
