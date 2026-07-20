@@ -45,7 +45,4 @@ export const brandImages: Record<string, string> = {
   dailyweekly: u(`${B}/03_Participating Brands_Asset/DW.png`),
   torhop: u(`${B}/03_Participating Brands_Asset/Torhop.png`),
   babaco: u(`${B}/03_Participating Brands_Asset/Babaco.png`),
-  quadthera: u(`${B}/03_Participating Brands_Asset/Quadthera.png`),
-  atike: u(`${B}/03_Participating Brands_Asset/atike.png`),
-  zipiel: u(`${B}/03_Participating Brands_Asset/zipiel.png`),
 };

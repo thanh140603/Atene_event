@@ -93,15 +93,13 @@ export class SeedService implements OnApplicationBootstrap {
     }> = [
       { slug: 'purito-seoul', name: 'Purito Seoul', tagline: 'From Soil to Seoul', sets: 3 },
       { slug: 'vt-cosmetics', name: 'VT Cosmetics', tagline: 'In - Vogue and Timeless', sets: 3 },
+      { slug: 'celonia', name: 'Celonia', tagline: 'Premium Anti-Aging Solution', sets: 3 },
       { slug: 'beplain', name: 'Beplain', tagline: 'Enjoy plain skin, beplain', sets: 1 },
       { slug: 'dr-deep', name: 'Dr.Deep', tagline: "Designing today's depth for the skin's tomorrow", sets: 1 },
       { slug: 'lubylab', name: 'LUBYLAB', tagline: 'The Home-Surgical Approach', sets: 1 },
       { slug: 'dailyweekly', name: 'DAILYWEEKLY', tagline: 'Daily Delight, Weekly Wonders', sets: 1 },
       { slug: 'torhop', name: 'Torhop', tagline: 'Sauna-Inspired Warming Care', sets: 1 },
       { slug: 'babaco', name: 'Babaco', tagline: 'Beauty begins with real care.', sets: 1 },
-      { slug: 'quadthera', name: 'Quadthera', tagline: 'Science-led daily therapy', sets: 1 },
-      { slug: 'atike', name: 'ATIKE', tagline: 'Ritual care, refined', sets: 1 },
-      { slug: 'zipiel', name: 'ZIPIEL', tagline: 'Sealed freshness, radiant skin', sets: 1 },
     ];
 
     for (let i = 0; i < data.length; i++) {

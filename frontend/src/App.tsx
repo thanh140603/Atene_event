@@ -22,7 +22,7 @@ import FindTokupack from './components/sections/FindTokupack';
 import BookLivestream from './components/sections/BookLivestream';
 import Faqs from './components/sections/Faqs';
 import FollowUs from './components/sections/FollowUs';
-import Footer from './components/Footer';
+import LineFooter from './components/sections/LineFooter';
 
 export default function App() {
   const [event, setEvent] = useState<EventInfo | null>(null);
@@ -51,6 +51,11 @@ export default function App() {
   }, [lang]);
 
   let content: JSX.Element;
+
+  // The mobile top bar is taller on the homepage (it adds the section-anchor
+  // nav row). Standalone pages only get the compact bar.
+  const isHome = !['/tokupack', '/brand/', '/competition', '/location', '/venue', '/reserve']
+    .some((p) => route.startsWith(p));
 
   if (route.startsWith('/tokupack')) {
     content = <TokupackPage />;
@@ -98,8 +103,8 @@ export default function App() {
           <BookLivestream />
           <Faqs faqs={faqs} />
           <FollowUs socials={socials} />
+          <LineFooter />
         </main>
-        <Footer event={event} />
       </>
     );
   }
@@ -107,7 +112,11 @@ export default function App() {
   return (
     <>
       <Sidebar />
-      <div className="pl-16 md:pl-[76px]">{content}</div>
+      <div
+        className={`md:pl-[76px] md:pt-0 ${isHome ? 'pt-[6.5rem]' : 'pt-14'}`}
+      >
+        {content}
+      </div>
     </>
   );
 }

@@ -15,6 +15,7 @@ export class ApplicationsService {
   create(dto: CreateApplicationDto) {
     const application = this.appRepo.create({
       name: dto.name,
+      tiktokId: dto.tiktokId,
       email: dto.email,
       preferredBrand: dto.preferredBrand,
       preferredBrandOther: dto.preferredBrandOther ?? '',

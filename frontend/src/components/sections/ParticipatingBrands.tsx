@@ -30,13 +30,13 @@ function BrandCard({ brand }: { brand: Brand }) {
         {brand.tagline}
       </p>
 
-      <div className="mt-2 flex items-center justify-between">
-        <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-medium text-neutral-600">
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <span className="rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-600">
           {t('home.brands.setsAvailable', { count })}
         </span>
         <a
           href={`#/brand/${brand.slug}`}
-          className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-3 py-1 text-[10px] font-semibold text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
+          className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
         >
           {t('home.brands.view')}
         </a>
@@ -57,7 +57,7 @@ export default function ParticipatingBrands({ brands }: { brands: Brand[] }) {
           {t('home.brands.intro')}
         </p>
 
-        <div className="mt-14 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-3">
           {brands.map((b) => (
             <BrandCard key={b.id} brand={b} />
           ))}

@@ -12,6 +12,10 @@ export class CreateApplicationDto {
   @IsNotEmpty()
   name: string;
 
+  @IsString()
+  @IsNotEmpty()
+  tiktokId: string;
+
   @IsEmail()
   email: string;
 

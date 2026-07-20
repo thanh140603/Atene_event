@@ -31,13 +31,12 @@ export default function CreatorSourcingDay({ event }: { event: EventInfo }) {
             CREATOR SOURCING DAY
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-neutral-600">
-            K-BeautyブランドのTikTok限定「TOKUPACK」を、誰よりも早く体験・測定できるほか、
-            まだ一般公開されていない特別なセットをいち早く知ることができ、実際のライブ販売につながる機会を得られます。
+            {t('home.creator.body')}
           </p>
 
           <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
             {event.stats.map((s) => (
-              <div key={s.id} className="border-l-2 border-brand pl-4">
+              <div key={s.id} className="border-l-[6px] border-neutral-800 pl-4">
                 <p className="text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-3xl">
                   {s.value}
                 </p>

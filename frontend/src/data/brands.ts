@@ -207,9 +207,9 @@ export const brands: BrandContent[] = [
     usps: placeholderUsps,
   },
   {
-    slug: 'quadthera',
-    name: 'Quadthera',
-    tagline: 'Science-led daily therapy',
+    slug: 'celonia',
+    name: 'Celonia',
+    tagline: 'Premium Anti-Aging Solution',
     story: '',
     tokupack: { subtitle: '', items: [] },
     usps: placeholderUsps,

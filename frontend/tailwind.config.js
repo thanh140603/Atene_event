@@ -19,6 +19,14 @@ export default {
           'Arial',
           'sans-serif',
         ],
+        serif: [
+          'Inter',
+          'Helvetica Neue',
+          'Hiragino Kaku Gothic ProN',
+          'Noto Sans JP',
+          'Arial',
+          'sans-serif',
+        ],
       },
       maxWidth: {
         content: '1120px',

@@ -40,7 +40,7 @@ export default function HowItWorks({ event }: { event: EventInfo }) {
                 <p className="mt-4 text-sm font-bold text-neutral-900">
                   {step.title}
                 </p>
-                <p className="mt-1 text-[11px] text-neutral-400">
+                <p className="mt-1 text-sm text-neutral-400">
                   {step.subtitle}
                 </p>
               </li>

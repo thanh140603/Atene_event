@@ -65,6 +65,7 @@ export default function TokupackForm() {
   };
 
   const [name, setName] = useState('');
+  const [tiktokId, setTiktokId] = useState('');
   const [email, setEmail] = useState('');
   const [preferredBrand, setPreferredBrand] = useState('');
   const [preferredBrandOther, setPreferredBrandOther] = useState('');
@@ -85,6 +86,7 @@ export default function TokupackForm() {
   const validate = () => {
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = t('tokupack.form.name.error');
+    if (!tiktokId.trim()) next.tiktokId = t('tokupack.form.tiktokId.error');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       next.email = t('tokupack.form.email.error');
     if (!preferredBrand)
@@ -104,6 +106,7 @@ export default function TokupackForm() {
     try {
       await api.createTokupackApplication({
         name: name.trim(),
+        tiktokId: tiktokId.trim(),
         email: email.trim(),
         preferredBrand,
         preferredBrandOther:
@@ -165,6 +168,23 @@ export default function TokupackForm() {
             />
             {errors.name && (
               <p className="mt-1 text-xs text-brand">{errors.name}</p>
+            )}
+          </div>
+
+          {/* TikTok ID */}
+          <div className="mt-8">
+            <Label required>{t('tokupack.form.tiktokId.label')}</Label>
+            <p className="mt-1 text-xs text-neutral-400">
+              {t('tokupack.form.tiktokId.help')}
+            </p>
+            <input
+              className={`mt-2 ${inputClass}`}
+              value={tiktokId}
+              onChange={(e) => setTiktokId(e.target.value)}
+              placeholder={t('tokupack.form.tiktokId.placeholder')}
+            />
+            {errors.tiktokId && (
+              <p className="mt-1 text-xs text-brand">{errors.tiktokId}</p>
             )}
           </div>
 

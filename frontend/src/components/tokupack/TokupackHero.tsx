@@ -3,6 +3,7 @@ import { useT } from '../../i18n/LanguageProvider';
 const BRANDS = [
   'VT Cosmetics',
   'Purito',
+  'Celonia',
   'Beplain',
   'TORHOP',
   'Lubylab',
@@ -12,7 +13,7 @@ const BRANDS = [
 ];
 
 /**
- * Blue-gradient intro band styled after the reference inquiry form.
+ * Intro band styled after the reference inquiry form.
  * Introduces the TokuPack request form and lists the participating brands.
  */
 export default function TokupackHero() {
@@ -21,21 +22,10 @@ export default function TokupackHero() {
     <section
       id="top"
       className="relative overflow-hidden"
-      style={{
-        background:
-          'linear-gradient(120deg, #eaf1ff 0%, #dce8ff 45%, #eef4ff 100%)',
-      }}
+      style={{ background: '#efefef' }}
     >
-      {/* faint oversized watermark, echoing the reference "C" */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -left-6 top-1/2 -translate-y-1/2 select-none text-[220px] font-black leading-none text-white/40 sm:text-[300px]"
-      >
-        T
-      </span>
-
       <div className="section-container relative py-20 text-center sm:py-24">
-        <p className="text-xs font-semibold tracking-[0.3em] text-[#2f6bff] sm:text-sm">
+        <p className="text-xs font-semibold tracking-[0.3em] text-brand sm:text-sm">
           {t('tokupack.hero.eyebrow')}
         </p>
         <h1 className="mx-auto mt-6 max-w-3xl text-2xl font-extrabold leading-snug tracking-tight text-neutral-900 sm:text-4xl">

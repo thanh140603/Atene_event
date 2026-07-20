@@ -12,7 +12,7 @@ const links = [
 export default function Navbar() {
   const t = useT();
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-50 hidden border-b border-neutral-200/70 bg-white/80 backdrop-blur md:block">
       <div className="section-container flex h-16 items-center justify-between">
         <a href="#top" className="flex items-center gap-2">
           <TokuPackLogo size={34} />
@@ -31,7 +31,7 @@ export default function Navbar() {
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="hidden items-center gap-4 md:flex">
           <AccountButton />
           <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
             {t('nav.reserveSlot')}

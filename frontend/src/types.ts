@@ -85,6 +85,7 @@ export interface GoogleUser {
 
 export interface TokupackApplicationInput {
   name: string;
+  tiktokId: string;
   email: string;
   preferredBrand: string;
   preferredBrandOther?: string;

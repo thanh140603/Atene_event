@@ -18,6 +18,10 @@ export class TokupackApplication {
   @Column()
   name: string;
 
+  // TikTok account ID (e.g. @yourID)
+  @Column({ default: '' })
+  tiktokId: string;
+
   // メールアドレス — email used at pre-registration
   @Column()
   email: string;

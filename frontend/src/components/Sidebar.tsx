@@ -3,6 +3,7 @@ import TokuPackLogo from './TokuPackLogo';
 import { useHashRoute } from '../hooks/useHashRoute';
 import { useT, useLang } from '../i18n/LanguageProvider';
 import { LANGS, LANG_SHORT, LANG_LABELS } from '../i18n/config';
+import { useAuth } from '../auth/AuthProvider';
 
 const stroke = {
   fill: 'none',
@@ -24,6 +25,15 @@ const nav: NavLink[] = [
   { labelKey: 'nav.tokupack', href: '#/tokupack', match: ['/tokupack'] },
   { labelKey: 'nav.competition', href: '#/competition', match: ['/competition'] },
   { labelKey: 'nav.reserve', href: '#/reserve', match: ['/reserve'] },
+];
+
+/** Homepage section anchors shown in the mobile horizontal nav row. */
+const sectionLinks = [
+  { key: 'nav.home', href: '#top' },
+  { key: 'nav.about', href: '#about' },
+  { key: 'nav.how', href: '#how' },
+  { key: 'nav.brands', href: '#brands' },
+  { key: 'nav.faqs', href: '#faqs' },
 ];
 
 const socials = [
@@ -76,11 +86,17 @@ export default function Sidebar() {
   const route = useHashRoute();
   const t = useT();
   const { lang, setLang } = useLang();
+  const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const anyOpen = open || langOpen;
+
+  // The section-anchor row only applies to the homepage (its links are #about,
+  // #how, … anchors). Standalone pages (tokupack, competition, …) don't have them.
+  const isHome = !['/tokupack', '/brand/', '/competition', '/location', '/venue', '/reserve']
+    .some((p) => route.startsWith(p));
 
   const closeAll = () => { setOpen(false); setLangOpen(false); setExpanded(null); };
 
@@ -99,8 +115,104 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* ── Fixed left rail ── */}
-      <aside className="fixed inset-y-0 left-0 z-[60] flex w-16 flex-col border-r border-neutral-200 bg-white md:w-[76px]">
+      {/* ── Mobile top bar (below md) ── */}
+      <header className="fixed inset-x-0 top-0 z-[60] bg-white md:hidden">
+        <div className="flex h-14 items-center justify-between border-b border-neutral-200 pr-3">
+          {/* Hamburger — black square, universal open/close */}
+          <button
+            type="button"
+            onClick={() => {
+              if (anyOpen) { closeAll(); } else { setOpen(true); }
+            }}
+            aria-expanded={anyOpen}
+            aria-label={anyOpen ? t('sidebar.closeMenu') : t('sidebar.openMenu')}
+            className="flex h-14 w-14 items-center justify-center bg-brand-dark text-white"
+          >
+            {anyOpen ? (
+              <svg viewBox="0 0 24 24" width={20} height={20} {...stroke}>
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" width={20} height={20} {...stroke}>
+                <path d="M5 9h14M5 15h14" />
+              </svg>
+            )}
+          </button>
+
+          {/* Quick actions */}
+          <div className="flex items-center gap-4">
+            <a
+              href="#/venue"
+              onClick={closeAll}
+              className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
+                <path d="M12 3l9 4.5-9 4.5-9-4.5z" />
+                <path d="M3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5" />
+              </svg>
+              {t('nav.venue')}
+            </a>
+            <a
+              href="#/location"
+              onClick={closeAll}
+              className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
+                <path d="M12 21s6.5-5.4 6.5-10.5A6.5 6.5 0 0 0 5.5 10.5C5.5 15.6 12 21 12 21z" />
+                <circle cx="12" cy="10.5" r="2.3" />
+              </svg>
+              {t('nav.access')}
+            </a>
+            <button
+              type="button"
+              onClick={() => { setLangOpen((o) => !o); setOpen(false); }}
+              aria-label={t('sidebar.language')}
+              className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} {...stroke}>
+                <circle cx="12" cy="12" r="8.5" />
+                <path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.6 0 17M12 3.5c-2.5 2.4-2.5 14.6 0 17" />
+              </svg>
+              {LANG_SHORT[lang]}
+            </button>
+            {/* Logout — only when signed in (mobile has no header AccountButton) */}
+            {user && (
+              <button
+                type="button"
+                onClick={signOut}
+                aria-label={t('home.reserve.signOut')}
+                title={user.email}
+                className="flex items-center text-neutral-800 transition hover:text-brand"
+              >
+                <svg viewBox="0 0 24 24" width={17} height={17} {...stroke}>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <path d="M16 17l5-5-5-5" />
+                  <path d="M21 12H9" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Horizontal scrolling nav row — homepage sections only */}
+        {isHome && (
+          <nav className="flex h-12 items-center overflow-x-auto border-b border-neutral-200 bg-white">
+            {sectionLinks.map((item) => (
+              <a
+                key={item.key}
+                href={item.href}
+                onClick={closeAll}
+                className="whitespace-nowrap px-4 text-sm font-medium text-neutral-700 transition"
+              >
+                {t(item.key)}
+              </a>
+            ))}
+          </nav>
+        )}
+      </header>
+
+      {/* ── Fixed left rail (md and up) ── */}
+      <aside className="fixed inset-y-0 left-0 z-[60] hidden w-16 flex-col border-r border-neutral-200 bg-white md:flex md:w-[76px]">
         {/* Logo */}
         <a
           href="#top"
@@ -187,9 +299,9 @@ export default function Sidebar() {
 
       {/* ── Main menu panel ── */}
       <div
-        className={`fixed inset-y-0 left-16 z-[55] w-[300px] overflow-y-auto bg-white transition-transform duration-300 md:left-[76px] sm:w-[360px] ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed bottom-0 left-0 z-[55] w-[300px] overflow-y-auto bg-white transition-transform duration-300 sm:w-[360px] md:inset-y-0 md:left-[76px] ${
+          isHome ? 'top-[6.5rem]' : 'top-14'
+        } md:top-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}
         aria-hidden={!open}
       >
         <div className="flex min-h-full flex-col px-8 py-12">
@@ -267,9 +379,9 @@ export default function Sidebar() {
 
       {/* ── Language panel ── */}
       <div
-        className={`fixed inset-y-0 left-16 z-[55] w-[300px] bg-white transition-transform duration-300 md:left-[76px] sm:w-[360px] ${
-          langOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed bottom-0 left-0 z-[55] w-[300px] bg-white transition-transform duration-300 sm:w-[360px] md:inset-y-0 md:left-[76px] ${
+          isHome ? 'top-[6.5rem]' : 'top-14'
+        } md:top-0 ${langOpen ? 'translate-x-0' : '-translate-x-full'}`}
         aria-hidden={!langOpen}
       >
         <div className="flex h-full flex-col justify-center px-10">

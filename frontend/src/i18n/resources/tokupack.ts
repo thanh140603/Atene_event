@@ -30,6 +30,12 @@ export const tokupack: ResourcePack = {
           placeholder: '山田 花子',
           error: 'お名前を入力してください。',
         },
+        tiktokId: {
+          label: 'TikTok ID',
+          help: 'TikTokのアカウントIDをご記入ください（例: @yourID）。',
+          placeholder: '@yourID',
+          error: 'TikTok IDを入力してください。',
+        },
         email: {
           label: 'メールアドレス',
           help: '事前登録時に使用したメールアドレスをご記入ください。',
@@ -96,6 +102,12 @@ export const tokupack: ResourcePack = {
           placeholder: 'Hanako Yamada',
           error: 'Please enter your name.',
         },
+        tiktokId: {
+          label: 'TikTok ID',
+          help: 'Please enter your TikTok account ID (e.g. @yourID).',
+          placeholder: '@yourID',
+          error: 'Please enter your TikTok ID.',
+        },
         email: {
           label: 'Email address',
           help: 'Please enter the email address you used when you pre-registered.',
@@ -161,6 +173,12 @@ export const tokupack: ResourcePack = {
           help: '참가 티켓에 기재된 이름을 입력해 주세요.',
           placeholder: '홍길동',
           error: '이름을 입력해 주세요.',
+        },
+        tiktokId: {
+          label: 'TikTok ID',
+          help: 'TikTok 계정 ID를 입력해 주세요 (예: @yourID).',
+          placeholder: '@yourID',
+          error: 'TikTok ID를 입력해 주세요.',
         },
         email: {
           label: '이메일',
