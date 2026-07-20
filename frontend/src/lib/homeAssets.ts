@@ -22,8 +22,9 @@ export const homeAssets = {
   lineQr: u(`${B}/06_LINE/M_888llqop_GW.png`),
 };
 
-/** Brand intro/animation videos delivered under src/public/vids, keyed by slug. */
-const V = '/vids';
+/** Brand intro/animation videos. In production, set VITE_VIDEO_BASE_URL to the cloud bucket
+ *  public URL (e.g. https://pub-xxx.r2.dev/vids). Falls back to /vids for local dev. */
+const V = (import.meta.env.VITE_VIDEO_BASE_URL ?? '/vids').replace(/\/$/, '');
 export const brandVideos: Record<string, string> = {
   torhop: u(`${V}/Torhop Brand Animation_3456-1920_jp (2).mp4`),
   'purito-seoul': u(`${V}/Purito_0317_오트3종.mov`),
