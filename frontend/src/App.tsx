@@ -50,6 +50,14 @@ export default function App() {
       .catch((err) => setError(String(err)));
   }, [lang]);
 
+  // On navigation to a standalone page (route starting with "/"), jump to the
+  // top — otherwise the previous page's scroll position carries over. In-page
+  // anchor links (#about, #how, …) are left alone so they scroll to their target.
+  const pageKey = route.startsWith('/') ? route.split(/[?#]/)[0] : '';
+  useEffect(() => {
+    if (pageKey) window.scrollTo(0, 0);
+  }, [pageKey]);
+
   let content: JSX.Element;
 
   // The mobile top bar is taller on the homepage (it adds the section-anchor

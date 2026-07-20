@@ -69,6 +69,13 @@ export interface BrandContent {
     items: string[];
   };
   usps: UspCard[];
+  /** Featured single hero product (standard layout, shown after the USP grid). */
+  singleProduct?: {
+    name?: string;
+    description?: string;
+    imageUrl?: string;
+    link?: string;
+  };
 
   // --- "featured" layout only (VT, Purito) ---
   /** Secondary hero message shown under the tagline. */

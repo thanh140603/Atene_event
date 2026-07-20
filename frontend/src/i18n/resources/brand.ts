@@ -32,6 +32,9 @@ export const brand: ResourcePack = {
         imagePlaceholder: '商品画像',
         productAlt: '商品 {index}',
       },
+      singleProduct: {
+        title: 'ピックアップ商品',
+      },
       tokupackSeries: {
         title: 'TOKUPACK',
       },
@@ -79,6 +82,9 @@ export const brand: ResourcePack = {
         imagePlaceholder: 'Product image',
         productAlt: 'Product {index}',
       },
+      singleProduct: {
+        title: 'FEATURED PRODUCT',
+      },
       tokupackSeries: {
         title: 'TOKUPACK',
       },
@@ -125,6 +131,9 @@ export const brand: ResourcePack = {
         title: '제품 특장점',
         imagePlaceholder: '제품 이미지',
         productAlt: '제품 {index}',
+      },
+      singleProduct: {
+        title: '대표 제품',
       },
       tokupackSeries: {
         title: 'TOKUPACK',

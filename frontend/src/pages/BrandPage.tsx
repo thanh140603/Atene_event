@@ -1,7 +1,9 @@
 import TokuPackLogo from '../components/TokuPackLogo';
-import BrandHero from '../components/brand/BrandHero';
+import BrandVideoHero from '../components/brand/BrandVideoHero';
+import BrandIntro from '../components/brand/BrandIntro';
 import BrandTokupackSet from '../components/brand/BrandTokupackSet';
 import BrandProductsUsp from '../components/brand/BrandProductsUsp';
+import BrandSingleProduct from '../components/brand/BrandSingleProduct';
 import BrandCta from '../components/brand/BrandCta';
 import FeaturedBrandHero from '../components/brand/featured/FeaturedBrandHero';
 import FeaturedTokupackSeries from '../components/brand/featured/FeaturedTokupackSeries';
@@ -45,9 +47,11 @@ export default function BrandPage({ slug }: { slug: string }) {
             </>
           ) : (
             <>
-              <BrandHero brand={brand} />
+              <BrandVideoHero brand={brand} />
+              <BrandIntro brand={brand} />
               <BrandTokupackSet brand={brand} />
               <BrandProductsUsp brand={brand} />
+              <BrandSingleProduct brand={brand} />
               <BrandCta brand={brand} />
             </>
           )}
