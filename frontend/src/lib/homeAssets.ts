@@ -27,7 +27,7 @@ export const homeAssets = {
 const V = (import.meta.env.VITE_VIDEO_BASE_URL ?? '/vids').replace(/\/$/, '');
 export const brandVideos: Record<string, string> = {
   torhop: u(`${V}/Torhop Brand Animation_3456-1920_jp (2).mp4`),
-  'purito-seoul': u(`${V}/Purito_0317_오트3종.mov`),
+  'purito-seoul': u(`${V}/Purito_0317_오트3종.mp4`),
   'vt-cosmetics': u(`${V}/VT Cosmetics_웹사이트용 브랜드 소개 영상.mp4`),
   beplain: u(`${V}/Beplain_260714_일본 틱톡샵 _브랜드 소개 영상.mp4`),
   lubylab: u(`${V}/LubyLab.mp4`),
