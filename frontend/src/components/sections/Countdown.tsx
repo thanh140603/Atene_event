@@ -1,5 +1,6 @@
 import type { EventInfo } from '../../types';
 import { useCountdown } from '../../hooks/useCountdown';
+import { useT } from '../../i18n/LanguageProvider';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -34,6 +35,7 @@ function formatEventDate(iso: string): string {
 
 export default function Countdown({ event }: { event: EventInfo }) {
   const c = useCountdown(event.eventDate);
+  const t = useT();
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -48,13 +50,13 @@ export default function Countdown({ event }: { event: EventInfo }) {
       />
       <div className="section-container relative py-16 sm:py-20">
         <div className="flex items-start justify-center gap-3 sm:gap-6">
-          <Unit value={c.days} label="Days" />
+          <Unit value={c.days} label={t('home.countdown.days')} />
           <Colon />
-          <Unit value={c.hours} label="Hours" />
+          <Unit value={c.hours} label={t('home.countdown.hours')} />
           <Colon />
-          <Unit value={c.minutes} label="Minutes" />
+          <Unit value={c.minutes} label={t('home.countdown.minutes')} />
           <Colon />
-          <Unit value={c.seconds} label="Seconds" />
+          <Unit value={c.seconds} label={t('home.countdown.seconds')} />
         </div>
 
         <div className="mt-12 text-center">

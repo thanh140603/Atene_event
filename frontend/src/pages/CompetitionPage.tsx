@@ -4,8 +4,10 @@ import ParticipationSteps from '../components/competition/ParticipationSteps';
 import RankingCriteria from '../components/competition/RankingCriteria';
 import WhatYouCanWin from '../components/competition/WhatYouCanWin';
 import CompetitionCTA from '../components/competition/CompetitionCTA';
+import { useT } from '../i18n/LanguageProvider';
 
 export default function CompetitionPage() {
+  const t = useT();
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur">
@@ -13,14 +15,14 @@ export default function CompetitionPage() {
           <a href="#top" className="flex items-center gap-2">
             <TokuPackLogo size={34} />
             <span className="text-sm font-bold tracking-wide">
-              KOREA INVITATION CHALLENGE
+              {t('competition.header.wordmark')}
             </span>
           </a>
           <a
             href="#/"
             className="text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
           >
-            ← Back to Event
+            {t('common.backToEvent')}
           </a>
         </div>
       </header>
@@ -37,11 +39,11 @@ export default function CompetitionPage() {
         <div className="section-container flex flex-col items-center gap-3 py-12 text-center">
           <TokuPackLogo size={44} />
           <p className="text-sm font-semibold text-white">
-            ATENE KOREA INVITATION CHALLENGE
+            {t('competition.footer.title')}
           </p>
-          <p className="text-xs">BEST TOKUPACK SELLER · 2026.07.27 — 08.26</p>
+          <p className="text-xs">{t('competition.footer.tagline')}</p>
           <p className="mt-3 text-[11px] text-neutral-500">
-            © 2026 ATENE. All rights reserved.
+            {t('competition.footer.copyright')}
           </p>
         </div>
       </footer>

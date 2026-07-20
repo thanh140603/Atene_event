@@ -1,14 +1,15 @@
+import { useT } from '../../i18n/LanguageProvider';
 import type { ReactNode } from 'react';
 
 interface Social {
-  name: string;
+  nameKey: string;
   url: string;
   icon: ReactNode;
 }
 
 const socials: Social[] = [
   {
-    name: 'Instagram',
+    nameKey: 'location.socials.instagram',
     url: 'https://www.instagram.com/',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -19,7 +20,7 @@ const socials: Social[] = [
     ),
   },
   {
-    name: 'TikTok',
+    nameKey: 'location.socials.tiktok',
     url: 'https://www.tiktok.com/',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -28,7 +29,7 @@ const socials: Social[] = [
     ),
   },
   {
-    name: 'X',
+    nameKey: 'location.socials.x',
     url: 'https://x.com/',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -37,7 +38,7 @@ const socials: Social[] = [
     ),
   },
   {
-    name: 'KakaoTalk',
+    nameKey: 'location.socials.kakaotalk',
     url: 'https://www.kakaocorp.com/page/service/service/KakaoTalk',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -48,16 +49,17 @@ const socials: Social[] = [
 ];
 
 export default function LocationSocials() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container flex justify-center gap-3 pb-20 sm:pb-24">
         {socials.map((s) => (
           <a
-            key={s.name}
+            key={s.nameKey}
             href={s.url}
             target="_blank"
             rel="noreferrer"
-            aria-label={s.name}
+            aria-label={t(s.nameKey)}
             className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 text-neutral-800 transition hover:border-neutral-900 hover:text-neutral-900"
           >
             <span className="h-5 w-5">{s.icon}</span>

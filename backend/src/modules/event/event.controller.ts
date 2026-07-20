@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { EventService } from './event.service';
 
 @Controller('event')
@@ -6,7 +6,7 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get()
-  getEvent() {
-    return this.eventService.getEventInfo();
+  getEvent(@Query('lang') lang?: string) {
+    return this.eventService.getEventInfo(lang);
   }
 }

@@ -1,66 +1,62 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 interface Step {
   n: string;
-  body: string;
+  key: string;
 }
 
 const steps: Step[] = [
-  {
-    n: '01',
-    body: 'Creator Sourcing Dayに参加する',
-  },
-  {
-    n: '02',
-    body: 'イベントでお気に入りの瞬間を撮影したショート動画を、TikTokまたはInstagram Reelsに投稿する',
-  },
-  {
-    n: '03',
-    body: '指定のハッシュタグ #CreatorSourcingDay #トクパック をつけて投稿し、Best Content Awardへエントリー',
-  },
+  { n: '01', key: 'venue.overview.step1' },
+  { n: '02', key: 'venue.overview.step2' },
+  { n: '03', key: 'venue.overview.step3' },
+  { n: '04', key: 'venue.overview.step4' },
 ];
 
 export default function AwardOverview() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container py-16 sm:py-20">
         <h3 className="text-lg font-bold leading-relaxed text-neutral-900 sm:text-xl">
-          〈ATENE〉Best Content Award開催決定。
+          {t('venue.overview.heading.pre')}
+          {t('venue.overview.heading.hi')}
+          {t('venue.overview.heading.post')}
           <br className="hidden sm:block" />
-          イベントの瞬間を切り取って、韓国K-Beauty体験を手に入れよう
+          {t('venue.overview.headingLine2')}
         </h3>
         <p className="mt-3 text-xs font-medium tracking-wide text-neutral-400">
-          2026.07.23
+          {t('venue.overview.date')}
         </p>
 
         <div className="mt-8 max-w-3xl space-y-5 text-sm leading-relaxed text-neutral-600">
           <p className="font-semibold text-neutral-800">
-            特別なTokupackを、誰よりも早くファンへ。
+            {t('venue.overview.lead')}
           </p>
-          <p>
-            Creator Sourcing Dayでは、人気K-Beautyブランドの限定Tokupackをいち早く体験できる特別な機会をご用意しています。
-            イベントで見つけたお気に入りの商品を、あなたらしい視点で発信し、ファンに特別な情報を届けませんか？
-            さらに、イベントの瞬間を撮影したショート動画を投稿することで「Best Content Award」へエントリー。
-          </p>
-          <p>
-            受賞者には韓国3日間ツアーをはじめ、豪華賞品や今後のブランドコラボレーションにつながる特別な機会をご用意しています。
-          </p>
+          <p>{t('venue.overview.p1')}</p>
+          <p>{t('venue.overview.p2')}</p>
         </div>
 
         {/* 参加方法 */}
-        <div className="mt-14 rounded-2xl border border-neutral-200 p-6 sm:p-8">
-          <div className="flex items-center gap-3">
-            <span className="h-[3px] w-8 rounded-full bg-brand" />
-            <p className="text-base font-bold text-neutral-900">参加方法</p>
-          </div>
+        <fieldset className="mt-14 border border-neutral-700">
+          <legend className="ml-6 flex items-center gap-2 px-1 text-sm font-bold text-neutral-900 sm:ml-8">
+            <span className="h-px w-5 bg-neutral-900" />
+            {t('venue.overview.howToTitle')}
+          </legend>
 
-          <ol className="mt-8 space-y-6">
-            {steps.map((s) => (
-              <li key={s.n} className="flex gap-4">
-                <span className="pt-0.5 text-xs font-bold text-brand">{s.n}</span>
-                <p className="text-sm leading-relaxed text-neutral-700">{s.body}</p>
+          <ol className="pb-2">
+            {steps.map((s, i) => (
+              <li key={s.n} className="px-6 pt-5 sm:px-8">
+                <div className="flex gap-4">
+                  <span className="shrink-0 text-xs font-semibold text-neutral-500">{s.n}.</span>
+                  <p className="text-sm leading-relaxed text-neutral-700">{t(s.key)}</p>
+                </div>
+                {i < steps.length - 1 && (
+                  <div className="mt-5 border-b border-dashed border-neutral-400" />
+                )}
               </li>
             ))}
           </ol>
-        </div>
+        </fieldset>
       </div>
     </section>
   );

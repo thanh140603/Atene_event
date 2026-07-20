@@ -1,8 +1,11 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 export default function BestContentAwardHero() {
+  const t = useT();
   return (
     <section id="award" className="bg-white">
       <div className="section-container py-20 sm:py-24">
-        <h2 className="section-heading">BEST CONTENT AWARDS</h2>
+        <h2 className="section-heading">{t('venue.award.heading')}</h2>
         <div className="heading-rule" />
 
         {/* Hero visual — dark banquet-room banner. Placeholder until real
@@ -23,9 +26,9 @@ export default function BestContentAwardHero() {
           />
           <div className="relative flex min-h-[220px] items-center justify-center px-6 py-16 sm:min-h-[300px] sm:py-24">
             <h3 className="text-center text-3xl font-extrabold uppercase leading-[0.95] tracking-tight text-white drop-shadow-lg sm:text-6xl">
-              Best Content
+              {t('venue.award.titleLine1')}
               <br />
-              Award
+              {t('venue.award.titleLine2')}
             </h3>
           </div>
         </div>

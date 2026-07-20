@@ -1,18 +1,15 @@
 import TokuPackLogo from './TokuPackLogo';
+import { useT } from '../i18n/LanguageProvider';
 
 const links = [
-  { href: '#about', label: 'About' },
-  { href: '#how', label: 'How It Works' },
-  { href: '#brands', label: 'Brands' },
-  { href: '#/tokupack', label: 'TokuPack' },
-  { href: '#/venue', label: 'Venue' },
-  { href: '#/competition', label: 'Competition' },
-  { href: '#/location', label: 'Location' },
-  { href: '#reserve', label: 'Reserve' },
-  { href: '#faqs', label: 'FAQs' },
+  { href: '#about', key: 'nav.about' },
+  { href: '#how', key: 'nav.how' },
+  { href: '#brands', key: 'nav.brands' },
+  { href: '#faqs', key: 'nav.faqs' },
 ];
 
 export default function Navbar() {
+  const t = useT();
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur">
       <div className="section-container flex h-16 items-center justify-between">
@@ -29,12 +26,12 @@ export default function Navbar() {
               href={l.href}
               className="text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
             >
-              {l.label}
+              {t(l.key)}
             </a>
           ))}
         </nav>
-        <a href="#reserve" className="btn-pill bg-brand text-white hover:opacity-90">
-          Reserve Slot
+        <a href="#/reserve" className="btn-pill bg-brand text-white hover:opacity-90">
+          {t('nav.reserveSlot')}
         </a>
       </div>
     </header>

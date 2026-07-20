@@ -1,25 +1,16 @@
+import { useT } from '../../i18n/LanguageProvider';
+import type { TFunc } from '../../i18n/LanguageProvider';
+
 interface Step {
   n: string;
-  body: string;
+  key: string;
 }
 
 const steps: Step[] = [
-  {
-    n: '01',
-    body: 'Creator Sourcing Dayに参加し、20以上のトクパックを実際に体験。気になるセットを見つけます。',
-  },
-  {
-    n: '02',
-    body: '販売したいトクパックを選び、2026.07.27〜08.26の期間中にTikTok Liveで販売を開始します。',
-  },
-  {
-    n: '03',
-    body: 'TikTok Shop上でGMVを自動計測。販売できるトクパックの数に制限はありません。',
-  },
-  {
-    n: '04',
-    body: 'ライブ販売の結果とコンテンツを投稿し、ランキングにエントリー。上位5名を韓国招待へ。',
-  },
+  { n: '01', key: 's1' },
+  { n: '02', key: 's2' },
+  { n: '03', key: 's3' },
+  { n: '04', key: 's4' },
 ];
 
 function Circle({ n }: { n: string }) {
@@ -30,12 +21,20 @@ function Circle({ n }: { n: string }) {
   );
 }
 
-function Label({ n, className = '' }: { n: string; className?: string }) {
+function Label({
+  n,
+  t,
+  className = '',
+}: {
+  n: string;
+  t: TFunc;
+  className?: string;
+}) {
   return (
     <p
       className={`text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-400 ${className}`}
     >
-      Step {n}
+      {t('competition.steps.stepLabel', { n })}
     </p>
   );
 }
@@ -49,17 +48,18 @@ function Body({ body, className = '' }: { body: string; className?: string }) {
 }
 
 export default function ParticipationSteps() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container py-20 sm:py-24">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-            PARTICIPATION
+            {t('competition.steps.title.l1')}
             <br />
-            STEPS
+            {t('competition.steps.title.l2')}
           </h2>
           <p className="max-w-xs text-xs leading-relaxed text-neutral-400 sm:text-right">
-            よっつのステップで、Creator Sourcing Dayでの出会いを韓国招待へつなげます。
+            {t('competition.steps.intro')}
           </p>
         </div>
 
@@ -73,15 +73,16 @@ export default function ParticipationSteps() {
           <ol className="space-y-12 md:space-y-16">
             {steps.map((step, i) => {
               const contentLeft = i % 2 === 1;
+              const body = t(`competition.steps.${step.key}`);
               return (
                 <li key={step.n}>
                   <div className="grid grid-cols-[auto_1fr] items-center gap-5 md:grid-cols-[1fr_auto_1fr] md:gap-10">
                     {/* left column (md and up) */}
                     <div className="hidden md:flex md:justify-end">
                       {contentLeft ? (
-                        <Body body={step.body} className="text-right" />
+                        <Body body={body} className="text-right" />
                       ) : (
-                        <Label n={step.n} className="text-right" />
+                        <Label n={step.n} t={t} className="text-right" />
                       )}
                     </div>
 
@@ -90,13 +91,13 @@ export default function ParticipationSteps() {
                     {/* right column — always holds content on mobile */}
                     <div>
                       <div className="md:hidden">
-                        <Body body={step.body} />
+                        <Body body={body} />
                       </div>
                       <div className="hidden md:block">
                         {contentLeft ? (
-                          <Label n={step.n} />
+                          <Label n={step.n} t={t} />
                         ) : (
-                          <Body body={step.body} />
+                          <Body body={body} />
                         )}
                       </div>
                     </div>

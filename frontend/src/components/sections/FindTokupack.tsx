@@ -1,4 +1,7 @@
+import { useT } from '../../i18n/LanguageProvider';
+
 export default function FindTokupack() {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container pb-20 sm:pb-24">
@@ -19,23 +22,25 @@ export default function FindTokupack() {
           />
           <div className="relative max-w-xl">
             <h2 className="text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-3xl">
-              お気に入りの<span className="text-brand">TOKUPACK</span>を見つけよう
+              {t('home.find.headingPre')}
+              <span className="text-brand">{t('home.find.headingHi')}</span>
+              {t('home.find.headingPost')}
             </h2>
             <p className="mt-5 text-sm font-semibold text-neutral-700">
-              TikTokでは、まだ出会えない。
+              {t('home.find.line1a')}
               <br />
-              その特別な構成を、誰よりも先に。
+              {t('home.find.line1b')}
             </p>
             <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-              気になるセットを事前に選んで、
+              {t('home.find.line2a')}
               <br />
-              イベント当日の特別なK-Beauty体験へ。
+              {t('home.find.line2b')}
             </p>
             <a
               href="#/tokupack"
               className="btn-pill mt-8 bg-neutral-900 text-white hover:opacity-90"
             >
-              TOKUPACKを選ぶ →
+              {t('home.find.cta')}
             </a>
           </div>
         </div>

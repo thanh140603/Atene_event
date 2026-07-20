@@ -1,5 +1,6 @@
 import type { EventInfo } from '../../types';
 import TokuPackLogo from '../TokuPackLogo';
+import { homeAssets } from '../../lib/homeAssets';
 
 export default function Hero({ event }: { event: EventInfo }) {
   return (
@@ -7,14 +8,12 @@ export default function Hero({ event }: { event: EventInfo }) {
       id="top"
       className="relative overflow-hidden bg-brand-dark text-white"
     >
-      {/* Gradient glow */}
-      <div
+      {/* Pink radial glow (transparent PNG) */}
+      <img
+        src={homeAssets.heroGlow}
+        alt=""
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/4 rounded-full opacity-70 blur-3xl"
-        style={{
-          background:
-            'radial-gradient(circle at center, #ff8ac2 0%, #b06ab3 35%, rgba(11,11,12,0) 70%)',
-        }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[680px] w-[680px] max-w-none -translate-x-1/2 -translate-y-1/3 opacity-80"
       />
 
       <div className="section-container relative flex flex-col items-center py-24 text-center sm:py-28">

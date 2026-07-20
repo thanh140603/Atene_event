@@ -1,23 +1,32 @@
 import type { EventInfo } from '../../types';
+import { homeAssets } from '../../lib/homeAssets';
+import { useT } from '../../i18n/LanguageProvider';
 
 export default function CreatorSourcingDay({ event }: { event: EventInfo }) {
+  const t = useT();
   return (
     <section className="bg-white">
       <div className="section-container grid grid-cols-1 items-center gap-12 py-16 sm:py-20 lg:grid-cols-2">
-        {/* Editorial image placeholder */}
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gradient-to-br from-neutral-200 to-neutral-400">
-          <span className="absolute left-6 top-6 text-sm font-medium tracking-[0.3em] text-white/90">
-            TOKYO 2026
+        {/* Editorial image */}
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-neutral-200">
+          <img
+            src={homeAssets.creatorPhoto}
+            alt={t('home.creator.imageAlt')}
+            className="h-full w-full object-cover"
+          />
+          <span className="absolute left-6 top-6 text-sm font-medium tracking-[0.3em] text-white/90 mix-blend-difference">
+            {t('home.creator.tokyoTag')}
           </span>
-          <div className="absolute inset-0 flex items-end justify-center bg-black/10 p-8">
-            <span className="text-xs uppercase tracking-widest text-white/70">
-              Creator Sourcing Day
-            </span>
-          </div>
         </div>
 
         {/* Copy + stats */}
         <div>
+          <img
+            src={homeAssets.csdBadge}
+            alt=""
+            aria-hidden
+            className="mb-6 h-16 w-16 object-contain"
+          />
           <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
             CREATOR SOURCING DAY
           </h2>

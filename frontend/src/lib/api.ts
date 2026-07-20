@@ -6,6 +6,7 @@ import type {
   Slot,
   TokupackApplicationInput,
 } from '../types';
+import type { Lang } from '../i18n/config';
 
 const BASE = import.meta.env.VITE_API_BASE ?? '/api';
 
@@ -15,11 +16,14 @@ async function get<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+/** Append the active language so the backend returns localized content. */
+const q = (path: string, lang?: Lang) => (lang ? `${path}?lang=${lang}` : path);
+
 export const api = {
-  getEvent: () => get<EventInfo>('/event'),
-  getBrands: () => get<Brand[]>('/brands'),
-  getFaqs: () => get<Faq[]>('/faqs'),
-  getSocialLinks: () => get<SocialLink[]>('/social-links'),
+  getEvent: (lang?: Lang) => get<EventInfo>(q('/event', lang)),
+  getBrands: (lang?: Lang) => get<Brand[]>(q('/brands', lang)),
+  getFaqs: (lang?: Lang) => get<Faq[]>(q('/faqs', lang)),
+  getSocialLinks: (lang?: Lang) => get<SocialLink[]>(q('/social-links', lang)),
   createBooking: async (payload: {
     creatorName?: string;
     email?: string;

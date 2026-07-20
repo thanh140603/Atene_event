@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../../lib/api';
+import { useT } from '../../i18n/LanguageProvider';
 
 const BRANDS = [
   'VT Cosmetics',
@@ -12,17 +13,28 @@ const BRANDS = [
   'Daily Weekly',
 ];
 
+// Stable option values sent to the API. Brand names are kept verbatim; the
+// special choices keep their original Japanese values as the stored identifier
+// while their visible label is resolved via t() at render time.
+const ALL_BRANDS = 'すべて希望する';
+const OTHER = 'その他';
+const UNDECIDED = '特に決まっていない';
+const OTHER_COLLAB = '他のコラボレーション形式を希望する';
+
+// Maps a special option value to its i18n label key. Brand names have no entry
+// and are displayed as-is.
+const SPECIAL_LABEL_KEYS: Record<string, string> = {
+  [ALL_BRANDS]: 'tokupack.form.options.allBrands',
+  [OTHER]: 'tokupack.form.options.other',
+  [UNDECIDED]: 'tokupack.form.options.undecided',
+  [OTHER_COLLAB]: 'tokupack.form.options.otherCollab',
+};
+
 // Q3 — single choice: brands + specials (mirrors the Google Form exactly)
-const PREFERRED_OPTIONS = [...BRANDS, 'すべて希望する', 'その他'];
+const PREFERRED_OPTIONS = [...BRANDS, ALL_BRANDS, OTHER];
 
 // Q4 — multiple choice: brands + specials
-const LIVE_COMMERCE_OPTIONS = [
-  ...BRANDS,
-  '特に決まっていない',
-  '他のコラボレーション形式を希望する',
-];
-
-const OTHER = 'その他';
+const LIVE_COMMERCE_OPTIONS = [...BRANDS, UNDECIDED, OTHER_COLLAB];
 
 type Status = 'idle' | 'saving' | 'done' | 'error';
 
@@ -45,6 +57,13 @@ const inputClass =
   'w-full rounded-md border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-[#2f6bff] focus:bg-white focus:ring-2 focus:ring-[#2f6bff]/20';
 
 export default function TokupackForm() {
+  const t = useT();
+
+  const optionLabel = (value: string) => {
+    const key = SPECIAL_LABEL_KEYS[value];
+    return key ? t(key) : value;
+  };
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [preferredBrand, setPreferredBrand] = useState('');
@@ -65,14 +84,15 @@ export default function TokupackForm() {
 
   const validate = () => {
     const next: Record<string, string> = {};
-    if (!name.trim()) next.name = 'お名前を入力してください。';
+    if (!name.trim()) next.name = t('tokupack.form.name.error');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      next.email = '有効なメールアドレスを入力してください。';
-    if (!preferredBrand) next.preferredBrand = '1つ選択してください。';
+      next.email = t('tokupack.form.email.error');
+    if (!preferredBrand)
+      next.preferredBrand = t('tokupack.form.preferredBrand.error');
     if (preferredBrand === OTHER && !preferredBrandOther.trim())
-      next.preferredBrandOther = '内容を入力してください。';
+      next.preferredBrandOther = t('tokupack.form.preferredBrand.otherError');
     if (liveCommerceBrands.length === 0)
-      next.liveCommerceBrands = '1つ以上選択してください。';
+      next.liveCommerceBrands = t('tokupack.form.liveCommerce.error');
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -106,17 +126,16 @@ export default function TokupackForm() {
               ✓
             </div>
             <h2 className="mt-6 text-xl font-bold text-neutral-900">
-              送信ありがとうございました
+              {t('tokupack.form.success.title')}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-              TOKUPACKのリクエストを受け付けました。
-              イベント当日の詳細はご登録のメールアドレスにご案内します。
+              {t('tokupack.form.success.message')}
             </p>
             <a
               href="#/"
               className="btn-pill mt-8 bg-neutral-900 text-white hover:opacity-90"
             >
-              ← イベントページに戻る
+              {t('tokupack.form.success.back')}
             </a>
           </div>
         </div>
@@ -134,15 +153,15 @@ export default function TokupackForm() {
         >
           {/* Name */}
           <div>
-            <Label required>あなたのお名前</Label>
+            <Label required>{t('tokupack.form.name.label')}</Label>
             <p className="mt-1 text-xs text-neutral-400">
-              参加チケットに記載のお名前をご記入ください。
+              {t('tokupack.form.name.help')}
             </p>
             <input
               className={`mt-2 ${inputClass}`}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="山田 花子"
+              placeholder={t('tokupack.form.name.placeholder')}
             />
             {errors.name && (
               <p className="mt-1 text-xs text-brand">{errors.name}</p>
@@ -151,16 +170,16 @@ export default function TokupackForm() {
 
           {/* Email */}
           <div className="mt-8">
-            <Label required>メールアドレス</Label>
+            <Label required>{t('tokupack.form.email.label')}</Label>
             <p className="mt-1 text-xs text-neutral-400">
-              事前登録時に使用したメールアドレスをご記入ください。
+              {t('tokupack.form.email.help')}
             </p>
             <input
               type="email"
               className={`mt-2 ${inputClass}`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('tokupack.form.email.placeholder')}
             />
             {errors.email && (
               <p className="mt-1 text-xs text-brand">{errors.email}</p>
@@ -169,9 +188,7 @@ export default function TokupackForm() {
 
           {/* Q3 — preferred brand (single) */}
           <div className="mt-8">
-            <Label required>
-              イベント当日、どのブランドの「Tokupack」を一番受け取りたいですか？
-            </Label>
+            <Label required>{t('tokupack.form.preferredBrand.label')}</Label>
             <div className="mt-3 space-y-2">
               {PREFERRED_OPTIONS.map((opt) => (
                 <label
@@ -189,7 +206,7 @@ export default function TokupackForm() {
                     checked={preferredBrand === opt}
                     onChange={() => setPreferredBrand(opt)}
                   />
-                  <span>{opt}</span>
+                  <span>{optionLabel(opt)}</span>
                 </label>
               ))}
             </div>
@@ -198,7 +215,7 @@ export default function TokupackForm() {
                 className={`mt-3 ${inputClass}`}
                 value={preferredBrandOther}
                 onChange={(e) => setPreferredBrandOther(e.target.value)}
-                placeholder="その他の内容をご記入ください"
+                placeholder={t('tokupack.form.preferredBrand.otherPlaceholder')}
               />
             )}
             {errors.preferredBrand && (
@@ -213,11 +230,9 @@ export default function TokupackForm() {
 
           {/* Q4 — live commerce brands (multiple) */}
           <div className="mt-8">
-            <Label required>
-              今後、どのブランドのTOKUPACKでライブ配信（ライブコマース）をしてみたいですか？
-            </Label>
+            <Label required>{t('tokupack.form.liveCommerce.label')}</Label>
             <p className="mt-1 text-xs text-neutral-400">
-              複数選択できます。
+              {t('tokupack.form.liveCommerce.help')}
             </p>
             <div className="mt-3 space-y-2">
               {LIVE_COMMERCE_OPTIONS.map((opt) => (
@@ -235,7 +250,7 @@ export default function TokupackForm() {
                     checked={liveCommerceBrands.includes(opt)}
                     onChange={() => toggleLiveBrand(opt)}
                   />
-                  <span>{opt}</span>
+                  <span>{optionLabel(opt)}</span>
                 </label>
               ))}
             </div>
@@ -248,13 +263,13 @@ export default function TokupackForm() {
 
           {/* Comment (optional) */}
           <div className="mt-8">
-            <Label>ご質問・ご要望（任意）</Label>
+            <Label>{t('tokupack.form.comment.label')}</Label>
             <textarea
               rows={4}
               className={`mt-2 ${inputClass} resize-none`}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="ご自由にご記入ください"
+              placeholder={t('tokupack.form.comment.placeholder')}
             />
           </div>
 
@@ -265,11 +280,13 @@ export default function TokupackForm() {
               disabled={status === 'saving'}
               className="btn-pill w-full justify-center bg-neutral-900 py-4 text-base text-white hover:opacity-90 disabled:opacity-40 sm:w-auto sm:px-16"
             >
-              {status === 'saving' ? '送信中…' : '送信する →'}
+              {status === 'saving'
+                ? t('tokupack.form.submit.saving')
+                : t('tokupack.form.submit.idle')}
             </button>
             {status === 'error' && (
               <p className="text-xs text-brand">
-                送信に失敗しました。時間をおいて再度お試しください。
+                {t('tokupack.form.submit.error')}
               </p>
             )}
           </div>

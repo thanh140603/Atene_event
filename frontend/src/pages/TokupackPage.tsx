@@ -1,8 +1,10 @@
+import { useT } from '../i18n/LanguageProvider';
 import TokuPackLogo from '../components/TokuPackLogo';
 import TokupackHero from '../components/tokupack/TokupackHero';
 import TokupackForm from '../components/tokupack/TokupackForm';
 
 export default function TokupackPage() {
+  const t = useT();
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur">
@@ -10,14 +12,14 @@ export default function TokupackPage() {
           <a href="#top" className="flex items-center gap-2">
             <TokuPackLogo size={34} />
             <span className="text-sm font-bold tracking-wide">
-              TOKUPACK REQUEST
+              {t('tokupack.header.wordmark')}
             </span>
           </a>
           <a
             href="#/"
             className="text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
           >
-            ← Back to Event
+            {t('common.backToEvent')}
           </a>
         </div>
       </header>
@@ -31,11 +33,11 @@ export default function TokupackPage() {
         <div className="section-container flex flex-col items-center gap-3 py-12 text-center">
           <TokuPackLogo size={44} />
           <p className="text-sm font-semibold text-white">
-            CREATOR SOURCING DAY — TOKUPACK
+            {t('tokupack.footer.tagline')}
           </p>
-          <p className="text-xs">Powered by ATENE</p>
+          <p className="text-xs">{t('tokupack.footer.poweredBy')}</p>
           <p className="mt-3 text-[11px] text-neutral-500">
-            © 2026 ATENE. All rights reserved.
+            {t('tokupack.footer.copyright')}
           </p>
         </div>
       </footer>
