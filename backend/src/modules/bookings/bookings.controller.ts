@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('bookings')
 export class BookingsController {
@@ -11,7 +12,9 @@ export class BookingsController {
     return this.bookingsService.create(dto);
   }
 
+  // Admin dashboard only — the public site never lists bookings.
   @Get()
+  @UseGuards(AdminGuard)
   findAll() {
     return this.bookingsService.findAll();
   }

@@ -10,7 +10,7 @@ export default function BrandCta({ brand }: { brand: BrandContent }) {
           {t('brand.cta.heading', { name: brand.name })}
         </h2>
         <a
-          href="#reserve"
+          href="#/reserve"
           className="btn-pill mt-10 bg-brand px-8 py-4 text-base text-white shadow-lg shadow-brand/20 hover:opacity-90"
         >
           {t('brand.cta.button')}

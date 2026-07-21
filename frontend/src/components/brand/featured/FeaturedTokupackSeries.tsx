@@ -1,8 +1,11 @@
 import type { BrandContent, TokupackSeriesCard } from '../../../data/brands';
 import { useT } from '../../../i18n/LanguageProvider';
+import { useL } from '../../../i18n/localized';
 
 function SeriesCard({ card }: { card: TokupackSeriesCard }) {
   const t = useT();
+  const l = useL();
+  const caption = l(card.caption);
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
       {card.imageUrl ? (
@@ -23,9 +26,7 @@ function SeriesCard({ card }: { card: TokupackSeriesCard }) {
         <h3 className="text-base font-bold tracking-wide text-neutral-900">
           {card.label}
         </h3>
-        {card.caption && (
-          <p className="text-xs text-neutral-500">{card.caption}</p>
-        )}
+        {caption && <p className="text-xs text-neutral-500">{caption}</p>}
         <a
           href={card.link ?? '#/tokupack'}
           className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-brand transition hover:opacity-80"
@@ -48,7 +49,7 @@ export default function FeaturedTokupackSeries({
 
   return (
     <section className="bg-neutral-50">
-      <div className="section-container py-20 sm:py-24">
+      <div className="section-container py-12 sm:py-16">
         <h2 className="section-heading">{t('brand.tokupackSeries.title')}</h2>
         <div className="heading-rule" />
 

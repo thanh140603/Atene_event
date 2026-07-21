@@ -1,5 +1,6 @@
 import type { BrandContent } from '../../data/brands';
 import { useT } from '../../i18n/LanguageProvider';
+import { useL } from '../../i18n/localized';
 
 /**
  * Single hero-product feature: one large product image beside its name,
@@ -7,11 +8,14 @@ import { useT } from '../../i18n/LanguageProvider';
  */
 export default function BrandSingleProduct({ brand }: { brand: BrandContent }) {
   const t = useT();
+  const l = useL();
   const p = brand.singleProduct;
+  const name = l(p?.name);
+  const description = l(p?.description);
 
   return (
     <section className="bg-neutral-50">
-      <div className="section-container py-20 sm:py-24">
+      <div className="section-container py-12 sm:py-16">
         <h2 className="section-heading">{t('brand.singleProduct.title')}</h2>
         <div className="heading-rule" />
 
@@ -21,7 +25,7 @@ export default function BrandSingleProduct({ brand }: { brand: BrandContent }) {
             {p?.imageUrl ? (
               <img
                 src={p.imageUrl}
-                alt={p.name ?? t('brand.singleProduct.title')}
+                alt={name ?? t('brand.singleProduct.title')}
                 className="aspect-square w-full object-cover"
               />
             ) : (
@@ -35,17 +39,17 @@ export default function BrandSingleProduct({ brand }: { brand: BrandContent }) {
 
           {/* Copy */}
           <div>
-            {p?.name ? (
+            {name ? (
               <h3 className="text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-3xl">
-                {p.name}
+                {name}
               </h3>
             ) : (
               <span className="block h-6 w-1/2 rounded bg-neutral-200" />
             )}
 
-            {p?.description ? (
+            {description ? (
               <p className="mt-6 text-sm leading-relaxed text-neutral-600">
-                {p.description}
+                {description}
               </p>
             ) : (
               <div className="mt-6 space-y-3">

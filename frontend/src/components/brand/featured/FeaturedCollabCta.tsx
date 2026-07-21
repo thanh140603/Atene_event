@@ -1,6 +1,8 @@
 import type { BrandContent } from '../../../data/brands';
+import { useL } from '../../../i18n/localized';
 
 export default function FeaturedCollabCta({ brand }: { brand: BrandContent }) {
+  const l = useL();
   const collab = brand.collab;
   if (!collab) return null;
 
@@ -27,13 +29,13 @@ export default function FeaturedCollabCta({ brand }: { brand: BrandContent }) {
 
       <div className="section-container relative flex flex-col items-center py-24 text-center sm:py-32">
         <h2 className="mx-auto max-w-2xl text-2xl font-extrabold leading-tight tracking-tight sm:text-4xl">
-          {collab.heading}
+          {l(collab.heading)}
         </h2>
         <a
           href={collab.ctaHref ?? '#reserve'}
           className="btn-pill mt-10 bg-brand px-8 py-4 text-base text-white shadow-lg shadow-brand/30 hover:opacity-90"
         >
-          {collab.ctaLabel}
+          {l(collab.ctaLabel)}
         </a>
       </div>
     </section>

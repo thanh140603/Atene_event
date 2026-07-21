@@ -1,6 +1,7 @@
 import type { BrandContent } from '../../../data/brands';
 import { brandVideos } from '../../../lib/homeAssets';
 import { useT } from '../../../i18n/LanguageProvider';
+import { useL } from '../../../i18n/localized';
 
 function Placeholder({
   label,
@@ -22,10 +23,13 @@ function Placeholder({
 
 export default function FeaturedBrandHero({ brand }: { brand: BrandContent }) {
   const t = useT();
+  const l = useL();
   const videoUrl = brandVideos[brand.slug] ?? brand.heroVideoUrl;
+  const story = l(brand.story);
+  const philosophy = l(brand.philosophy);
   return (
     <section className="bg-white">
-      <div className="section-container py-16 sm:py-20">
+      <div className="section-container py-10 sm:py-14">
         <p className="text-center text-[11px] font-semibold uppercase tracking-[0.35em] text-brand">
           {t('brand.kicker')}
         </p>
@@ -33,7 +37,7 @@ export default function FeaturedBrandHero({ brand }: { brand: BrandContent }) {
           {brand.name}
         </h1>
         <p className="mt-3 text-center text-sm font-medium text-neutral-500">
-          {brand.tagline}
+          {l(brand.tagline)}
         </p>
 
         {/* Brand introduction video */}
@@ -71,14 +75,14 @@ export default function FeaturedBrandHero({ brand }: { brand: BrandContent }) {
         </div>
 
         {/* Brand philosophy */}
-        {brand.story && (
+        {story && (
           <p className="mx-auto mt-12 max-w-2xl text-center text-base leading-loose text-neutral-700">
-            {brand.story}
+            {story}
           </p>
         )}
-        {brand.philosophy && (
+        {philosophy && (
           <p className="mx-auto mt-6 text-center text-lg font-bold tracking-tight text-neutral-900">
-            {brand.philosophy}
+            {philosophy}
           </p>
         )}
       </div>

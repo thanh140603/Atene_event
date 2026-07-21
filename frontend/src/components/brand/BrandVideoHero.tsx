@@ -3,8 +3,9 @@ import { brandVideos } from '../../lib/homeAssets';
 import { useT } from '../../i18n/LanguageProvider';
 
 /**
- * Opening section: the brand animation video filling the whole section,
- * autoplaying (muted, looped) as soon as the page opens.
+ * Opening section: the brand animation video shown at its natural aspect ratio,
+ * autoplaying (muted, looped) as soon as the page opens. The section is free of a
+ * fixed height so the full frame is always visible — no cropping obscures content.
  */
 export default function BrandVideoHero({ brand }: { brand: BrandContent }) {
   const t = useT();
@@ -15,7 +16,7 @@ export default function BrandVideoHero({ brand }: { brand: BrandContent }) {
       {videoUrl ? (
         <video
           src={videoUrl}
-          className="h-[60vh] w-full object-cover sm:h-[85vh]"
+          className="h-auto w-full"
           autoPlay
           muted
           loop

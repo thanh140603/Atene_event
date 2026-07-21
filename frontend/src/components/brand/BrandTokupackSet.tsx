@@ -1,14 +1,16 @@
 import type { BrandContent } from '../../data/brands';
 import { useT } from '../../i18n/LanguageProvider';
+import { useL } from '../../i18n/localized';
 
 export default function BrandTokupackSet({ brand }: { brand: BrandContent }) {
   const t = useT();
+  const l = useL();
   const { tokupack } = brand;
   const hasItems = tokupack.items.length > 0;
 
   return (
     <section className="bg-neutral-50">
-      <div className="section-container py-20 sm:py-24">
+      <div className="section-container py-12 sm:py-16">
         <h2 className="section-heading">{t('brand.tokupackSet.title')}</h2>
         <div className="heading-rule" />
 
@@ -33,16 +35,16 @@ export default function BrandTokupackSet({ brand }: { brand: BrandContent }) {
           {/* Contents */}
           <div>
             <h3 className="text-xl font-bold text-neutral-900 sm:text-2xl">
-              {tokupack.subtitle || t('brand.tokupackSet.detailsComingSoon')}
+              {l(tokupack.subtitle) || t('brand.tokupackSet.detailsComingSoon')}
             </h3>
 
             <ul className="mt-8 space-y-4">
               {hasItems
-                ? tokupack.items.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
+                ? tokupack.items.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                       <span className="text-sm leading-relaxed text-neutral-700">
-                        {item}
+                        {l(item)}
                       </span>
                     </li>
                   ))
@@ -54,12 +56,50 @@ export default function BrandTokupackSet({ brand }: { brand: BrandContent }) {
                   ))}
             </ul>
 
-            <a
-              href="#/tokupack"
+            {/* Price rows from the set's text file */}
+            {tokupack.pricing?.length ? (
+              <dl className="mt-8 max-w-sm space-y-2 border-t border-neutral-200 pt-6 text-sm">
+                {tokupack.pricing.map((row, i) => (
+                  <div
+                    key={i}
+                    className="flex items-baseline justify-between gap-6"
+                  >
+                    <dt
+                      className={
+                        row.highlight
+                          ? 'font-bold text-neutral-900'
+                          : 'text-neutral-500'
+                      }
+                    >
+                      {l(row.label)}
+                    </dt>
+                    <dd
+                      className={
+                        row.highlight
+                          ? 'text-xl font-extrabold text-brand'
+                          : 'font-semibold text-neutral-700'
+                      }
+                    >
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+
+            {/* Scrolls to the PRODUCT USP section below (plain anchors would
+                change the hash route, so scroll programmatically). */}
+            <button
+              type="button"
+              onClick={() =>
+                document
+                  .getElementById('brand-usp')
+                  ?.scrollIntoView({ behavior: 'smooth' })
+              }
               className="btn-pill mt-10 bg-brand text-white hover:opacity-90"
             >
               {t('brand.explore')}
-            </a>
+            </button>
           </div>
         </div>
       </div>

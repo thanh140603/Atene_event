@@ -31,6 +31,7 @@ export const brandVideos: Record<string, string> = {
   'vt-cosmetics': u(`${V}/VT Cosmetics_웹사이트용 브랜드 소개 영상.mp4`),
   beplain: u(`${V}/Beplain_260714_일본 틱톡샵 _브랜드 소개 영상.mp4`),
   lubylab: u(`${V}/LubyLab.mp4`),
+  'dr-deep': u(`${V}/DrDeep.mp4`),
   dailyweekly: u(`${V}/Daily Weekly 최종본.mp4`),
   babaco: u(`${V}/Babaco_브랜드 광고 홍보영상(1280x840).mp4`),
 };

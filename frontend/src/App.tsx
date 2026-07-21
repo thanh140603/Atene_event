@@ -8,7 +8,9 @@ import LocationPage from './pages/LocationPage';
 import VenueLayoutPage from './pages/VenueLayoutPage';
 import TokupackPage from './pages/TokupackPage';
 import BrandPage from './pages/BrandPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import ReservePage from './pages/ReservePage';
+import AdminPage from './pages/AdminPage';
 
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
@@ -62,14 +64,27 @@ export default function App() {
 
   // The mobile top bar is taller on the homepage (it adds the section-anchor
   // nav row). Standalone pages only get the compact bar.
-  const isHome = !['/tokupack', '/brand/', '/competition', '/location', '/venue', '/reserve']
+  const isHome = !['/tokupack', '/brand/', '/competition', '/location', '/venue', '/reserve', '/admin']
     .some((p) => route.startsWith(p));
 
   if (route.startsWith('/tokupack')) {
     content = <TokupackPage />;
   } else if (route.startsWith('/brand/')) {
-    const slug = route.slice('/brand/'.length).split(/[/?#]/)[0];
-    content = <BrandPage slug={slug} />;
+    // "/brand/:slug" or "/brand/:slug/product/:id"
+    const [slug, sub, productId] = route
+      .slice('/brand/'.length)
+      .split(/[?#]/)[0]
+      .split('/');
+    content =
+      sub === 'product' && productId ? (
+        <ProductDetailPage
+          key={`${slug}/${productId}`}
+          slug={slug}
+          productId={productId}
+        />
+      ) : (
+        <BrandPage slug={slug} />
+      );
   } else if (route.startsWith('/competition')) {
     content = <CompetitionPage />;
   } else if (route.startsWith('/location')) {
@@ -78,6 +93,8 @@ export default function App() {
     content = <VenueLayoutPage />;
   } else if (route.startsWith('/reserve')) {
     content = <ReservePage />;
+  } else if (route.startsWith('/admin')) {
+    content = <AdminPage />;
   } else if (error) {
     content = (
       <div className="flex min-h-screen items-center justify-center p-8 text-center">
@@ -116,6 +133,10 @@ export default function App() {
       </>
     );
   }
+
+  // The admin dashboard is a standalone tool — no site sidebar/offsets.
+  const isAdmin = route.startsWith('/admin');
+  if (isAdmin) return content;
 
   return (
     <>

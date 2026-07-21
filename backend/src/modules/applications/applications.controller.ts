@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('tokupack-applications')
 export class ApplicationsController {
@@ -11,7 +12,9 @@ export class ApplicationsController {
     return this.applicationsService.create(dto);
   }
 
+  // Admin dashboard only — the public site never lists applications.
   @Get()
+  @UseGuards(AdminGuard)
   findAll() {
     return this.applicationsService.findAll();
   }

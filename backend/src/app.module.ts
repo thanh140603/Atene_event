@@ -11,6 +11,7 @@ import { Faq } from './entities/faq.entity';
 import { SocialLink } from './entities/social-link.entity';
 import { Booking } from './entities/booking.entity';
 import { TokupackApplication } from './entities/tokupack-application.entity';
+import { AdminUser } from './entities/admin-user.entity';
 
 import { EventModule } from './modules/event/event.module';
 import { BrandsModule } from './modules/brands/brands.module';
@@ -18,6 +19,7 @@ import { FaqsModule } from './modules/faqs/faqs.module';
 import { SocialModule } from './modules/social/social.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { ApplicationsModule } from './modules/applications/applications.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { SeedModule } from './seed/seed.module';
 
 @Module({
@@ -40,6 +42,7 @@ import { SeedModule } from './seed/seed.module';
         SocialLink,
         Booking,
         TokupackApplication,
+        AdminUser,
       ],
       synchronize: true, // dev convenience — auto-creates schema
       retryAttempts: 15,
@@ -51,6 +54,7 @@ import { SeedModule } from './seed/seed.module';
     SocialModule,
     BookingsModule,
     ApplicationsModule,
+    AuthModule,
     SeedModule,
   ],
 })

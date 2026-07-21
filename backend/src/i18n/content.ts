@@ -137,16 +137,10 @@ const brandTagline: Record<string, ByLang<string>> = {
     en: 'Beauty begins with real care.',
     ko: '아름다움은 진심 어린 케어에서 시작됩니다.',
   },
-  quadthera: {
-    ja: '科学が導く毎日のセラピー',
-    en: 'Science-led daily therapy',
-    ko: '과학이 이끄는 데일리 테라피',
-  },
-  atike: { ja: '洗練された、儀式のようなケア', en: 'Ritual care, refined', ko: '정제된 리추얼 케어' },
-  zipiel: {
-    ja: '密封された新鮮さ、輝く肌',
-    en: 'Sealed freshness, radiant skin',
-    ko: '밀봉된 신선함, 빛나는 피부',
+  celonia: {
+    ja: 'プレミアム エイジングケア ソリューション',
+    en: 'Premium Anti-Aging Solution',
+    ko: '프리미엄 안티에이징 솔루션',
   },
 };
 

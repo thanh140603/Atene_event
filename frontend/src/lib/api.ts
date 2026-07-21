@@ -50,4 +50,22 @@ export const api = {
     if (!res.ok) throw new Error(`Application failed: ${res.status}`);
     return res.json();
   },
+
+  // --- Admin dashboard (bearer-token protected) ---
+  adminLogin: async (email: string, password: string) => {
+    const res = await fetch(`${BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) throw new Error(`Login failed: ${res.status}`);
+    return res.json() as Promise<{ token: string; email: string; role: string }>;
+  },
+  adminGet: async <T>(path: string, token: string): Promise<T> => {
+    const res = await fetch(`${BASE}${path}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
+    return res.json() as Promise<T>;
+  },
 };
