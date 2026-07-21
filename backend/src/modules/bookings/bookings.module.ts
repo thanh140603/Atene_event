@@ -5,9 +5,10 @@ import { Booking } from '../../entities/booking.entity';
 import { BookingsController } from './bookings.controller';
 import { BookingsService } from './bookings.service';
 import { AuthModule } from '../auth/auth.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Booking]), AuthModule, MailModule],
   controllers: [BookingsController],
   providers: [BookingsService],
 })

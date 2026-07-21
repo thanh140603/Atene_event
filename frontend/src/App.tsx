@@ -9,6 +9,7 @@ import VenueLayoutPage from './pages/VenueLayoutPage';
 import TokupackPage from './pages/TokupackPage';
 import BrandPage from './pages/BrandPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import BrandSetPage from './pages/BrandSetPage';
 import ReservePage from './pages/ReservePage';
 import AdminPage from './pages/AdminPage';
 
@@ -70,18 +71,20 @@ export default function App() {
   if (route.startsWith('/tokupack')) {
     content = <TokupackPage />;
   } else if (route.startsWith('/brand/')) {
-    // "/brand/:slug" or "/brand/:slug/product/:id"
-    const [slug, sub, productId] = route
+    // "/brand/:slug", "/brand/:slug/product/:id" or "/brand/:slug/set/:id"
+    const [slug, sub, subId] = route
       .slice('/brand/'.length)
       .split(/[?#]/)[0]
       .split('/');
     content =
-      sub === 'product' && productId ? (
+      sub === 'product' && subId ? (
         <ProductDetailPage
-          key={`${slug}/${productId}`}
+          key={`${slug}/${subId}`}
           slug={slug}
-          productId={productId}
+          productId={subId}
         />
+      ) : sub === 'set' && subId ? (
+        <BrandSetPage key={`${slug}/set/${subId}`} slug={slug} setId={subId} />
       ) : (
         <BrandPage slug={slug} />
       );

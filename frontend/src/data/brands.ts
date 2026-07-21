@@ -68,6 +68,27 @@ export interface ProductShowcase {
   products: ShowcaseProduct[];
 }
 
+/**
+ * One TOKUPACK set of a multi-set brand (`brands/<n>. <Brand>/TOKUPACK SET <x>/`).
+ * Rendered as a card in the brand page's set grid; Explore opens the set's
+ * own sub-page (`#/brand/:slug/set/:id`) = TOKUPACK SET → USP → DETAILS.
+ */
+export interface TokupackSetPage {
+  /** Route id — the delivered set-folder number ("1" / "2" / "3"). */
+  id: string;
+  /** Grid label under the card ("TOKUPACK A"). */
+  label: string;
+  /** Card image on the brand page (the loose `…TPSET_<X>…` file in the brand root). */
+  cardImageUrl: string;
+  /** The sub-page's set section (copy from `<set>/x.1 TOKUPACK SET/text*.txt`). */
+  tokupack: BrandContent['tokupack'];
+  /** The sub-page's USP catalog pages (`<set>/x.2 USP/` — set 1 says "x.1 PRODUCT USP"). */
+  usps: UspCard[];
+  /** Carousel headline + products (`<set>/x.3 DETAILS/`). */
+  productsHeadline?: LocalizedString;
+  products?: BrandProduct[];
+}
+
 /** The featured closing collaboration banner. */
 export interface CollabBanner {
   heading: LocalizedString;
@@ -112,6 +133,13 @@ export interface BrandContent {
     imageUrl?: string;
     link?: string;
   };
+  /**
+   * Multi-set brands (VT, Celonia, Purito): the brand page shows a card grid
+   * (one card per set) instead of the single TOKUPACK SET → USP → carousel
+   * flow, and each set gets its own sub-page at `#/brand/:slug/set/:id`
+   * with exactly that flow. See BRAND_MULTI_SET_LAYOUT.md.
+   */
+  tokupackSets?: TokupackSetPage[];
 
   // --- "featured" layout only (VT, Purito) ---
   /** Secondary hero message shown under the tagline. */
@@ -123,9 +151,6 @@ export interface BrandContent {
   /** Closing collaboration banner. */
   collab?: CollabBanner;
 }
-
-/** Three empty USP tiles — a sensible default until real product shots land. */
-const placeholderUsps: UspCard[] = [{}, {}, {}];
 
 /** The three standard price rows every set's text file uses, pre-localized. */
 const L_REGULAR_PRICE = {
@@ -158,6 +183,140 @@ const u = (p: string) => encodeURI(p);
 const seq = (n: number, f: (i: number) => string) =>
   Array.from({ length: n }, (_, k) => u(f(k + 1)));
 const pad2 = (i: number) => String(i).padStart(2, '0');
+
+/**
+ * VT's リードルショット 100 ships in both TOKUPACK SET 1 and 2 (the delivered
+ * `DETAILS/1` folders are identical copies) — defined once, referenced by both
+ * sets so `#/brand/vt-cosmetics/product/1` stays unambiguous.
+ */
+const VT_REEDLE_S100: BrandProduct = {
+  id: '1',
+  // Name / pricing from `TOKUPACK SET 1/1.3 DETAILS/1/text.txt`.
+  name: {
+    ja: 'リードルショット 100',
+    en: 'Reedle Shot 100',
+    ko: '리들샷 100',
+  },
+  listPrice: '¥3,520',
+  volume: '50ml',
+  imageUrl: u(`${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/1/REEDLE-S100_Sub.jpg`),
+  galleryImages: [
+    u(`${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/1/JP_Thumb/Copy of REEDLE-S100_Sub.jpg`),
+  ],
+  // Pages 6 / 10 / 14 were delivered as GIFs.
+  detailImages: seq(
+    20,
+    (i) =>
+      `${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/1/JP_Detailed/Copy of ${i}.${[6, 10, 14].includes(i) ? 'gif' : 'jpg'}`,
+  ),
+};
+
+/** Celonia's sheet mask ships in TOKUPACK SET 1 and 3 — defined once. */
+const CELONIA_SHEET_MASK: BrandProduct = {
+  id: '1',
+  // Name / pricing from `TOKUPACK SET 1/1.3 DETAILS/1/text.txt`.
+  name: {
+    ja: 'シグネチャーバイオ シートマスク',
+    en: 'Signature Bio Sheet Mask',
+    ko: '시그니처 바이오 시트 마스크',
+  },
+  listPrice: '¥4,400',
+  volume: '33g x 5',
+  // The delivered file name really ends in "l .jpg" (trailing space).
+  imageUrl: u(
+    `${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/1/Copy of Main thumbnail .jpg`,
+  ),
+  galleryImages: [
+    'Copy of Main thumbnail .jpg',
+    'Copy of 3.jpg',
+    'Copy of 4.jpg',
+    'Copy of 5.jpg',
+    'Copy of 6.jpg',
+    'Copy of 7.jpg',
+    'Copy of 8.jpg',
+    'Copy of 9.jpg',
+    'Copy of 10.jpg',
+    'Copy of 11.jpg',
+    'Copy of 12.1.jpg',
+    'Copy of 12.2.jpg',
+    'Copy of 13.jpg',
+  ].map((f) =>
+    u(`${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/1/JP_Thumb/${f}`),
+  ),
+  // Page 15 was delivered as a PNG.
+  detailImages: seq(
+    15,
+    (i) =>
+      `${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/1/JP_Detailed/Copy of ${i}.${i === 15 ? 'png' : 'jpg'}`,
+  ),
+};
+
+/** Celonia's skin booster ships in all three TOKUPACK sets — defined once. */
+const CELONIA_SKIN_BOOSTER: BrandProduct = {
+  id: '2',
+  // Name / pricing from `TOKUPACK SET 1/1.3 DETAILS/2/text.txt`.
+  name: {
+    ja: 'バイオソリューション スキンブースター 10ml',
+    en: 'Bio Solution Skin Booster 10ml',
+    ko: '바이오 솔루션 스킨부스터 10ml',
+  },
+  listPrice: '¥6,050',
+  volume: '10ml',
+  imageUrl: u(`${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/2/Copy of 2.png`),
+  // Some delivered names carry double spaces — kept verbatim.
+  galleryImages: [
+    'Copy of 2.png',
+    'Copy of 3.jpg',
+    'Copy of 7.jpg',
+    'Copy of 8.jpg',
+    'Copy of 9.jpg',
+    'Copy of 10.jpg',
+    'Copy of 11.jpg',
+    'Copy of 13.jpg',
+    'Copy of 13.2.jpg',
+    'Copy of 14.jpg',
+    'Copy of 16.jpg',
+    'Copy of All 2 resize.jpg',
+    'Copy of All 3 resize.jpg',
+    'Copy of all DP resize.jpg',
+    'Copy of CELONIA  resize.jpg',
+    'Copy of Skinbooster resize.jpg',
+    'Copy of Skinbooster  resize.jpg',
+  ].map((f) =>
+    u(`${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/2/JP_Thumb/${f}`),
+  ),
+  // Page 18 was delivered as a PNG.
+  detailImages: seq(
+    18,
+    (i) =>
+      `${BR}/8. Celonia/TOKUPACK SET 1/1.3 DETAILS/2/JP_Detailed/Copy of ${i}.${i === 18 ? 'png' : 'jpg'}`,
+  ),
+};
+
+/** Purito's peel-shot pad ships in TOKUPACK SET 1 and 3 — defined once. */
+const PURITO_PEEL_SHOT: BrandProduct = {
+  id: '3',
+  // Name / pricing from `TOKUPACK SET 1/DETAILS/3/text.txt`.
+  name: {
+    ja: 'ピールショット エクスフォリエイティング パッド',
+    en: 'Peel Shot Exfoliating Pad',
+    ko: '필샷 엑스폴리에이팅 패드',
+  },
+  listPrice: '¥2,875',
+  volume: '64g (8 pads)',
+  imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/3/Copy of 11.png`),
+  galleryImages: [
+    'Copy of 84.png',
+    'Copy of 20251202 퓨리토_00163.jpg',
+    'Copy of 20251202 퓨리토_00541.jpg',
+    'Copy of 20251202 퓨리토_00573.jpg',
+    'Copy of 20251202 퓨리토_00593 1.jpg',
+    'Copy of 20251202 퓨리토_00632.jpg',
+  ].map((f) => u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/3/jp_thumb/${f}`)),
+  detailImages: [
+    u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/3/jp_detailed/Copy of full (5).png`),
+  ],
+};
 
 export const brands: BrandContent[] = [
   {
@@ -300,101 +459,680 @@ export const brands: BrandContent[] = [
   {
     slug: 'purito-seoul',
     name: 'Purito Seoul',
+    logoUrl: u(`${BR}/9. Purito/Copy of Purito.png`),
     tagline: 'From Soil to Seoul',
-    layout: 'featured',
     heroVideoUrl: '',
     heroImageUrl: '',
+    // ja copy from `9. Purito/text2.txt` — line breaks preserved.
     story: {
-      ja: '自然由来の成分と誠実なフォーミュラで、肌にやさしいスキンケアを届ける韓国発のブランド。土から生まれた素材の力で、あなたの毎日にすこやかな美しさを。',
-      en: 'A Korean brand delivering skin-friendly skincare through naturally derived ingredients and honest formulas. With the power of materials born from the soil, it brings healthy beauty to your every day.',
-      ko: '자연 유래 성분과 정직한 포뮬러로 피부에 순한 스킨케어를 선보이는 한국 브랜드. 흙에서 태어난 원료의 힘으로 당신의 매일에 건강한 아름다움을 전합니다.',
+      ja: '自然から、現代Kビューティーの中心・ソウルへ。\n\nPuritoは、自然が持つ健やかな力と、\n一人ひとりの肌状態に寄り添うソウル発の洗練されたスキンケアメソッドを融合し、\nあなたの肌本来の美しさを引き出します。',
+      en: "From nature to Seoul, the heart of modern K-beauty.\n\nPurito fuses the wholesome power of nature with a refined Seoul-born skincare method that attends to each person's skin, drawing out your skin's natural beauty.",
+      ko: '자연에서, 현대 K뷰티의 중심 서울로.\n\nPurito는 자연이 지닌 건강한 힘과\n한 사람 한 사람의 피부 상태에 다가가는 서울발 세련된 스킨케어 메소드를 융합해\n당신의 피부 본연의 아름다움을 이끌어냅니다.',
     },
-    philosophy: {
-      ja: 'すべての肌のためのクリーンビューティー',
-      en: 'Clean beauty for every skin',
-      ko: '모든 피부를 위한 클린 뷰티',
-    },
+    // Not rendered — the multi-set grid replaces the single-set section.
     tokupack: { subtitle: '', items: [] },
     usps: [],
-    tokupackSeries: [
-      { label: 'TOKUPACK A', link: '#/tokupack' },
-      { label: 'TOKUPACK B', link: '#/tokupack' },
-      { label: 'TOKUPACK C', link: '#/tokupack' },
+    // No dedicated set images were delivered — the root `combo<n>.png` files
+    // serve as both the grid card and the sub-page set image.
+    tokupackSets: [
+      {
+        id: '1',
+        label: 'TOKUPACK A',
+        cardImageUrl: u(`${BR}/9. Purito/combo1.png`),
+        // Copy from `TOKUPACK SET 1/Tokupack set1/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: '人気の4ステップスキンケアを1セットで体験。',
+            en: 'Experience the popular 4-step skincare in one set.',
+            ko: '인기 4단계 스킨케어를 한 세트로 체험.',
+          },
+          imageUrl: u(`${BR}/9. Purito/combo1.png`),
+          items: [
+            {
+              ja: 'ピールショットパッド 1箱（8枚）',
+              en: 'Peel Shot Pad, 1 box (8 pads)',
+              ko: '필샷 패드 1박스 (8매)',
+            },
+            {
+              ja: 'マイティバンブー パンテノールクリーム 100ml',
+              en: 'Mighty Bamboo Panthenol Cream 100ml',
+              ko: '마이티 뱀부 판테놀 크림 100ml',
+            },
+            {
+              ja: 'ワンダーリリーフ センテラセラム（無香料）60ml',
+              en: 'Wonder Releaf Centella Serum (Unscented) 60ml',
+              ko: '원더 릴리프 센텔라 세럼 (무향) 60ml',
+            },
+            {
+              ja: 'デイリーソフトタッチ サンスクリーン 60ml',
+              en: 'Daily Soft Touch Sunscreen 60ml',
+              ko: '데일리 소프트터치 선스크린 60ml',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥13,125' },
+            { label: L_LIVE_DISCOUNT, value: '54%OFF' },
+            { label: L_LIVE_PRICE, value: '¥5,999', highlight: true },
+          ],
+        },
+        usps: [
+          { imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/USP/Copy of 1.png`) },
+        ],
+        // Copy from `TOKUPACK SET 1/DETAILS/text2.txt`.
+        productsHeadline: {
+          ja: '世界で愛されるPURITOのベストセラーを厳選。',
+          en: "A curated pick of PURITO's best-sellers loved worldwide.",
+          ko: '전 세계에서 사랑받는 PURITO 베스트셀러를 엄선.',
+        },
+        products: [
+          {
+            id: '1',
+            // Name / pricing from `TOKUPACK SET 1/DETAILS/1/text.txt`.
+            name: {
+              ja: 'マイティバンブー パンテノールクリーム',
+              en: 'Mighty Bamboo Panthenol Cream',
+              ko: '마이티 뱀부 판테놀 크림',
+            },
+            listPrice: '¥3,500',
+            volume: '100ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/Copy of 1.png`),
+            galleryImages: [5, 6, 7, 8, 9, 10].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/JP_Thumb/Copy of ${n}.png`),
+            ),
+            detailImages: [
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/JP_Detailed/Copy of 1.png`),
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/JP_Detailed/Copy of 2.png`),
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/JP_Detailed/Copy of 3.jpg`),
+            ],
+          },
+          {
+            id: '2',
+            // Name / pricing from `TOKUPACK SET 1/DETAILS/2/text.txt`.
+            name: {
+              ja: 'ワンダーリリーフ センテラセラム（無香料）',
+              en: 'Wonder Releaf Centella Serum (Unscented)',
+              ko: '원더 릴리프 센텔라 세럼 (무향)',
+            },
+            listPrice: '¥3,500',
+            volume: '60ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/Copy of 5.png`),
+            galleryImages: [33, 34, 35].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/JP_Thumb/Copy of ${n}.png`),
+            ),
+            detailImages: seq(
+              9,
+              (i) =>
+                `${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/JP_Detailed/Copy of detailpage_언센티드세럼.v.3.1_r${i}_c1.png`,
+            ),
+          },
+          PURITO_PEEL_SHOT,
+          {
+            id: '4',
+            // Name / pricing from `TOKUPACK SET 1/DETAILS/4/text.txt`.
+            name: {
+              ja: 'デイリー ソフトタッチ サンスクリーン',
+              en: 'Daily Soft Touch Sunscreen',
+              ko: '데일리 소프트터치 선스크린',
+            },
+            listPrice: '¥3,250',
+            volume: '60ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/Copy of 9.png`),
+            galleryImages: [67, 69, 70, 71].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/jp_thumb/Copy of ${n}.png`),
+            ),
+            // UUID-named avif/webp pages — delivered order unknown, kept sorted.
+            detailImages: [
+              'Copy of 4f738319-2313-41c1-9688-1d2f5bac4196.avif',
+              'Copy of 6ff39e0d-25e4-4c1e-bf70-27a9e3922591.avif',
+              'Copy of 29a503ff-c1a2-44dd-8c01-e5ae8c12ed55.avif',
+              'Copy of 79fc8780-dc30-43f2-8617-fe3e9f935748.avif',
+              'Copy of 274b82f2-8229-44ea-b596-d45f985132ea.avif',
+              'Copy of 691e5d98-37ef-41da-b506-2c0f840d96bd.webp',
+              'Copy of 4044ccb5-57bd-43af-b97e-836865531345.avif',
+              'Copy of 97954ad4-8ecc-494c-960d-1f3e1c294800.webp',
+              'Copy of 163679e5-3bc7-4f02-b4ea-84f3631b2707.avif',
+              'Copy of 07081745-9db3-41fd-80d2-ca5bf18dece2.avif',
+              'Copy of b6f36cc5-a1c1-4b65-a6cc-c3dd5ec18f84.avif',
+              'Copy of da2bc680-d7d2-4443-8766-83a85eeeba9f.webp',
+              'Copy of ddf30df7-cd05-4e68-a75a-2a0a29cf3333.webp',
+              'Copy of e003f12c-d1c4-40bf-a842-b2a99b8ac693.avif',
+              'Copy of eea822fb-8250-4a5d-a31b-2f9ede285703.avif',
+              'Copy of f0602f2b-6a8c-4e67-b821-24e702abe6f1.webp',
+            ].map((f) =>
+              u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/jp_detailed/${f}`),
+            ),
+          },
+        ],
+      },
+      {
+        id: '2',
+        label: 'TOKUPACK B',
+        cardImageUrl: u(`${BR}/9. Purito/combo2.png`),
+        // Copy from `TOKUPACK SET2/Tokupack set2/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: '肌悩みに合わせて使える高機能美容液セット。',
+            en: 'A high-performance serum set matched to your skin concerns.',
+            ko: '피부 고민에 맞춰 쓰는 고기능 세럼 세트.',
+          },
+          imageUrl: u(`${BR}/9. Purito/combo2.png`),
+          items: [
+            {
+              ja: 'レチノール・レチナール2000 NAD+配合セラム 30ml',
+              en: 'Retinol/Retinal 2000 NAD+ Serum 30ml',
+              ko: '레티놀·레티날 2000 NAD+ 세럼 30ml',
+            },
+            {
+              ja: 'アゼライン酸10% コウジ酸・ティーツリー配合セラム 30ml',
+              en: 'Azelaic Acid 10% Kojic Acid & Tea Tree Serum 30ml',
+              ko: '아젤라익애씨드 10% 코직산·티트리 세럼 30ml',
+            },
+            {
+              ja: 'マルチPDRN コラーゲン・EGF配合セラム 30ml',
+              en: 'Multi PDRN Collagen & EGF Serum 30ml',
+              ko: '멀티 PDRN 콜라겐·EGF 세럼 30ml',
+            },
+            {
+              ja: '＼ GIFT ／ デイリーソフトタッチ サンスティック 20g',
+              en: 'GIFT: Daily Soft Touch Sun Stick 20g',
+              ko: 'GIFT: 데일리 소프트터치 선스틱 20g',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥13,500' },
+            { label: L_LIVE_DISCOUNT, value: '52%OFF' },
+            { label: L_LIVE_PRICE, value: '¥6,500', highlight: true },
+          ],
+        },
+        // The delivered `TOKUPACK SET2/USP/` folder is empty.
+        usps: [],
+        // Copy from `TOKUPACK SET2/DETAILS/text2.txt`.
+        productsHeadline: {
+          ja: '肌悩みに合わせて使える高機能美容液セット。',
+          en: 'A high-performance serum set matched to your skin concerns.',
+          ko: '피부 고민에 맞춰 쓰는 고기능 세럼 세트.',
+        },
+        products: [
+          {
+            id: '5',
+            // Name / pricing from `TOKUPACK SET2/DETAILS/5/text.txt`.
+            name: {
+              ja: 'アゼライン酸10％ コウジ酸·ティーツリー セラム',
+              en: 'Azelaic Acid 10% Kojic Acid & Tea Tree Serum',
+              ko: '아젤라익애씨드 10% 코직산·티트리 세럼',
+            },
+            listPrice: '¥4,500',
+            volume: '30ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/Copy of 6.png`),
+            galleryImages: [56, 75, 76, 78, 79].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/JP_THUMB/Copy of ${n}.png`),
+            ),
+            detailImages: [
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/jp_detailed/Copy of full (2).png`),
+            ],
+          },
+          {
+            id: '6',
+            // Name / pricing from `TOKUPACK SET2/DETAILS/6/text.txt`.
+            name: {
+              ja: 'マルチ PDRN コラーゲン EGF セラム',
+              en: 'Multi PDRN Collagen EGF Serum',
+              ko: '멀티 PDRN 콜라겐 EGF 세럼',
+            },
+            listPrice: '¥4,500',
+            volume: '30ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/6/Copy of 7.png`),
+            galleryImages: [
+              'Copy of 60.png',
+              'Copy of 61.png',
+              'Copy of 62.png',
+              'Copy of 64.png',
+              'Copy of 65.png',
+              'Copy of AMZ_Thumb_PDRN세럼_00_r2_c1.png',
+              'Copy of AMZ_Thumb_PDRN세럼_00_r3_c1.png',
+            ].map((f) =>
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/6/JP_THUMB/${f}`),
+            ),
+            detailImages: [
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/6/JP_DETAILED/Copy of full (4).png`),
+            ],
+          },
+          {
+            id: '7',
+            // Name / pricing from `TOKUPACK SET2/DETAILS/7/text.txt`.
+            name: {
+              ja: 'レチノール·レチナール 2000 NAD+ セラム',
+              en: 'Retinol/Retinal 2000 NAD+ Serum',
+              ko: '레티놀·레티날 2000 NAD+ 세럼',
+            },
+            listPrice: '¥4,500',
+            volume: '30ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/Copy of 8.png`),
+            galleryImages: [54, 66, 67, 69, 70, 71].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/JP_THUMB/Copy of ${n}.png`),
+            ),
+            detailImages: [
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/JP_DETAILED/Copy of full (3).png`),
+            ],
+          },
+          {
+            id: '8',
+            // Name / pricing from `TOKUPACK SET2/DETAILS/8/text.txt`.
+            name: {
+              ja: 'デイリー ソフトタッチ サンスティック',
+              en: 'Daily Soft Touch Sun Stick',
+              ko: '데일리 소프트터치 선스틱',
+            },
+            listPrice: '¥3,250',
+            volume: '20g',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/Copy of 10.png`),
+            galleryImages: [72, 73, 75].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/jp_thumb/Copy of ${n}.png`),
+            ),
+            // The delivered jp_detailed folder is empty — no DETAILS section.
+          },
+        ],
+      },
+      {
+        id: '3',
+        label: 'TOKUPACK C',
+        cardImageUrl: u(`${BR}/9. Purito/combo3.png`),
+        // Copy from `TOKUPACK SET3/TOKUPACK SET3/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: '敏感肌のためのやさしい保湿ケア。',
+            en: 'Gentle moisture care for sensitive skin.',
+            ko: '민감성 피부를 위한 순한 보습 케어.',
+          },
+          imageUrl: u(`${BR}/9. Purito/combo3.png`),
+          items: [
+            {
+              ja: 'ピールショットパッド 1箱（8枚）',
+              en: 'Peel Shot Pad, 1 box (8 pads)',
+              ko: '필샷 패드 1박스 (8매)',
+            },
+            {
+              ja: 'ジェントル エクスフォリエイティング フェイスクレンザー 150ml',
+              en: 'Gentle Exfoliating Face Cleanser 150ml',
+              ko: '젠틀 엑스폴리에이팅 페이스 클렌저 150ml',
+            },
+            {
+              ja: 'PDRN ジェントル リファイニング トナー 200ml',
+              en: 'PDRN Gentle Refining Toner 200ml',
+              ko: 'PDRN 젠틀 리파이닝 토너 200ml',
+            },
+            {
+              ja: 'カーミング ジェルクリーム 100ml',
+              en: 'Calming Gel Cream 100ml',
+              ko: '카밍 젤크림 100ml',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥12,225' },
+            { label: L_LIVE_DISCOUNT, value: '48%OFF' },
+            { label: L_LIVE_PRICE, value: '¥6,333', highlight: true },
+          ],
+        },
+        usps: [
+          { imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/USP/Copy of 3.png`) },
+        ],
+        // Copy from `TOKUPACK SET3/DETAILS/text2.txt`.
+        productsHeadline: {
+          ja: 'オーツ由来成分でうるおいを与え、肌バリアをサポート。',
+          en: 'Oat-derived ingredients deliver moisture and support the skin barrier.',
+          ko: '귀리 유래 성분으로 촉촉함을 주고 피부 장벽을 지원.',
+        },
+        products: [
+          {
+            id: '9',
+            // Name / pricing from `TOKUPACK SET3/DETAILS/9/text.txt`.
+            name: {
+              ja: 'オートイン ジェントル エクスフォリエイティング フェイスクレンザー',
+              en: 'Oat-In Gentle Exfoliating Face Cleanser',
+              ko: '오트인 젠틀 엑스폴리에이팅 페이스 클렌저',
+            },
+            listPrice: '¥3,250',
+            volume: '150ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/Copy of 2.png`),
+            galleryImages: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/jp_thumb/Copy of ${n}.png`),
+            ),
+            // UUID-named avif/webp/png pages — delivered order unknown, kept sorted.
+            detailImages: [
+              'Copy of 5c5a076b-9ca9-4c94-88bd-98d0024ddac0.avif',
+              'Copy of 6b940af1-fe64-4616-b6ad-d374b7cc6085.png',
+              'Copy of 7d447a0f-16b5-4e2c-a196-baf5f41e78e3.avif',
+              'Copy of 9a227838-f9f0-4d24-adb8-a210662a87df.avif',
+              'Copy of 79fc8780-dc30-43f2-8617-fe3e9f935748 (1).avif',
+              'Copy of 97b06e2b-0ed8-45ee-8e51-c178618a51dc.avif',
+              'Copy of 531c8f77-aebb-4bd9-8e65-1508ae0f0baa.avif',
+              'Copy of 912f33f3-13af-4abb-af17-a0839c67b6cf.png',
+              'Copy of 31241833-577a-4ff5-b663-cbedabb53b73.avif',
+              'Copy of e19d0cf6-35ff-4424-bbb3-fe97de4173bd.avif',
+              'Copy of f0602f2b-6a8c-4e67-b821-24e702abe6f1 (2).webp',
+            ].map((f) =>
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/jp_detailed/${f}`),
+            ),
+          },
+          {
+            id: '10',
+            // Name / pricing from `TOKUPACK SET3/DETAILS/10/text.txt`.
+            name: {
+              ja: 'オート PDRN ジェントル リファイニング トナー',
+              en: 'Oat PDRN Gentle Refining Toner',
+              ko: '오트 PDRN 젠틀 리파이닝 토너',
+            },
+            listPrice: '¥3,200',
+            volume: '200ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/Copy of 3.png`),
+            galleryImages: [43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53].map(
+              (n) =>
+                u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/jp_thumb/Copy of ${n}.png`),
+            ),
+            // UUID-named pages, sorted; " (1)" duplicates of pages already in
+            // the list are skipped.
+            detailImages: [
+              'Copy of 0c59d300-d67f-4af4-897c-79400a00afc5.avif',
+              'Copy of 55ee9573-166b-425a-bff5-61176b0400a6.avif',
+              'Copy of 79fc8780-dc30-43f2-8617-fe3e9f935748 (2).avif',
+              'Copy of 82b4e54e-5a97-446c-a58e-2b09b91c3e62.webp',
+              'Copy of 92a03a30-e4ec-4af3-99fc-1e291a340787.webp',
+              'Copy of 2773fd0c-a7c4-4cf2-81a5-dddd0baf881d.avif',
+              'Copy of 29064a0f-f792-42ea-aa27-5bc3ad3bafc0.avif',
+              'Copy of ad37552b-0f13-43de-a29b-5964e06dc393.avif',
+              'Copy of d24d2170-075e-4a75-8201-6f16b8131b24.png',
+              'Copy of f0602f2b-6a8c-4e67-b821-24e702abe6f1 (3).webp',
+            ].map((f) =>
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/jp_detailed/${f}`),
+            ),
+          },
+          {
+            id: '11',
+            // Name / pricing from `TOKUPACK SET3/DETAILS/11/text.txt`.
+            name: {
+              ja: 'オートイン カーミング ジェルクリーム',
+              en: 'Oat-In Calming Gel Cream',
+              ko: '오트인 카밍 젤크림',
+            },
+            listPrice: '¥2,900',
+            volume: '100ml',
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/Copy of 4.png`),
+            galleryImages: [29, 30, 31, 32].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/jp_thumb/Copy of ${n}.png`),
+            ),
+            detailImages: [
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/jp_detailed/Copy of 1.png`),
+              u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/jp_detailed/Copy of 2.png`),
+            ],
+          },
+          PURITO_PEEL_SHOT,
+        ],
+      },
     ],
-    showcase: {
-      heading: {
-        ja: '世界で人気の新商品・ベストセラーを限定でご紹介',
-        en: 'A limited showcase of new arrivals and global best-sellers',
-        ko: '전 세계에서 사랑받는 신제품·베스트셀러를 한정 소개',
-      },
-      products: [{}, {}, {}, {}, {}, {}],
-    },
-    collab: {
-      heading: {
-        ja: 'Purito Seoulとのコラボレーションを始めませんか？',
-        en: 'Ready to start a collaboration with Purito Seoul?',
-        ko: 'Purito Seoul과 컬래버레이션을 시작해 보시겠어요?',
-      },
-      ctaLabel: {
-        ja: '今すぐLivestreamを予約！▶',
-        en: 'Reserve your livestream now! ▶',
-        ko: '지금 바로 라이브 방송 예약! ▶',
-      },
-      ctaHref: '#reserve',
-    },
   },
   {
     slug: 'vt-cosmetics',
     name: 'VT Cosmetics',
+    logoUrl: u(`${BR}/7. VT/Copy of VT.png`),
     tagline: 'In - Vogue and Timeless',
-    layout: 'featured',
     heroVideoUrl: '',
     heroImageUrl: '',
+    // ja copy from `7. VT/text2.txt` — line breaks preserved.
     story: {
-      ja: '肌を大切にする思いと、時代を超えて愛される洗練された商品で、よりあなたらしい毎日を共にするブランド。',
-      en: 'A brand that walks with you through a daily life that is more you — with heartfelt care for the skin and refined products loved across generations.',
-      ko: '피부를 소중히 여기는 마음과 시대를 넘어 사랑받는 세련된 제품으로, 더 나다운 매일을 함께하는 브랜드.',
+      ja: 'VTは、肌を大切にする思いと時代を超えて愛される洗練された商品でよりあなたらしい毎日を共にするブランドです。\n「肌本来の美しさを保つこと」それが私たちVTの求める「美」のあり方です。',
+      en: "VT is a brand that walks with you through a daily life that is more you — with heartfelt care for the skin and refined products loved across generations.\n\"Preserving the skin's natural beauty\" — that is the form of beauty we at VT pursue.",
+      ko: 'VT는 피부를 소중히 여기는 마음과 시대를 넘어 사랑받는 세련된 제품으로 더 나다운 매일을 함께하는 브랜드입니다.\n"피부 본연의 아름다움을 지키는 것" 그것이 우리 VT가 추구하는 "미"의 모습입니다.',
     },
-    philosophy: {
-      ja: '肌本来の美しさを保つこと',
-      en: "Preserving the skin's natural beauty",
-      ko: '피부 본연의 아름다움을 지키는 것',
-    },
+    // Not rendered — the multi-set grid replaces the single-set section.
     tokupack: { subtitle: '', items: [] },
     usps: [],
-    tokupackSeries: [
-      { label: 'TOKUPACK A', link: '#/tokupack' },
-      { label: 'TOKUPACK B', link: '#/tokupack' },
-      { label: 'TOKUPACK C', link: '#/tokupack' },
+    tokupackSets: [
+      {
+        id: '1',
+        label: 'TOKUPACK A',
+        cardImageUrl: u(`${BR}/7. VT/Copy of Copy of VT_TPSET_A_RE.jpg`),
+        // Copy from `TOKUPACK SET 1/1.1 TOKUPACK SET 1/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: '顔＆頭皮のリードルS Wケアセット',
+            en: 'Reedle S double-care set for face & scalp',
+            ko: '얼굴 & 두피 리들S W케어 세트',
+          },
+          imageUrl: u(
+            `${BR}/7. VT/TOKUPACK SET 1/1.1 TOKUPACK SET 1/Copy of VT_TPSET_A_RE.jpg`,
+          ),
+          items: [
+            {
+              ja: 'PDRN+ リードルSブラシヘアセラム 100ml',
+              en: 'PDRN+ Reedle S Brush Hair Serum 100ml',
+              ko: 'PDRN+ 리들S 브러시 헤어 세럼 100ml',
+            },
+            {
+              ja: 'リードル S100 50ml',
+              en: 'Reedle S100 50ml',
+              ko: '리들 S100 50ml',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥6,160' },
+            { label: L_LIVE_DISCOUNT, value: '25%OFF' },
+            { label: L_LIVE_PRICE, value: '¥4,620', highlight: true },
+          ],
+        },
+        usps: [
+          {
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 1/1.1 PRODUCT USP/Copy of 20260713_TTS_POP_01-3.png`,
+            ),
+          },
+        ],
+        // Copy from `TOKUPACK SET 1/1.3 DETAILS/text.txt`.
+        productsHeadline: {
+          ja: '顔と頭皮を同時にケアするVTリードルS Wケアセット。潤いと健やかさを与え、毎日のスキン＆ヘアケアを簡単に。',
+          en: "VT's Reedle S double-care set treats face and scalp at once. It delivers moisture and health, making daily skin & hair care simple.",
+          ko: '얼굴과 두피를 동시에 케어하는 VT 리들S W케어 세트. 촉촉함과 건강함을 주어 매일의 스킨 & 헤어 케어를 간편하게.',
+        },
+        products: [
+          VT_REEDLE_S100,
+          {
+            id: '2',
+            // Name / pricing from `TOKUPACK SET 1/1.3 DETAILS/2/text.txt`.
+            name: {
+              ja: 'PDRN＋リードルショット ブラシヘアセラム',
+              en: 'PDRN+ Reedle Shot Brush Hair Serum',
+              ko: 'PDRN+ 리들샷 브러시 헤어 세럼',
+            },
+            listPrice: '¥2,640',
+            volume: '100ml',
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/2/PDRN+-REEDLE-S-BRUSH-HAIR-SERUM_Sub.jpg`,
+            ),
+            galleryImages: [
+              u(
+                `${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/2/JP_Thumb/Copy of PDRN+-REEDLE-S-BRUSH-HAIR-SERUM_Sub.jpg`,
+              ),
+            ],
+            // `Copy of 18.png` duplicates `Copy of 18.jpg` — jpg sequence used.
+            detailImages: seq(
+              24,
+              (i) =>
+                `${BR}/7. VT/TOKUPACK SET 1/1.3 DETAILS/2/JP_Detailed/Copy of ${i}.jpg`,
+            ),
+          },
+        ],
+      },
+      {
+        id: '2',
+        label: 'TOKUPACK B',
+        cardImageUrl: u(`${BR}/7. VT/Copy of Copy of VT_TPSET_B_RE.jpg`),
+        // Copy from `TOKUPACK SET 2/2.1 TOKUPACK SET/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: 'VTベストセラーセット',
+            en: 'VT best-seller set',
+            ko: 'VT 베스트셀러 세트',
+          },
+          imageUrl: u(
+            `${BR}/7. VT/TOKUPACK SET 2/2.1 TOKUPACK SET/Copy of VT_TPSET_B_RE.jpg`,
+          ),
+          items: [
+            {
+              ja: 'リドルショット100',
+              en: 'Reedle Shot 100',
+              ko: '리들샷 100',
+            },
+            {
+              ja: 'PDRN+カプセルクリーム',
+              en: 'PDRN+ Capsule Cream',
+              ko: 'PDRN+ 캡슐 크림',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥6,160' },
+            { label: L_LIVE_DISCOUNT, value: '25%OFF' },
+            { label: L_LIVE_PRICE, value: '¥4,620', highlight: true },
+          ],
+        },
+        usps: [
+          {
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 2/2.2 USP/Copy of 20260713_TTS_POP_02-3.png`,
+            ),
+          },
+        ],
+        // Copy from `TOKUPACK SET 2/2.3 DETAILS/text.txt`.
+        productsHeadline: {
+          ja: 'このセットで、肌のキメと潤いを整え、毎日のスキンケアと集中保湿を手軽に両立できます。',
+          en: 'This set refines skin texture and moisture, making daily skincare and focused hydration easy to combine.',
+          ko: '이 세트로 피부결과 수분을 정돈해 매일의 스킨케어와 집중 보습을 손쉽게 병행할 수 있습니다.',
+        },
+        products: [
+          VT_REEDLE_S100,
+          {
+            id: '3',
+            // Name / pricing from `TOKUPACK SET 2/2.3 DETAILS/3/text.txt`.
+            name: {
+              ja: 'PDRN＋カプセルクリーム 100',
+              en: 'PDRN+ Capsule Cream 100',
+              ko: 'PDRN+ 캡슐 크림 100',
+            },
+            listPrice: '¥2,640',
+            volume: '50ml',
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 2/2.3 DETAILS/3/PDRN+-CAPSULE-CREAM_Sub.jpg`,
+            ),
+            galleryImages: [
+              u(
+                `${BR}/7. VT/TOKUPACK SET 2/2.3 DETAILS/3/JP_Thumb/PDRN+-CAPSULE-CREAM_Sub.jpg`,
+              ),
+            ],
+            detailImages: seq(
+              13,
+              (i) =>
+                `${BR}/7. VT/TOKUPACK SET 2/2.3 DETAILS/3/JP_Detailed/Copy of ${i}.jpg`,
+            ),
+          },
+        ],
+      },
+      {
+        id: '3',
+        label: 'TOKUPACK C',
+        cardImageUrl: u(`${BR}/7. VT/Copy of Copy of VT_TPSET_C_RE.jpg`),
+        // Copy from `TOKUPACK SET 3/3.1 TOKUPACK SET/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: 'ハリと潤いのある弾力肌セット',
+            en: 'Firm & hydrated bouncy-skin set',
+            ko: '탄력과 촉촉함의 탱탱 피부 세트',
+          },
+          imageUrl: u(
+            `${BR}/7. VT/TOKUPACK SET 3/3.1 TOKUPACK SET/Copy of VT_TPSET_C_RE.jpg`,
+          ),
+          items: [
+            {
+              ja: 'レチナール ペプチド スポットクリーム',
+              en: 'Retinal Peptide Spot Cream',
+              ko: '레티날 펩타이드 스팟 크림',
+            },
+            {
+              ja: 'レチナール ペプチド デイリーマスク（25枚)',
+              en: 'Retinal Peptide Daily Mask (25 sheets)',
+              ko: '레티날 펩타이드 데일리 마스크 (25매)',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥4,840' },
+            { label: L_LIVE_DISCOUNT, value: '25%OFF' },
+            { label: L_LIVE_PRICE, value: '¥3,630', highlight: true },
+          ],
+        },
+        usps: [
+          {
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 3/3.2 USP/Copy of 20260713_TTS_POP_03-3.png`,
+            ),
+          },
+        ],
+        // Copy from `TOKUPACK SET 3/3.3 DETAILS/text (1).txt`.
+        productsHeadline: {
+          ja: '肌のキメを整え、ハリと潤いを与える集中ケアセット',
+          en: 'An intensive-care set that refines skin texture and delivers firmness and moisture',
+          ko: '피부결을 정돈하고 탄력과 수분을 주는 집중 케어 세트',
+        },
+        products: [
+          {
+            id: '4',
+            // Name / pricing from `TOKUPACK SET 3/3.3 DETAILS/4/text.txt`.
+            name: {
+              ja: 'レチナール ペプチド スポットクリーム',
+              en: 'Retinal Peptide Spot Cream',
+              ko: '레티날 펩타이드 스팟 크림',
+            },
+            listPrice: '¥2,200',
+            volume: '15ml',
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/4/RETINAL-PEPTIDE-SPOT-CREAM_Sub.jpg`,
+            ),
+            galleryImages: [
+              u(
+                `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/4/JP_Thumb/RETINAL-PEPTIDE-SPOT-CREAM_Sub.jpg`,
+              ),
+            ],
+            // Pages 3 / 5 were delivered as GIFs.
+            detailImages: seq(
+              6,
+              (i) =>
+                `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/4/JP_Detailed/Copy of ${i}.${[3, 5].includes(i) ? 'gif' : 'jpg'}`,
+            ),
+          },
+          {
+            id: '5',
+            // Name / pricing from `TOKUPACK SET 3/3.3 DETAILS/5/text.txt`.
+            name: {
+              ja: 'レチナール ペプチド デイリーマスク（25枚)',
+              en: 'Retinal Peptide Daily Mask (25 sheets)',
+              ko: '레티날 펩타이드 데일리 마스크 (25매)',
+            },
+            listPrice: '¥2,640',
+            volume: '360g(25ea)',
+            imageUrl: u(
+              `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/5/RETINAL-PEPTIDE-DAILY-MASK_Sub.jpg`,
+            ),
+            galleryImages: [
+              u(
+                `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/5/JP_Thumb/RETINAL-PEPTIDE-DAILY-MASK_Sub.jpg`,
+              ),
+            ],
+            // Pages 3 / 5 / 7 were delivered as GIFs.
+            detailImages: seq(
+              7,
+              (i) =>
+                `${BR}/7. VT/TOKUPACK SET 3/3.3 DETAILS/5/JP_Detailed/Copy of ${i}.${[3, 5, 7].includes(i) ? 'gif' : 'jpg'}`,
+            ),
+          },
+        ],
+      },
     ],
-    showcase: {
-      heading: {
-        ja: '世界で人気の新商品・ベストセラーを限定でご紹介',
-        en: 'A limited showcase of new arrivals and global best-sellers',
-        ko: '전 세계에서 사랑받는 신제품·베스트셀러를 한정 소개',
-      },
-      products: [
-        { name: 'Reedle Shot 100' },
-        { name: 'Spot Cream' },
-        { name: 'PDRN Reedles Brush Hair Serum' },
-        { name: 'Mask' },
-        { name: 'Cream' },
-        {},
-      ],
-    },
-    collab: {
-      heading: {
-        ja: 'VT Cosmeticsとのコラボレーションを始めませんか？',
-        en: 'Ready to start a collaboration with VT Cosmetics?',
-        ko: 'VT Cosmetics와 컬래버레이션을 시작해 보시겠어요?',
-      },
-      ctaLabel: {
-        ja: '今すぐLivestreamを予約！▶',
-        en: 'Reserve your livestream now! ▶',
-        ko: '지금 바로 라이브 방송 예약! ▶',
-      },
-      ctaHref: '#reserve',
-    },
   },
   {
     slug: 'beplain',
@@ -573,7 +1311,7 @@ export const brands: BrandContent[] = [
         },
       ],
       pricing: [
-        { label: L_REGULAR_PRICE, value: '¥9,179' },
+        { label: L_REGULAR_PRICE, value: '¥29,500' },
         { label: L_LIVE_DISCOUNT, value: '50%OFF' },
         { label: L_LIVE_PRICE, value: '¥14,750', highlight: true },
       ],
@@ -885,8 +1623,11 @@ export const brands: BrandContent[] = [
       en: 'Instant cool-down, lasting hydration. A 3-step cooling routine that protects summer skin.',
       ko: '순간 쿨다운, 촉촉함은 그대로. 여름 피부를 지키는 3단계 쿨링 케어.',
     },
-    // `PRODUCT USP/` was delivered empty — placeholder grid until pages land.
-    usps: placeholderUsps,
+    usps: [
+      {
+        imageUrl: u(`${BR}/3. Daily Weekly/PRODUCT USP/일본소싱행사_A4_최종.jpg`),
+      },
+    ],
     products: [
       {
         id: '1',
@@ -1069,10 +1810,192 @@ export const brands: BrandContent[] = [
   {
     slug: 'celonia',
     name: 'Celonia',
+    logoUrl: u(`${BR}/8. Celonia/Copy of Celonia.png`),
     tagline: 'Premium Anti-Aging Solution',
-    story: '',
+    // ja copy from `8. Celonia/text2.txt` — paragraph break preserved.
+    story: {
+      ja: 'セロニアはグローバルバイオ企業メディポストが研究・生産した成分を核にお肌本来の美しさを引き出すスキンケアブランドです。\n\n瞬間の美しさではなく、時間の流れの中でも変わらない美しさを目指します。',
+      en: "Celonia is a skincare brand that draws out the skin's natural beauty, built around ingredients researched and produced by the global bio company Medipost.\n\nWe aim not for momentary beauty, but for beauty that stays unchanged through the passage of time.",
+      ko: '셀로니아는 글로벌 바이오 기업 메디포스트가 연구·생산한 성분을 핵심으로 피부 본연의 아름다움을 이끌어내는 스킨케어 브랜드입니다.\n\n순간의 아름다움이 아닌, 시간의 흐름 속에서도 변하지 않는 아름다움을 지향합니다.',
+    },
+    // Not rendered — the multi-set grid replaces the single-set section.
     tokupack: { subtitle: '', items: [] },
-    usps: placeholderUsps,
+    usps: [],
+    // The delivered `x.2 USP` folders are all empty → the USP section hides.
+    tokupackSets: [
+      {
+        id: '1',
+        label: 'TOKUPACK A',
+        cardImageUrl: u(
+          `${BR}/8. Celonia/Copy of KakaoTalk_Photo_2026-07-21-13-55-38 001.png`,
+        ),
+        // Copy from `TOKUPACK SET 1/1.1 TOKUPACK SET 1/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: 'シワ改善・コラーゲンブースト ミニルーティン',
+            en: 'Wrinkle-improving, collagen-boost mini routine',
+            ko: '주름 개선·콜라겐 부스트 미니 루틴',
+          },
+          imageUrl: u(
+            `${BR}/8. Celonia/TOKUPACK SET 1/1.1 TOKUPACK SET 1/KakaoTalk_Photo_2026-07-21-13-55-38 001.png`,
+          ),
+          items: [
+            {
+              ja: 'シグネチャーバイオ シートマスク 33g x 5',
+              en: 'Signature Bio Sheet Mask 33g x 5',
+              ko: '시그니처 바이오 시트 마스크 33g x 5',
+            },
+            {
+              ja: 'バイオソリューション スキンブースター 10ml',
+              en: 'Bio Solution Skin Booster 10ml',
+              ko: '바이오 솔루션 스킨부스터 10ml',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥10,450' },
+            { label: L_LIVE_DISCOUNT, value: '32%OFF' },
+            { label: L_LIVE_PRICE, value: '¥7,106', highlight: true },
+          ],
+        },
+        usps: [],
+        // Copy from `TOKUPACK SET 1/1.3 DETAILS/text.txt`.
+        productsHeadline: {
+          ja: '潤いとハリを与えるスキンブースター＋集中マスクのミニルーティン',
+          en: 'A mini routine of skin booster + intensive mask for moisture and firmness',
+          ko: '촉촉함과 탄력을 주는 스킨부스터＋집중 마스크 미니 루틴',
+        },
+        products: [CELONIA_SHEET_MASK, CELONIA_SKIN_BOOSTER],
+      },
+      {
+        id: '2',
+        label: 'TOKUPACK B',
+        cardImageUrl: u(
+          `${BR}/8. Celonia/Copy of KakaoTalk_Photo_2026-07-21-13-55-38 003.png`,
+        ),
+        // Copy from `TOKUPACK SET 2/2.1 TOKUPACK SET 2/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: '【1+1】NGF37 100,000ppm スキンブースター',
+            en: '[1+1] NGF37 100,000ppm Skin Booster',
+            ko: '【1+1】NGF37 100,000ppm 스킨부스터',
+          },
+          imageUrl: u(
+            `${BR}/8. Celonia/TOKUPACK SET 2/2.1 TOKUPACK SET 2/KakaoTalk_Photo_2026-07-21-13-55-38 003.png`,
+          ),
+          items: [
+            {
+              ja: 'バイオソリューション スキンブースター 10ml x 2ea',
+              en: 'Bio Solution Skin Booster 10ml x 2ea',
+              ko: '바이오 솔루션 스킨부스터 10ml x 2ea',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥12,100' },
+            { label: L_LIVE_DISCOUNT, value: '35%OFF' },
+            { label: L_LIVE_PRICE, value: '¥7,865', highlight: true },
+          ],
+        },
+        usps: [],
+        // Copy from `TOKUPACK SET 2/2.3 DETAILS/text.txt`.
+        productsHeadline: {
+          ja: 'みずみずしい潤いで肌にハリを与え、毎日のスキンケアで透明感あふれる素肌へ導くスキンブースター',
+          en: 'A skin booster that firms with fresh moisture, guiding skin to overflowing clarity through daily care',
+          ko: '싱그러운 수분으로 피부에 탄력을 주고, 매일의 스킨케어로 투명감 넘치는 맨살로 이끄는 스킨부스터',
+        },
+        products: [CELONIA_SKIN_BOOSTER],
+      },
+      {
+        id: '3',
+        label: 'TOKUPACK C',
+        cardImageUrl: u(
+          `${BR}/8. Celonia/Copy of KakaoTalk_Photo_2026-07-21-13-55-38 002.png`,
+        ),
+        // Copy from `TOKUPACK SET 3/3.1 TOKUPACK SET 3/text (1).txt`.
+        tokupack: {
+          subtitle: {
+            ja: 'NGF37 プレミアムブーストセット',
+            en: 'NGF37 Premium Boost Set',
+            ko: 'NGF37 프리미엄 부스트 세트',
+          },
+          imageUrl: u(
+            `${BR}/8. Celonia/TOKUPACK SET 3/3.1 TOKUPACK SET 3/KakaoTalk_Photo_2026-07-21-13-55-38 002.png`,
+          ),
+          items: [
+            {
+              ja: 'シグネチャーバイオ 3Dオーロラ アンプル 35ml',
+              en: 'Signature Bio 3D Aurora Ampoule 35ml',
+              ko: '시그니처 바이오 3D 오로라 앰플 35ml',
+            },
+            {
+              ja: 'バイオソリューション スキンブースター 10ml',
+              en: 'Bio Solution Skin Booster 10ml',
+              ko: '바이오 솔루션 스킨부스터 10ml',
+            },
+            {
+              ja: 'GIFT: シグネチャーバイオ シートマスク 33g x 5',
+              en: 'GIFT: Signature Bio Sheet Mask 33g x 5',
+              ko: 'GIFT: 시그니처 바이오 시트 마스크 33g x 5',
+            },
+          ],
+          pricing: [
+            { label: L_REGULAR_PRICE, value: '¥21,340' },
+            { label: L_LIVE_DISCOUNT, value: '40%OFF' },
+            { label: L_LIVE_PRICE, value: '¥12,804', highlight: true },
+          ],
+        },
+        usps: [],
+        // Copy from `TOKUPACK SET 3/3.3 DETAILS/text.txt`.
+        productsHeadline: {
+          ja: '潤いとハリを与えるアンプル＋スキンブースター＆集中マスクセット',
+          en: 'An ampoule + skin booster & intensive mask set for moisture and firmness',
+          ko: '촉촉함과 탄력을 주는 앰플＋스킨부스터 & 집중 마스크 세트',
+        },
+        products: [
+          {
+            id: '3',
+            // Name / pricing from `TOKUPACK SET 3/3.3 DETAILS/3/text.txt`.
+            name: {
+              ja: 'シグネチャーバイオ 3Dオーロラ アンプル 35ml',
+              en: 'Signature Bio 3D Aurora Ampoule 35ml',
+              ko: '시그니처 바이오 3D 오로라 앰플 35ml',
+            },
+            listPrice: '¥15,290',
+            volume: '35ml',
+            imageUrl: u(
+              `${BR}/8. Celonia/TOKUPACK SET 3/3.3 DETAILS/3/Copy of 1.jpg`,
+            ),
+            galleryImages: [
+              'Copy of 1.jpg',
+              'Copy of 3.jpg',
+              'Copy of 4.jpg',
+              'Copy of 8.jpg',
+              'Copy of 9.jpg',
+              'Copy of 11.jpg',
+              'Copy of 12.jpg',
+              'Copy of 13.jpg',
+              'Copy of 14.jpg',
+              'Copy of 15.jpg',
+              'Copy of 16.1.jpg',
+              'Copy of 16.2.jpg',
+              'Copy of All 2 resize.jpg',
+              'Copy of All 3 resize.jpg',
+              'Copy of all DP resize.jpg',
+              'Copy of CELONIA  resize.jpg',
+            ].map((f) =>
+              u(`${BR}/8. Celonia/TOKUPACK SET 3/3.3 DETAILS/3/JP_Thumb/${f}`),
+            ),
+            // Mixed jpg/png sequence exactly as delivered.
+            detailImages: seq(
+              19,
+              (i) =>
+                `${BR}/8. Celonia/TOKUPACK SET 3/3.3 DETAILS/3/JP_Detailed/Copy of ${i}.${[3, 4, 5, 6, 8, 9, 19].includes(i) ? 'png' : 'jpg'}`,
+            ),
+          },
+          CELONIA_SKIN_BOOSTER,
+          CELONIA_SHEET_MASK,
+        ],
+      },
+    ],
   },
 ];
 
@@ -1084,5 +2007,18 @@ export function getProduct(
   slug: string,
   productId: string,
 ): BrandProduct | undefined {
-  return getBrand(slug)?.products?.find((p) => p.id === productId);
+  const brand = getBrand(slug);
+  return (
+    brand?.products?.find((p) => p.id === productId) ??
+    brand?.tokupackSets
+      ?.flatMap((s) => s.products ?? [])
+      .find((p) => p.id === productId)
+  );
+}
+
+export function getTokupackSet(
+  slug: string,
+  setId: string,
+): TokupackSetPage | undefined {
+  return getBrand(slug)?.tokupackSets?.find((s) => s.id === setId);
 }

@@ -39,7 +39,9 @@ export default function BrandProductsCarousel({
   const products = brand.products ?? [];
   const count = products.length;
   const perView = usePerView();
-  const looping = count > 1;
+  // Only behave like a carousel when there are more products than fit —
+  // otherwise the cards just sit centered with no arrows/dots.
+  const looping = count > perView;
 
   // Leftmost visible slide on the extended track [lastN, ...products, firstN].
   const [index, setIndex] = useState(perView);
@@ -91,7 +93,15 @@ export default function BrandProductsCarousel({
   return (
     <section className="bg-white">
       <div className="section-container py-12 sm:py-16">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-3">
+        {/* With few products (no carousel) the text column widens and the
+            whole text+cards group hugs the center instead of spreading out. */}
+        <div
+          className={`grid grid-cols-1 items-center gap-10 ${
+            looping
+              ? 'lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-3'
+              : 'lg:grid-cols-[minmax(0,26rem)_auto] lg:justify-center lg:gap-14'
+          }`}
+        >
           {/* Lineup headline — only the copy delivered in `DETAILS/text.txt` */}
           <div className="lg:self-start">
             {brand.productsHeadline && (
@@ -103,21 +113,22 @@ export default function BrandProductsCarousel({
 
           {/* Arrows + sliding window of product cards */}
           <div className="flex items-center gap-3 sm:gap-5">
-            <button
-              type="button"
-              onClick={prev}
-              disabled={!looping}
-              aria-label={t('brand.productList.prev')}
-              className={arrowClass}
-            >
-              <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            {looping && (
+              <button
+                type="button"
+                onClick={prev}
+                aria-label={t('brand.productList.prev')}
+                className={arrowClass}
+              >
+                <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
 
             <div className="min-w-0 flex-1 overflow-hidden">
               <div
-                className={`flex ${animate ? 'transition-transform duration-500 ease-out' : ''}`}
+                className={`flex ${looping ? '' : 'justify-center'} ${animate ? 'transition-transform duration-500 ease-out' : ''}`}
                 style={{
                   transform: `translateX(-${(looping ? index : 0) * (100 / perView)}%)`,
                 }}
@@ -126,7 +137,9 @@ export default function BrandProductsCarousel({
                 {slides.map((p, i) => (
                   <div
                     key={i}
-                    className="w-full shrink-0 px-2 sm:w-1/2 lg:w-1/3"
+                    className={`w-full shrink-0 px-2 sm:w-1/2 ${
+                      looping ? 'lg:w-1/3' : 'lg:w-72'
+                    }`}
                   >
                     <img
                       src={p.imageUrl}
@@ -145,17 +158,18 @@ export default function BrandProductsCarousel({
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={next}
-              disabled={!looping}
-              aria-label={t('brand.productList.next')}
-              className={arrowClass}
-            >
-              <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {looping && (
+              <button
+                type="button"
+                onClick={next}
+                aria-label={t('brand.productList.next')}
+                className={arrowClass}
+              >
+                <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 

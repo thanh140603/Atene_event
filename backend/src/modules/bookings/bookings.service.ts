@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Booking } from '../../entities/booking.entity';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { MailService } from '../mail/mail.service';
 
 interface Identity {
   email: string;
@@ -18,6 +19,7 @@ export class BookingsService {
   constructor(
     @InjectRepository(Booking)
     private readonly bookingRepo: Repository<Booking>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(dto: CreateBookingDto) {
@@ -29,7 +31,12 @@ export class BookingsService {
       dates: dto.dates,
       slots: dto.slots,
     });
-    return this.bookingRepo.save(booking);
+    const saved = await this.bookingRepo.save(booking);
+
+    // Fire-and-forget: a failed email must not fail the booking.
+    void this.mailService.sendBookingConfirmation(saved);
+
+    return saved;
   }
 
   findAll() {

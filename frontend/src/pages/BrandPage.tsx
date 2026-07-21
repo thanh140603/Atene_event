@@ -2,6 +2,7 @@ import TokuPackLogo from '../components/TokuPackLogo';
 import BrandVideoHero from '../components/brand/BrandVideoHero';
 import BrandIntro from '../components/brand/BrandIntro';
 import BrandTokupackSet from '../components/brand/BrandTokupackSet';
+import BrandTokupackSetsGrid from '../components/brand/BrandTokupackSetsGrid';
 import BrandProductsUsp from '../components/brand/BrandProductsUsp';
 import BrandProductsCarousel from '../components/brand/BrandProductsCarousel';
 import BrandSingleProduct from '../components/brand/BrandSingleProduct';
@@ -45,6 +46,15 @@ export default function BrandPage({ slug }: { slug: string }) {
               <FeaturedTokupackSeries brand={brand} />
               <FeaturedProductShowcase brand={brand} />
               <FeaturedCollabCta brand={brand} />
+            </>
+          ) : brand.tokupackSets?.length ? (
+            /* Multi-set brands: video + intro, then the set card grid —
+               each set's full content lives on its own sub-page. */
+            <>
+              <BrandVideoHero brand={brand} />
+              <BrandIntro brand={brand} />
+              <BrandTokupackSetsGrid brand={brand} />
+              <BrandCta brand={brand} />
             </>
           ) : (
             <>
