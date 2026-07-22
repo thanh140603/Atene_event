@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+
 import { useT } from '../../i18n/LanguageProvider';
 
 interface Row {
@@ -19,23 +21,36 @@ const criteriaKeys = ['c1', 'c2', 'c3'];
 
 export default function RankingCriteria() {
   const t = useT();
+
+  // Fill the leaderboard bars only once they scroll into view.
+  const boardRef = useRef<HTMLUListElement>(null);
+  const [barsVisible, setBarsVisible] = useState(false);
+  useEffect(() => {
+    const el = boardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setBarsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="bg-white">
-      <div className="section-container py-20 sm:py-24">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
-              {t('competition.ranking.kicker')}
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-              {t('competition.ranking.title.l1')}
-              <br />
-              {t('competition.ranking.title.l2')}
-            </h2>
-          </div>
-          <p className="max-w-xs text-xs leading-relaxed text-neutral-400 sm:text-right">
-            {t('competition.ranking.intro')}
+      <div className="section-container py-10 sm:py-12">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
+            {t('competition.ranking.kicker')}
           </p>
+          <h2 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-3xl">
+            {t('competition.ranking.title')}
+          </h2>
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-2">
@@ -51,8 +66,8 @@ export default function RankingCriteria() {
               </span>
             </div>
 
-            <ul className="mt-8 space-y-6">
-              {rows.map((r) => (
+            <ul ref={boardRef} className="mt-8 space-y-6">
+              {rows.map((r, i) => (
                 <li key={r.rank}>
                   <div className="flex items-center gap-4">
                     <span className="w-6 text-sm font-bold text-brand">
@@ -67,8 +82,11 @@ export default function RankingCriteria() {
                   </div>
                   <div className="ml-10 mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-200">
                     <div
-                      className="h-full rounded-full bg-brand"
-                      style={{ width: `${r.pct}%` }}
+                      className="h-full rounded-full bg-brand transition-[width] duration-700 ease-out motion-reduce:transition-none"
+                      style={{
+                        width: barsVisible ? `${r.pct}%` : '0%',
+                        transitionDelay: `${i * 120}ms`,
+                      }}
                     />
                   </div>
                 </li>

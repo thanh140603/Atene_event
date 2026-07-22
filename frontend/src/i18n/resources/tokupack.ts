@@ -45,7 +45,7 @@ export const tokupack: ResourcePack = {
         preferredBrand: {
           label:
             'イベント当日、どのブランドの「Tokupack」を一番受け取りたいですか？',
-          error: '1つ選択してください。',
+          error: '1つ以上選択してください。',
           otherPlaceholder: 'その他の内容をご記入ください',
           otherError: '内容を入力してください。',
         },
@@ -67,7 +67,7 @@ export const tokupack: ResourcePack = {
         success: {
           title: '送信ありがとうございました',
           message:
-            'TOKUPACKのリクエストを受け付けました。イベント当日の詳細はご登録のメールアドレスにご案内します。',
+            '🎁 TOKUPACKのリクエストを受け付けました。イベント当日にお会いできるのを楽しみにしています！',
           back: '← イベントページに戻る',
         },
       },
@@ -117,7 +117,7 @@ export const tokupack: ResourcePack = {
         preferredBrand: {
           label:
             'On the event day, which brand’s "Tokupack" would you most like to receive?',
-          error: 'Please select one option.',
+          error: 'Please select at least one.',
           otherPlaceholder: 'Please describe your choice',
           otherError: 'Please enter the details.',
         },
@@ -139,7 +139,7 @@ export const tokupack: ResourcePack = {
         success: {
           title: 'Thank you for your submission',
           message:
-            'We have received your TOKUPACK request. Details for the event day will be sent to your registered email address.',
+            '🎁 We have received your TokuPack request. We look forward to seeing you at the event!',
           back: '← Back to the event page',
         },
       },
@@ -189,7 +189,7 @@ export const tokupack: ResourcePack = {
         preferredBrand: {
           label:
             '이벤트 당일에 어떤 브랜드의 "Tokupack"을 가장 받고 싶으신가요?',
-          error: '하나를 선택해 주세요.',
+          error: '하나 이상 선택해 주세요.',
           otherPlaceholder: '기타 내용을 입력해 주세요',
           otherError: '내용을 입력해 주세요.',
         },
@@ -211,7 +211,7 @@ export const tokupack: ResourcePack = {
         success: {
           title: '보내주셔서 감사합니다',
           message:
-            'TOKUPACK 요청을 접수했습니다. 이벤트 당일 상세 안내는 등록하신 이메일 주소로 보내드립니다.',
+            '🎁 TOKUPACK 요청을 접수했습니다. 이벤트 당일에 뵙게 되기를 기대합니다!',
           back: '← 이벤트 페이지로 돌아가기',
         },
       },

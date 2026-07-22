@@ -30,7 +30,7 @@ const SPECIAL_LABEL_KEYS: Record<string, string> = {
   [OTHER_COLLAB]: 'tokupack.form.options.otherCollab',
 };
 
-// Q3 — single choice: brands + specials (mirrors the Google Form exactly)
+// Q3 — multiple choice: brands + specials
 const PREFERRED_OPTIONS = [...BRANDS, ALL_BRANDS, OTHER];
 
 // Q4 — multiple choice: brands + specials
@@ -67,7 +67,7 @@ export default function TokupackForm() {
   const [name, setName] = useState('');
   const [tiktokId, setTiktokId] = useState('');
   const [email, setEmail] = useState('');
-  const [preferredBrand, setPreferredBrand] = useState('');
+  const [preferredBrands, setPreferredBrands] = useState<string[]>([]);
   const [preferredBrandOther, setPreferredBrandOther] = useState('');
   const [liveCommerceBrands, setLiveCommerceBrands] = useState<string[]>([]);
   const [comment, setComment] = useState('');
@@ -75,13 +75,15 @@ export default function TokupackForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const toggleLiveBrand = (value: string) => {
-    setLiveCommerceBrands((prev) =>
-      prev.includes(value)
-        ? prev.filter((v) => v !== value)
-        : [...prev, value],
-    );
-  };
+  const toggleIn =
+    (set: React.Dispatch<React.SetStateAction<string[]>>) => (value: string) =>
+      set((prev) =>
+        prev.includes(value)
+          ? prev.filter((v) => v !== value)
+          : [...prev, value],
+      );
+  const togglePreferredBrand = toggleIn(setPreferredBrands);
+  const toggleLiveBrand = toggleIn(setLiveCommerceBrands);
 
   const validate = () => {
     const next: Record<string, string> = {};
@@ -89,9 +91,9 @@ export default function TokupackForm() {
     if (!tiktokId.trim()) next.tiktokId = t('tokupack.form.tiktokId.error');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       next.email = t('tokupack.form.email.error');
-    if (!preferredBrand)
+    if (preferredBrands.length === 0)
       next.preferredBrand = t('tokupack.form.preferredBrand.error');
-    if (preferredBrand === OTHER && !preferredBrandOther.trim())
+    if (preferredBrands.includes(OTHER) && !preferredBrandOther.trim())
       next.preferredBrandOther = t('tokupack.form.preferredBrand.otherError');
     if (liveCommerceBrands.length === 0)
       next.liveCommerceBrands = t('tokupack.form.liveCommerce.error');
@@ -108,9 +110,11 @@ export default function TokupackForm() {
         name: name.trim(),
         tiktokId: tiktokId.trim(),
         email: email.trim(),
-        preferredBrand,
-        preferredBrandOther:
-          preferredBrand === OTHER ? preferredBrandOther.trim() : '',
+        // The API stores a single string — multiple picks are comma-joined.
+        preferredBrand: preferredBrands.join(', '),
+        preferredBrandOther: preferredBrands.includes(OTHER)
+          ? preferredBrandOther.trim()
+          : '',
         liveCommerceBrands,
         comment: comment.trim() || undefined,
       });
@@ -206,31 +210,33 @@ export default function TokupackForm() {
             )}
           </div>
 
-          {/* Q3 — preferred brand (single) */}
+          {/* Q3 — preferred brands (multiple) */}
           <div className="mt-8">
             <Label required>{t('tokupack.form.preferredBrand.label')}</Label>
+            <p className="mt-1 text-xs text-neutral-400">
+              {t('tokupack.form.liveCommerce.help')}
+            </p>
             <div className="mt-3 space-y-2">
               {PREFERRED_OPTIONS.map((opt) => (
                 <label
                   key={opt}
                   className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-sm transition ${
-                    preferredBrand === opt
+                    preferredBrands.includes(opt)
                       ? 'border-[#2f6bff] bg-[#2f6bff]/5'
                       : 'border-neutral-200 hover:border-neutral-300'
                   }`}
                 >
                   <input
-                    type="radio"
-                    name="preferredBrand"
+                    type="checkbox"
                     className="accent-[#2f6bff]"
-                    checked={preferredBrand === opt}
-                    onChange={() => setPreferredBrand(opt)}
+                    checked={preferredBrands.includes(opt)}
+                    onChange={() => togglePreferredBrand(opt)}
                   />
                   <span>{optionLabel(opt)}</span>
                 </label>
               ))}
             </div>
-            {preferredBrand === OTHER && (
+            {preferredBrands.includes(OTHER) && (
               <input
                 className={`mt-3 ${inputClass}`}
                 value={preferredBrandOther}

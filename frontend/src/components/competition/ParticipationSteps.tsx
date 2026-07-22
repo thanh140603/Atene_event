@@ -51,16 +51,14 @@ export default function ParticipationSteps() {
   const t = useT();
   return (
     <section className="bg-white">
-      <div className="section-container py-20 sm:py-24">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-            {t('competition.steps.title.l1')}
-            <br />
-            {t('competition.steps.title.l2')}
-          </h2>
-          <p className="max-w-xs text-xs leading-relaxed text-neutral-400 sm:text-right">
-            {t('competition.steps.intro')}
+      <div className="section-container py-10 sm:py-12">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
+            {t('competition.steps.kicker')}
           </p>
+          <h2 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-3xl">
+            {t('competition.steps.title')}
+          </h2>
         </div>
 
         <div className="relative mt-16">

@@ -113,21 +113,19 @@ export default function WhatYouCanWin() {
   const t = useT();
   return (
     <section className="bg-white">
-      <div className="section-container py-20 sm:py-24">
+      <div className="section-container py-10 sm:py-12">
         <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
           {t('competition.rewards.kicker')}
         </p>
-        <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-5xl">
-          {t('competition.rewards.title.l1')}
-          <br />
-          {t('competition.rewards.title.l2')}
+        <h2 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-3xl">
+          {t('competition.rewards.title')}
         </h2>
         <div className="mt-6 h-px w-full bg-neutral-200" />
 
         <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-400">
           {t('competition.rewards.forTop5')}
         </p>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-neutral-600">
+        <p className="mt-4 text-sm leading-relaxed text-neutral-600">
           {t('competition.rewards.lead')}
         </p>
 
@@ -147,9 +145,6 @@ export default function WhatYouCanWin() {
           ))}
         </div>
 
-        <p className="mt-14 text-center text-[11px] font-semibold uppercase tracking-[0.4em] text-brand">
-          {t('competition.rewards.entryNowOpen')}
-        </p>
       </div>
     </section>
   );

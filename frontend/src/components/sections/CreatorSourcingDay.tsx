@@ -14,7 +14,7 @@ export default function CreatorSourcingDay({ event }: { event: EventInfo }) {
             alt={t('home.creator.imageAlt')}
             className="h-full w-full object-cover"
           />
-          <span className="absolute left-6 top-6 text-sm font-medium tracking-[0.3em] text-white/90 mix-blend-difference">
+          <span className="absolute left-1/2 top-8 -translate-x-1/2 whitespace-nowrap text-xl font-semibold tracking-[0.35em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)] sm:text-2xl [text-indent:0.35em]">
             {t('home.creator.tokyoTag')}
           </span>
         </div>

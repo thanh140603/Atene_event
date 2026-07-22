@@ -58,7 +58,9 @@ export default function App() {
   // anchor links (#about, #how, …) are left alone so they scroll to their target.
   const pageKey = route.startsWith('/') ? route.split(/[?#]/)[0] : '';
   useEffect(() => {
-    if (pageKey) window.scrollTo(0, 0);
+    // "instant" bypasses the global `scroll-behavior: smooth`, so new pages
+    // open at the top with no scroll animation.
+    if (pageKey) window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pageKey]);
 
   let content: JSX.Element;

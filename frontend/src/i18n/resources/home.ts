@@ -78,6 +78,8 @@ export const home: ResourcePack = {
         evening: '夜',
         clearDay: '時間をクリア',
         totalSummary: '{hours}時間 · {days}日',
+        incompleteDays:
+          '次の日付の時間帯がまだ選択されていません: {dates}。選択したすべての日付の時間帯を選んでから予約してください。',
       },
       location: {
         heading: 'アクセス・会場',
@@ -182,6 +184,8 @@ export const home: ResourcePack = {
         evening: 'Evening',
         clearDay: 'Clear hours',
         totalSummary: '{hours} hour(s) · {days} day(s)',
+        incompleteDays:
+          'These days still need a time slot: {dates}. Please select at least one hour for every selected day before booking.',
       },
       location: {
         heading: 'Access & Location',
@@ -285,6 +289,8 @@ export const home: ResourcePack = {
         evening: '저녁',
         clearDay: '시간 지우기',
         totalSummary: '{hours}시간 · {days}일',
+        incompleteDays:
+          '다음 날짜에 시간대가 아직 선택되지 않았습니다: {dates}. 선택한 모든 날짜에 시간대를 하나 이상 선택한 후 예약하세요.',
       },
       location: {
         heading: '오시는 길 · 장소',

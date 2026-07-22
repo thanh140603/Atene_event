@@ -126,15 +126,45 @@ export class SeedService implements OnApplicationBootstrap {
 
   private async seedFaqs() {
     if ((await this.faqRepo.count()) > 0) return;
-    const answer =
-      'A 2-3 line sentence about answering the question ect ect ect filler text goes here ect ect……';
     await this.faqRepo.save([
-      { question: 'How do I receive my TokuPack?', answer, sortOrder: 1 },
-      { question: 'Who can join Creator Sourcing Day?', answer, sortOrder: 2 },
-      { question: 'When is the livestream campaign period?', answer, sortOrder: 3 },
-      { question: 'How do I book a livestream slot?', answer, sortOrder: 4 },
-      { question: 'What rewards can creators earn?', answer, sortOrder: 5 },
-      { question: 'Where is the offline event held?', answer, sortOrder: 6 },
+      {
+        question: 'How can I participate in the livestream campaign?',
+        answer:
+          'After attending Creator Sourcing Day and choosing your preferred TokuPack(s), simply book your livestream slot on our website. You can start selling your selected TokuPack(s) on TikTok LIVE between July 27 and August 26, 2026.',
+        sortOrder: 1,
+      },
+      {
+        question: 'Can I livestream more than one TokuPack?',
+        answer:
+          'Yes. You may reserve livestreams for multiple TokuPacks from different participating brands. Each reservation should be made separately through the booking page.',
+        sortOrder: 2,
+      },
+      {
+        question: 'How is the Korea Invitation Challenge evaluated?',
+        answer:
+          'Winners will be determined based on the total GMV (Gross Merchandise Value) generated from the TokuPacks you sell through your TikTok LIVE sessions. The first five creators to reach ¥5,000,000 in GMV during the campaign period from July 27 to August 26 will win the Korea Invitation Challenge and receive an exclusive 5-day trip to Korea.',
+        sortOrder: 3,
+      },
+      {
+        question: 'Do I need to submit my sales results manually?',
+        answer:
+          'No. Sales generated through TikTok Shop are tracked automatically. ATENE will monitor your GMV across all participating brands, update the creator rankings throughout the campaign, and announce the winners based on the official GMV records from TikTok Shop.',
+        sortOrder: 4,
+      },
+      {
+        question:
+          'Will I receive payment for my livestream? How does the commission work?',
+        answer:
+          "Yes. After you book your livestream, ATENE will coordinate with the brand to discuss and confirm the commission structure for your collaboration. Once both parties agree on the terms, you'll receive the details before your livestream begins.",
+        sortOrder: 5,
+      },
+      {
+        question:
+          'Can I livestream multiple brands during the same livestream session?',
+        answer:
+          'Yes. You are welcome to feature multiple participating brands in a single livestream. There is no limit to the number of TokuPacks or brands you can showcase within the same livestream session, as long as your schedule has been confirmed with ATENE and the participating brands.',
+        sortOrder: 6,
+      },
     ]);
     this.logger.log('Seeded FAQs');
   }
@@ -146,7 +176,7 @@ export class SeedService implements OnApplicationBootstrap {
         platform: 'instagram',
         label: 'ATENE',
         handle: '@atene_cosmetics.jp',
-        url: 'https://instagram.com/atene_cosmetics.jp',
+        url: 'https://www.instagram.com/atene_cosmetics.jp/',
         sortOrder: 1,
       },
       {
@@ -159,8 +189,8 @@ export class SeedService implements OnApplicationBootstrap {
       {
         platform: 'tiktok',
         label: 'ATENE',
-        handle: '@atene_cosmetics.jp',
-        url: 'https://tiktok.com/@atene_cosmetics.jp',
+        handle: '@atene_cosmeticsjp',
+        url: 'https://www.tiktok.com/@atene_cosmeticsjp',
         sortOrder: 3,
       },
     ]);

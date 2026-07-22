@@ -126,9 +126,9 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
 
   const setBrandForActive = (brand: string) => {
     if (!activeDate) return;
+    // Only affects hours picked from now on — slots keep their own brand, so
+    // one day can mix several brands (e.g. Purito 09:00, VT 13:00).
     setBrandByDate((b) => ({ ...b, [activeDate]: brand }));
-    // Keep any hours already chosen for this day, just re-tag them to the new brand.
-    setSlots((s) => s.map((x) => (x.date === activeDate ? { ...x, brand } : x)));
   };
 
   const isHourSelected = (startTime: string) =>
@@ -151,26 +151,38 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
   const removeSlot = (date: string, startTime: string) =>
     setSlots((s) => s.filter((x) => !(x.date === date && x.start === startTime)));
 
-  const grouped = useMemo(
-    () =>
-      selectedDates
-        .map((date) => ({
+  // One summary card per date+brand pair — a single-brand day looks exactly
+  // like the classic card; a mixed day simply gets one card per brand.
+  const grouped = useMemo(() => {
+    const out: { date: string; brand: string; items: Slot[] }[] = [];
+    for (const date of selectedDates) {
+      const daySlots = slots
+        .filter((s) => s.date === date)
+        .sort((a, b) => a.start.localeCompare(b.start));
+      for (const brand of [...new Set(daySlots.map((s) => s.brand))]) {
+        out.push({
           date,
-          brand: brandByDate[date] ?? '',
-          items: slots
-            .filter((s) => s.date === date)
-            .sort((a, b) => a.start.localeCompare(b.start)),
-        }))
-        .filter((g) => g.items.length > 0),
-    [selectedDates, brandByDate, slots],
-  );
+          brand,
+          items: daySlots.filter((s) => s.brand === brand),
+        });
+      }
+    }
+    return out;
+  }, [selectedDates, slots]);
 
   const bookedDays = useMemo(() => new Set(slots.map((s) => s.date)).size, [slots]);
 
-  const canBook = slots.length > 0 && status !== 'saving';
+  // Days the creator picked on the calendar but hasn't given any hours yet.
+  const incompleteDates = useMemo(
+    () => selectedDates.filter((d) => !slots.some((s) => s.date === d)),
+    [selectedDates, slots],
+  );
+
+  const canBook =
+    slots.length > 0 && incompleteDates.length === 0 && status !== 'saving';
 
   const book = async (account: GoogleUser) => {
-    if (slots.length === 0) return;
+    if (slots.length === 0 || incompleteDates.length > 0) return;
     setStatus('saving');
     try {
       await api.createBooking({
@@ -193,7 +205,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
 
   // Everything is filled in first; sign-in is only requested at booking time.
   const handleBookClick = () => {
-    if (slots.length === 0) return;
+    if (slots.length === 0 || incompleteDates.length > 0) return;
     if (user) {
       void book(user);
     } else {
@@ -464,7 +476,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
               <ul className="mt-4 space-y-2">
                 {grouped.map((g) => (
                   <li
-                    key={g.date}
+                    key={`${g.date}|${g.brand}`}
                     className="rounded-md border border-neutral-200 px-3 py-2 text-sm"
                   >
                     <div className="flex items-center justify-between">
@@ -496,20 +508,29 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
             )}
 
             <div className="mt-6 flex items-center justify-between">
-              <div className="text-xs">
+              <div className="max-w-[60%] text-xs">
                 {status === 'error' && (
                   <span className="font-medium text-brand">
                     {t('home.reserve.errorMsg')}
                   </span>
                 )}
-                {status !== 'error' && slots.length > 0 && (
-                  <span className="font-medium text-neutral-600">
-                    {t('home.reserve.totalSummary', {
-                      hours: slots.length,
-                      days: bookedDays,
+                {status !== 'error' && incompleteDates.length > 0 && (
+                  <span className="font-medium text-amber-600">
+                    {t('home.reserve.incompleteDays', {
+                      dates: incompleteDates.map(prettyDate).join(', '),
                     })}
                   </span>
                 )}
+                {status !== 'error' &&
+                  incompleteDates.length === 0 &&
+                  slots.length > 0 && (
+                    <span className="font-medium text-neutral-600">
+                      {t('home.reserve.totalSummary', {
+                        hours: slots.length,
+                        days: bookedDays,
+                      })}
+                    </span>
+                  )}
               </div>
               <button
                 onClick={handleBookClick}

@@ -104,13 +104,18 @@ export class MailService {
     // Name shown after 様 — use the booker's name, else their email.
     const kolName = this.esc(booking.creatorName || booking.email || 'お客様');
 
-    // One block per reserved slot: brand / date / time.
+    // One block per reserved slot: brand / date / time. Every line carries
+    // the same explicit style so mail clients (and Gmail auto-translate)
+    // can't render them at different sizes/indents.
+    const detailLine = (text: string) =>
+      `<p style="margin:4px 0;font-size:14px;line-height:1.7;">・${text}</p>`;
     const bookingDetails = booking.slots
-      .map(
-        (s) => `
-        <p style="margin:4px 0;">・対象ブランド（Brand）：${this.esc(s.brand)}</p>
-        <p style="margin:4px 0;">・配信日程（Date）：${this.esc(s.date)}</p>
-        <p style="margin:4px 0;">・配信時間（Time）：${this.esc(s.start)}〜${this.esc(s.end)}</p>`,
+      .map((s) =>
+        [
+          detailLine(`対象ブランド（Brand）：${this.esc(s.brand)}`),
+          detailLine(`配信日程（Date）：${this.esc(s.date)}`),
+          detailLine(`配信時間（Time）：${this.esc(s.start)}〜${this.esc(s.end)}`),
+        ].join(''),
       )
       .join(
         '<hr style="border:none;border-top:1px dashed #ddd;margin:12px 0;" />',

@@ -31,7 +31,7 @@ export const location: ResourcePack = {
         instagram: 'Instagram',
         tiktok: 'TikTok',
         x: 'X',
-        kakaotalk: 'KakaoTalk',
+        line: 'LINE',
       },
       footer: {
         event: 'Creator Sourcing Day 2026',
@@ -71,7 +71,7 @@ export const location: ResourcePack = {
         instagram: 'Instagram',
         tiktok: 'TikTok',
         x: 'X',
-        kakaotalk: 'KakaoTalk',
+        line: 'LINE',
       },
       footer: {
         event: 'Creator Sourcing Day 2026',
@@ -111,7 +111,7 @@ export const location: ResourcePack = {
         instagram: 'Instagram',
         tiktok: 'TikTok',
         x: 'X',
-        kakaotalk: 'KakaoTalk',
+        line: 'LINE',
       },
       footer: {
         event: 'Creator Sourcing Day 2026',

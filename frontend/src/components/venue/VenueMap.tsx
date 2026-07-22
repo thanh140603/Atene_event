@@ -1,83 +1,82 @@
 import { useT } from '../../i18n/LanguageProvider';
 
-// Booth positions are expressed in the SVG viewBox coordinate system below
-// (800 × 470). The layout mirrors the reference floor map: a left/right anchor
-// booth, a 4×2 grid of brands in the middle, and an ENTER marker at the bottom.
-interface Booth {
-  cx: number;
-  cy: number;
+// Floor plan artwork (uploaded to /venue) with empty booth boxes; brand logos
+// are overlaid at fixed percentage positions matching each box in the image.
+const VENUE_IMG = encodeURI('/venue/Venue.png');
+const LOGO_BLACK = '/homepage/03_Participating Brands_Asset/Logo_Black';
+const black = (f: string) => encodeURI(`${LOGO_BLACK}/${f}`);
+
+interface Slot {
+  /** Percentage box (relative to the Venue.png dimensions). */
+  left: number;
+  top: number;
   w: number;
   h: number;
-  lines: string[];
-  size?: number;
+  name: string;
+  /** Logo image; when absent, `name` is rendered as a text logo. */
+  src?: string;
+  /** Dark tiles are filled black with a white logo, like the reference. */
+  dark?: boolean;
+  /** Serif text logo (e.g. Celonia). */
+  serif?: boolean;
+  /** Render the logo a bit smaller inside its box. */
+  shrink?: boolean;
 }
 
-const COL = [250, 348, 446, 546]; // grid column centres
-const ROW_TOP = 198;
-const ROW_BOTTOM = 283;
-
-const booths: Booth[] = [
+const slots: Slot[] = [
   // Left anchor
-  { cx: 158, cy: 240, w: 82, h: 74, lines: ['Purito', 'SEOUL'], size: 13 },
+  { left: 7, top: 29.5, w: 17, h: 29, name: 'Purito Seoul', src: black('Purito.png') },
 
-  // Top row
-  { cx: COL[0], cy: ROW_TOP, w: 86, h: 38, lines: ['DAILY WEEKLY'], size: 9 },
-  { cx: COL[1], cy: ROW_TOP, w: 86, h: 38, lines: ['LUBYLAB'], size: 11 },
-  { cx: COL[2], cy: ROW_TOP, w: 86, h: 38, lines: ['Babaco'], size: 13 },
-  { cx: COL[3], cy: ROW_TOP, w: 96, h: 38, lines: ['Quadthera'], size: 12 },
+  // Left 2×2 block
+  { left: 26.6, top: 21.5, w: 10.6, h: 20.5, name: 'Dr.Deep', src: black('Dr.Deep.png') },
+  { left: 38.8, top: 21.5, w: 9.5, h: 20.5, name: 'Daily Weekly', src: black('DailyWeekly.png') },
+  { left: 25, top: 42.7, w: 11.5, h: 23.8, name: 'Torhop', src: black('Torhop.png') },
+  { left: 37.3, top: 42.7, w: 11, h: 23.8, name: 'Lubylab', src: black('Lubylab.png') },
 
-  // Bottom row
-  { cx: COL[0], cy: ROW_BOTTOM, w: 86, h: 38, lines: ['Torhop'], size: 13 },
-  { cx: COL[1], cy: ROW_BOTTOM, w: 86, h: 38, lines: ['Dr.deep'], size: 12 },
-  { cx: COL[2], cy: ROW_BOTTOM, w: 86, h: 38, lines: ['beplain'], size: 12 },
-  { cx: COL[3], cy: ROW_BOTTOM, w: 96, h: 46, lines: ['zipie', 'ATIKE'], size: 11 },
+  // Right 2×2 block
+  { left: 52, top: 21.5, w: 9.5, h: 20.5, name: 'Babaco', src: black('Babaco.png') },
+  { left: 62.8, top: 21.5, w: 10.7, h: 20.5, name: 'Celonia', src: black('Celonia.png') },
+  { left: 52, top: 42.7, w: 10.8, h: 23.8, name: 'Beplain', src: black('Beplain.png') },
+  { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'ATENE', src: black('Atene_Logo_Black (1).png') },
 
-  // Right anchor
-  { cx: 642, cy: 240, w: 84, h: 74, lines: ['VT', 'COSMETICS'], size: 12 },
+  // Right anchor — slightly smaller logo so it doesn't spill out of its box.
+  { left: 75.8, top: 29.5, w: 19.2, h: 29, name: 'VT Cosmetics', src: black('VT.png'), shrink: true },
 ];
 
-function BoothTag({ cx, cy, w, h, lines, size = 12 }: Booth) {
-  const x = cx - w / 2;
-  const y = cy - h / 2;
-  const lineHeight = 13;
-  const firstY = cy - ((lines.length - 1) * lineHeight) / 2 + size / 3;
-
+function BoothLogo({ slot }: { slot: Slot }) {
   return (
-    <g filter="url(#boothShadow)">
-      {/* tail (drawn first so the body covers the seam) */}
-      <path
-        d={`M ${x + 15} ${y + h} l 6 8 l 6 -8 z`}
-        fill="url(#boothFill)"
-        stroke="#cbcbcb"
-        strokeWidth={1}
-      />
-      <rect
-        x={x}
-        y={y}
-        width={w}
-        height={h}
-        rx={7}
-        fill="url(#boothFill)"
-        stroke="#cbcbcb"
-        strokeWidth={1}
-      />
-      {/* subtle top highlight for the glossy bevel look */}
-      <rect x={x + 2} y={y + 2} width={w - 4} height={(h - 4) / 2} rx={5} fill="#ffffff" opacity={0.55} />
-      {lines.map((ln, i) => (
-        <text
-          key={i}
-          x={cx}
-          y={firstY + i * lineHeight}
-          textAnchor="middle"
-          fontSize={size}
-          fontWeight={700}
-          letterSpacing={ln === ln.toUpperCase() ? 0.5 : 0}
-          fill="#171717"
+    <div
+      className={`absolute flex items-center justify-center ${
+        slot.dark ? 'bg-neutral-900' : ''
+      }`}
+      style={{
+        left: `${slot.left}%`,
+        top: `${slot.top}%`,
+        width: `${slot.w}%`,
+        height: `${slot.h}%`,
+      }}
+    >
+      {slot.src ? (
+        <img
+          src={slot.src}
+          alt={slot.name}
+          className={`object-contain ${
+            slot.shrink ? 'max-h-[52%] max-w-[60%]' : 'max-h-[70%] max-w-[78%]'
+          }`}
+          loading="lazy"
+        />
+      ) : (
+        <span
+          className={`px-1 text-center font-bold leading-tight ${
+            slot.dark ? 'text-white' : 'text-neutral-900'
+          } ${slot.serif ? 'font-serif font-medium tracking-wide' : 'tracking-[0.15em]'}`}
+          // Scales with the map width so text logos shrink on small screens.
+          style={{ fontSize: 'clamp(9px, 1.6cqw, 22px)' }}
         >
-          {ln}
-        </text>
-      ))}
-    </g>
+          {slot.name}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -85,7 +84,7 @@ export default function VenueMap() {
   const t = useT();
   return (
     <section id="venue" className="bg-white">
-      <div className="section-container py-20 sm:py-24">
+      <div className="section-container py-10 sm:py-12">
         <h2 className="section-heading">{t('venue.map.title')}</h2>
         <div className="heading-rule" />
 
@@ -93,93 +92,25 @@ export default function VenueMap() {
           {t('venue.map.desc')}
         </p>
 
-        <div className="mx-auto mt-14 max-w-4xl">
-          <svg
-            viewBox="0 0 800 470"
-            role="img"
-            aria-label={t('venue.map.svgLabel')}
-            className="h-auto w-full"
-            style={{ fontFamily: 'inherit' }}
-          >
-            <defs>
-              <linearGradient id="boothFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="55%" stopColor="#f2f2f2" />
-                <stop offset="100%" stopColor="#d9d9d9" />
-              </linearGradient>
-              <filter id="boothShadow" x="-20%" y="-20%" width="140%" height="150%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#000000" floodOpacity="0.18" />
-              </filter>
-            </defs>
+        {/* Gift box — small pink label top-left, body copy in black. */}
+        <div className="mx-auto mt-8 max-w-2xl rounded-2xl border border-neutral-200 p-6 shadow-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">
+            {t('venue.map.giftLabel')}
+          </p>
+          <p className="mt-3 text-justify text-sm leading-relaxed text-neutral-900">
+            {t('venue.map.giftBody')}
+          </p>
+        </div>
 
-            {/* ---- Hall outline ---- */}
-            <path
-              d="M 108 350
-                 L 108 172
-                 L 152 122
-                 Q 154 118 162 118
-                 L 638 118
-                 Q 646 118 648 122
-                 L 692 172
-                 L 692 350
-                 L 455 350
-                 M 345 350
-                 L 108 350"
-              fill="none"
-              stroke="#111111"
-              strokeWidth={5}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-            {/* decorative top pillars */}
-            <rect x="250" y="112" width="26" height="10" fill="#111111" />
-            <rect x="524" y="112" width="26" height="10" fill="#111111" />
-
-            {/* faint interior aisle dividers between grid columns */}
-            {[299, 397, 494].map((x) => (
-              <line
-                key={x}
-                x1={x}
-                y1={160}
-                x2={x}
-                y2={322}
-                stroke="#e5e5e5"
-                strokeWidth={1.5}
-              />
-            ))}
-
-            {/* ---- Booths ---- */}
-            {booths.map((b, i) => (
-              <BoothTag key={i} {...b} />
-            ))}
-
-            {/* ---- Stage / DJ booth marker near the entrance ---- */}
-            <rect x="372" y="372" width="16" height="6" rx={2} fill="#111111" />
-            <rect x="396" y="366" width="8" height="20" rx={2} fill="#111111" />
-            <rect x="412" y="372" width="16" height="6" rx={2} fill="#111111" />
-
-            {/* ---- ENTER guide ---- */}
-            <g stroke="#9ca3af" strokeWidth={1.5} strokeDasharray="4 4" fill="none">
-              <path d="M 350 355 L 360 405" />
-              <path d="M 450 355 L 440 405" />
-              <line x1="300" y1="428" x2="360" y2="428" />
-              <line x1="440" y1="428" x2="500" y2="428" />
-            </g>
-            {/* up arrows indicating entry direction */}
-            <path d="M 360 405 l -4 6 M 360 405 l 4 6" stroke="#9ca3af" strokeWidth={1.5} fill="none" />
-            <path d="M 440 405 l -4 6 M 440 405 l 4 6" stroke="#9ca3af" strokeWidth={1.5} fill="none" />
-            <text
-              x="400"
-              y="433"
-              textAnchor="middle"
-              fontSize={15}
-              fontWeight={800}
-              letterSpacing={3}
-              fill="#111111"
-            >
-              ENTER
-            </text>
-          </svg>
+        <div
+          role="img"
+          aria-label={t('venue.map.svgLabel')}
+          className="relative mx-auto mt-14 max-w-4xl [container-type:inline-size]"
+        >
+          <img src={VENUE_IMG} alt="" className="h-auto w-full" />
+          {slots.map((s) => (
+            <BoothLogo key={s.name} slot={s} />
+          ))}
         </div>
       </div>
     </section>

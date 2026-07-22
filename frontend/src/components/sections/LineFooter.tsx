@@ -21,7 +21,7 @@ export default function LineFooter() {
               {t('home.follow.lineDesc')}
             </p>
             <a
-              href="https://line.me/R/ti/p/@atene"
+              href="https://line.me/ti/p/wbxRR8KLmQ"
               target="_blank"
               rel="noreferrer"
               className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-neutral-900 transition hover:opacity-90 sm:inline-flex sm:w-auto"

@@ -40,8 +40,12 @@ export default function BrandProductsCarousel({
   const count = products.length;
   const perView = usePerView();
   // Only behave like a carousel when there are more products than fit —
-  // otherwise the cards just sit centered with no arrows/dots.
+  // otherwise the cards just sit still with no arrows/dots.
   const looping = count > perView;
+  // With fewer cards than fit (1–2 on desktop) the row doesn't fill its
+  // half, so the text column widens and the whole group hugs the center.
+  // Exactly-full rows keep the standard wide layout (minus the arrows).
+  const compact = count < perView;
 
   // Leftmost visible slide on the extended track [lastN, ...products, firstN].
   const [index, setIndex] = useState(perView);
@@ -93,13 +97,11 @@ export default function BrandProductsCarousel({
   return (
     <section className="bg-white">
       <div className="section-container py-12 sm:py-16">
-        {/* With few products (no carousel) the text column widens and the
-            whole text+cards group hugs the center instead of spreading out. */}
         <div
           className={`grid grid-cols-1 items-center gap-10 ${
-            looping
-              ? 'lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-3'
-              : 'lg:grid-cols-[minmax(0,26rem)_auto] lg:justify-center lg:gap-14'
+            compact
+              ? 'lg:grid-cols-[minmax(0,26rem)_auto] lg:justify-center lg:gap-14'
+              : 'lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-3'
           }`}
         >
           {/* Lineup headline — only the copy delivered in `DETAILS/text.txt` */}
@@ -138,7 +140,7 @@ export default function BrandProductsCarousel({
                   <div
                     key={i}
                     className={`w-full shrink-0 px-2 sm:w-1/2 ${
-                      looping ? 'lg:w-1/3' : 'lg:w-72'
+                      compact ? 'lg:w-72' : 'lg:w-1/3'
                     }`}
                   >
                     <img

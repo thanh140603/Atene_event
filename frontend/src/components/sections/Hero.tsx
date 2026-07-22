@@ -6,17 +6,21 @@ export default function Hero({ event }: { event: EventInfo }) {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-brand-dark text-white"
+      className="relative overflow-x-clip bg-brand-dark text-white"
     >
-      {/* Pink radial glow (transparent PNG) */}
+      {/* Pink radial glow (transparent PNG), straddling the hero's bottom
+          edge 50/50 into the countdown section below — overflow-x-clip stops
+          it adding horizontal scroll, z-10 lets the lower half render over
+          the next section. */}
       <img
         src={homeAssets.heroGlow}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[680px] w-[680px] max-w-none -translate-x-1/2 -translate-y-1/3 opacity-80"
+        className="pointer-events-none absolute bottom-0 left-1/2 z-10 h-[680px] w-[680px] max-w-none -translate-x-1/2 translate-y-1/2 opacity-80"
       />
 
-      <div className="section-container relative flex flex-col items-center py-24 text-center sm:py-28">
+      {/* z-20 keeps the copy and logo above the glow (z-10). */}
+      <div className="section-container relative z-20 flex flex-col items-center py-24 text-center sm:py-28">
         <p className="text-xs font-semibold tracking-[0.35em] text-neutral-300 sm:text-sm">
           {event.heroKicker}
         </p>

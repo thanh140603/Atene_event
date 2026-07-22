@@ -16,19 +16,20 @@ export default function AwardOverview() {
   const t = useT();
   return (
     <section className="bg-white">
-      <div className="section-container py-16 sm:py-20">
-        <h3 className="text-lg font-bold leading-relaxed text-neutral-900 sm:text-xl">
+      <div className="section-container py-8 sm:py-10">
+        <h3 className="text-2xl font-extrabold leading-snug tracking-tight text-neutral-900 sm:text-3xl lg:text-4xl">
+          {t('venue.overview.headingLine2')}
+        </h3>
+        <p className="mt-3 text-base font-bold text-neutral-900 sm:text-lg">
           {t('venue.overview.heading.pre')}
           {t('venue.overview.heading.hi')}
           {t('venue.overview.heading.post')}
-          <br className="hidden sm:block" />
-          {t('venue.overview.headingLine2')}
-        </h3>
+        </p>
         <p className="mt-3 text-xs font-medium tracking-wide text-neutral-400">
           {t('venue.overview.date')}
         </p>
 
-        <div className="mt-8 max-w-3xl space-y-5 text-sm leading-relaxed text-neutral-600">
+        <div className="mt-8 max-w-3xl space-y-5 text-justify text-sm leading-relaxed text-neutral-600">
           <p className="font-semibold text-neutral-800">
             {t('venue.overview.lead')}
           </p>
@@ -37,7 +38,7 @@ export default function AwardOverview() {
         </div>
 
         {/* 参加方法 */}
-        <fieldset className="mt-14 border border-neutral-700">
+        <fieldset className="mt-10 border border-neutral-700">
           <legend className="ml-6 flex items-center gap-2 px-1 text-sm font-bold text-neutral-900 sm:ml-8">
             <span className="h-px w-5 bg-neutral-900" />
             {t('venue.overview.howToTitle')}

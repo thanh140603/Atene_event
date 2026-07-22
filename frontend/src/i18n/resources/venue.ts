@@ -8,8 +8,11 @@ export const venue: ResourcePack = {
       },
       map: {
         title: 'VENUE LAYOUT',
-        desc: '11ブランドの限定Tokupackが一堂に。会場マップで各ブランドのブースを確認して、お気に入りを見つけましょう。',
+        desc: '9ブランドの限定Tokupackが一堂に。会場マップで各ブランドのブースを確認して、お気に入りを見つけましょう。',
         svgLabel: 'ブランドブースと入口を示す会場フロアマップ',
+        giftLabel: '🎁 Gift',
+        giftBody:
+          '各ブランドのブースを巡って、参加9ブランドの限定TokuPackを集めましょう。最後にATENEブースに立ち寄れば、コンプリートギフトをプレゼント！パートナーブランドからのサプライズギフトも多数ご用意しています。お見逃しなく！',
       },
       award: {
         heading: 'BEST CONTENT AWARDS',
@@ -69,8 +72,11 @@ export const venue: ResourcePack = {
       },
       map: {
         title: 'VENUE LAYOUT',
-        desc: '11 brands and their exclusive TokuPacks under one roof. Check the venue map to find each brand’s booth and discover your favorites.',
+        desc: '9 brands and their exclusive TokuPacks under one roof. Check the venue map to find each brand’s booth and discover your favorites.',
         svgLabel: 'Venue floor plan showing brand booths and the entrance',
+        giftLabel: '🎁 Gift',
+        giftBody:
+          "Visit each brand booth to discover and collect exclusive TokuPacks from all 9 participating brands. Then, stop by the ATENE booth at the end to claim your completion gift! We also have many more surprise gifts from our partner brands waiting to be revealed - don't miss out!",
       },
       award: {
         heading: 'BEST CONTENT AWARDS',
@@ -130,8 +136,11 @@ export const venue: ResourcePack = {
       },
       map: {
         title: 'VENUE LAYOUT',
-        desc: '11개 브랜드의 한정 톡팩이 한자리에. 장소 맵에서 각 브랜드의 부스를 확인하고 마음에 드는 제품을 찾아보세요.',
+        desc: '9개 브랜드의 한정 톡팩이 한자리에. 장소 맵에서 각 브랜드의 부스를 확인하고 마음에 드는 제품을 찾아보세요.',
         svgLabel: '브랜드 부스와 입구를 보여주는 장소 플로어 맵',
+        giftLabel: '🎁 Gift',
+        giftBody:
+          '각 브랜드 부스를 돌며 참가 9개 브랜드의 한정 톡팩을 모아보세요. 마지막에 ATENE 부스에 들르면 컴플리트 기프트를 드립니다! 파트너 브랜드의 서프라이즈 선물도 다수 준비되어 있으니 놓치지 마세요!',
       },
       award: {
         heading: 'BEST CONTENT AWARDS',

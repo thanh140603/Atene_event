@@ -160,41 +160,68 @@ const tokupackDesc = (brand: string, lang: Lang) =>
       : `Curated ${brand} set — Creator Sourcing Day exclusive.`;
 
 // ---- FAQs (keyed by sortOrder) ----
-const faqAnswer: ByLang<string> = {
-  ja: '質問に対する2〜3行程度の回答テキストがここに入ります。ここに説明が続きます……',
-  en: 'A 2-3 line sentence about answering the question ect ect ect filler text goes here ect ect……',
-  ko: '질문에 대한 2~3줄 정도의 답변 텍스트가 여기에 들어갑니다. 여기에 설명이 이어집니다……',
-};
 const faqQuestion: Record<number, ByLang<string>> = {
   1: {
-    ja: 'トクパックはどのように受け取れますか？',
-    en: 'How do I receive my TokuPack?',
-    ko: '톡팩은 어떻게 받나요?',
+    ja: 'ライブ配信キャンペーンにはどうすれば参加できますか？',
+    en: 'How can I participate in the livestream campaign?',
+    ko: '라이브 방송 캠페인에는 어떻게 참여하나요?',
   },
   2: {
-    ja: 'Creator Sourcing Dayには誰が参加できますか？',
-    en: 'Who can join Creator Sourcing Day?',
-    ko: 'Creator Sourcing Day에는 누가 참여할 수 있나요?',
+    ja: '複数のトクパックをライブ配信できますか？',
+    en: 'Can I livestream more than one TokuPack?',
+    ko: '두 개 이상의 톡팩을 라이브 방송할 수 있나요?',
   },
   3: {
-    ja: 'ライブ配信キャンペーンの期間はいつですか？',
-    en: 'When is the livestream campaign period?',
-    ko: '라이브 방송 캠페인 기간은 언제인가요?',
+    ja: 'Korea Invitation Challengeはどのように評価されますか？',
+    en: 'How is the Korea Invitation Challenge evaluated?',
+    ko: 'Korea Invitation Challenge는 어떻게 평가되나요?',
   },
   4: {
-    ja: 'ライブ配信枠はどのように予約しますか？',
-    en: 'How do I book a livestream slot?',
-    ko: '라이브 방송 슬롯은 어떻게 예약하나요?',
+    ja: '販売実績を手動で提出する必要がありますか？',
+    en: 'Do I need to submit my sales results manually?',
+    ko: '판매 실적을 수동으로 제출해야 하나요?',
   },
   5: {
-    ja: 'クリエイターはどんな報酬を得られますか？',
-    en: 'What rewards can creators earn?',
-    ko: '크리에이터는 어떤 리워드를 받을 수 있나요?',
+    ja: 'ライブ配信に対して報酬は受け取れますか？コミッションはどのように機能しますか？',
+    en: 'Will I receive payment for my livestream? How does the commission work?',
+    ko: '라이브 방송에 대한 대금을 받나요? 커미션은 어떻게 되나요?',
   },
   6: {
-    ja: 'オフラインイベントはどこで開催されますか？',
-    en: 'Where is the offline event held?',
-    ko: '오프라인 이벤트는 어디에서 열리나요?',
+    ja: '同じライブ配信セッション中に複数のブランドをライブ配信できますか？',
+    en: 'Can I livestream multiple brands during the same livestream session?',
+    ko: '같은 라이브 방송 세션에서 여러 브랜드를 라이브 방송할 수 있나요?',
+  },
+};
+const faqAnswer: Record<number, ByLang<string>> = {
+  1: {
+    ja: 'Creator Sourcing Dayに参加し、お好みのトクパックを選んだ後、当ウェブサイトでライブ配信枠を予約するだけです。2026年7月27日から8月26日まで、選んだトクパックをTikTok LIVEで販売できます。',
+    en: 'After attending Creator Sourcing Day and choosing your preferred TokuPack(s), simply book your livestream slot on our website. You can start selling your selected TokuPack(s) on TikTok LIVE between July 27 and August 26, 2026.',
+    ko: 'Creator Sourcing Day에 참여하고 원하는 톡팩을 선택한 후, 저희 웹사이트에서 라이브 방송 슬롯을 예약하기만 하면 됩니다. 2026년 7월 27일부터 8월 26일까지 선택한 톡팩을 TikTok LIVE에서 판매할 수 있습니다.',
+  },
+  2: {
+    ja: 'はい。複数の参加ブランドのトクパックについてライブ配信を予約できます。各予約は予約ページから個別に行ってください。',
+    en: 'Yes. You may reserve livestreams for multiple TokuPacks from different participating brands. Each reservation should be made separately through the booking page.',
+    ko: '네. 여러 참여 브랜드의 톡팩에 대해 라이브 방송을 예약할 수 있습니다. 각 예약은 예약 페이지에서 개별적으로 진행해 주세요.',
+  },
+  3: {
+    ja: '受賞者は、TikTok LIVEセッションで販売したトクパックから生み出された総GMV（流通取引総額）に基づいて決定されます。キャンペーン期間である7月27日から8月26日の間にGMV¥5,000,000に最初に到達した5名のクリエイターがKorea Invitation Challengeで優勝し、韓国への5日間の特別旅行を獲得します。',
+    en: 'Winners will be determined based on the total GMV (Gross Merchandise Value) generated from the TokuPacks you sell through your TikTok LIVE sessions. The first five creators to reach ¥5,000,000 in GMV during the campaign period from July 27 to August 26 will win the Korea Invitation Challenge and receive an exclusive 5-day trip to Korea.',
+    ko: '수상자는 TikTok LIVE 세션을 통해 판매한 톡팩에서 발생한 총 GMV(총거래액)를 기준으로 결정됩니다. 캠페인 기간인 7월 27일부터 8월 26일 사이에 GMV ¥5,000,000에 가장 먼저 도달한 다섯 명의 크리에이터가 Korea Invitation Challenge에서 우승하여 한국 5일 여행 특전을 받게 됩니다.',
+  },
+  4: {
+    ja: 'いいえ。TikTok Shopを通じた販売は自動的に記録されます。ATENEがすべての参加ブランドにわたるあなたのGMVを監視し、キャンペーン期間中クリエイターランキングを更新し、TikTok Shopの公式GMV記録に基づいて受賞者を発表します。',
+    en: 'No. Sales generated through TikTok Shop are tracked automatically. ATENE will monitor your GMV across all participating brands, update the creator rankings throughout the campaign, and announce the winners based on the official GMV records from TikTok Shop.',
+    ko: '아니요. TikTok Shop을 통해 발생한 판매는 자동으로 추적됩니다. ATENE가 모든 참여 브랜드에 걸친 귀하의 GMV를 모니터링하고, 캠페인 기간 동안 크리에이터 순위를 업데이트하며, TikTok Shop의 공식 GMV 기록을 바탕으로 수상자를 발표합니다.',
+  },
+  5: {
+    ja: 'はい。ライブ配信を予約した後、ATENEがブランドと調整し、コラボレーションのコミッション体系について話し合い、確定します。双方が条件に合意すると、ライブ配信が始まる前に詳細をお知らせします。',
+    en: "Yes. After you book your livestream, ATENE will coordinate with the brand to discuss and confirm the commission structure for your collaboration. Once both parties agree on the terms, you'll receive the details before your livestream begins.",
+    ko: '네. 라이브 방송을 예약한 후, ATENE가 브랜드와 협의하여 협업에 대한 커미션 구조를 논의하고 확정합니다. 양측이 조건에 합의하면 라이브 방송이 시작되기 전에 세부 사항을 안내해 드립니다.',
+  },
+  6: {
+    ja: 'はい。1回のライブ配信で複数の参加ブランドを紹介していただけます。スケジュールがATENEおよび参加ブランドと確認されている限り、同じライブ配信セッション内で紹介できるトクパックやブランドの数に制限はありません。',
+    en: 'Yes. You are welcome to feature multiple participating brands in a single livestream. There is no limit to the number of TokuPacks or brands you can showcase within the same livestream session, as long as your schedule has been confirmed with ATENE and the participating brands.',
+    ko: '네. 한 번의 라이브 방송에서 여러 참여 브랜드를 소개하실 수 있습니다. 일정이 ATENE 및 참여 브랜드와 확인된 경우, 같은 라이브 방송 세션 내에서 소개할 수 있는 톡팩이나 브랜드 수에는 제한이 없습니다.',
   },
 };
 
@@ -230,6 +257,6 @@ export function localizeFaq(faq: any, lang: Lang) {
   return {
     ...faq,
     question: faqQuestion[faq.sortOrder]?.[lang] ?? faq.question,
-    answer: faqAnswer[lang],
+    answer: faqAnswer[faq.sortOrder]?.[lang] ?? faq.answer,
   };
 }

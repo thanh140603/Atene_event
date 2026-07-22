@@ -4,12 +4,12 @@ export default function CompetitionCTA() {
   const t = useT();
   return (
     <section className="bg-white">
-      <div className="section-container py-24 text-center sm:py-32">
+      <div className="section-container py-12 text-center sm:py-16">
         <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-brand">
           {t('competition.cta.eyebrow')}
         </p>
 
-        <h2 className="mx-auto mt-8 max-w-3xl text-4xl font-extrabold leading-[1.15] tracking-tight text-neutral-900 sm:text-6xl">
+        <h2 className="mx-auto mt-8 max-w-3xl text-xl font-extrabold leading-[1.4] tracking-tight text-neutral-900 sm:text-3xl">
           {t('competition.cta.title.l1')}
           <br />
           {t('competition.cta.title.l2')}

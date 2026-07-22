@@ -10,7 +10,7 @@ function DateBlock({ label, value }: { label: string; value: string }) {
       <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
         {label}
       </p>
-      <p className="mt-2 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
+      <p className="mt-2 text-xl font-extrabold tracking-tight text-neutral-900 sm:text-2xl">
         {value}
       </p>
     </div>
@@ -21,17 +21,13 @@ export default function CompetitionHero() {
   const t = useT();
   return (
     <section id="top" className="bg-white">
-      <div className="section-container py-20 sm:py-28">
+      <div className="section-container py-12 sm:py-14">
         <p className="text-sm font-semibold tracking-[0.35em] text-neutral-500">
           {t('competition.hero.eyebrow')}
         </p>
 
-        <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-[1.05] tracking-tight text-neutral-900 sm:text-6xl">
-          {t('competition.hero.title.l1')}
-          <br />
-          {t('competition.hero.title.l2')} <span className="text-brand">—</span>
-          <br />
-          {t('competition.hero.title.l3')}
+        <h1 className="mt-6 max-w-4xl text-2xl font-extrabold leading-snug tracking-tight text-neutral-900 sm:text-4xl">
+          {t('competition.hero.title')}
         </h1>
 
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-neutral-500 sm:text-base">

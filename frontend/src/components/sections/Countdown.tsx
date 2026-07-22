@@ -23,14 +23,20 @@ function Colon() {
   );
 }
 
+/** Render the event instant in the venue's timezone (Tokyo), not the viewer's. */
 function formatEventDate(iso: string): string {
-  const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = pad(d.getMonth() + 1);
-  const day = pad(d.getDate());
-  const hh = pad(d.getHours());
-  const mm = pad(d.getMinutes());
-  return `${y}.${m}.${day} | ${hh}:${mm}`;
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date(iso));
+  const get = (type: string) =>
+    parts.find((p) => p.type === type)?.value ?? '';
+  return `${get('year')}.${get('month')}.${get('day')} | ${get('hour')}:${get('minute')}`;
 }
 
 export default function Countdown({ event }: { event: EventInfo }) {
@@ -48,7 +54,9 @@ export default function Countdown({ event }: { event: EventInfo }) {
             'radial-gradient(circle, #ffb3d1 0%, rgba(255,255,255,0) 70%)',
         }}
       />
-      <div className="section-container relative py-16 sm:py-20">
+      {/* Extra top padding keeps the digits clear of the hero glow that
+          spills 50/50 over the section boundary. */}
+      <div className="section-container relative pb-16 pt-72 sm:pb-20 sm:pt-80">
         <div className="flex items-start justify-center gap-3 sm:gap-6">
           <Unit value={c.days} label={t('home.countdown.days')} />
           <Colon />

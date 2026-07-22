@@ -5,7 +5,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-size: 20px;
+    /* Mobile-first: slightly smaller base so all rem-based text scales down. */
+    font-size: 17px;
+  }
+  @media (min-width: 640px) {
+    html {
+      font-size: 20px;
+    }
   }
   body {
     @apply bg-white text-neutral-900 antialiased;

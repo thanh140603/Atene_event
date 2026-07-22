@@ -304,7 +304,7 @@ const PURITO_PEEL_SHOT: BrandProduct = {
   },
   listPrice: '¥2,875',
   volume: '64g (8 pads)',
-  imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/3/Copy of 11.png`),
+  imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/3/3.png`),
   galleryImages: [
     'Copy of 84.png',
     'Copy of 20251202 퓨리토_00163.jpg',
@@ -535,7 +535,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,500',
             volume: '100ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/Copy of 1.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/1.png`),
             galleryImages: [5, 6, 7, 8, 9, 10].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/1/JP_Thumb/Copy of ${n}.png`),
             ),
@@ -555,7 +555,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,500',
             volume: '60ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/Copy of 5.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/2.png`),
             galleryImages: [33, 34, 35].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/2/JP_Thumb/Copy of ${n}.png`),
             ),
@@ -576,7 +576,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,250',
             volume: '60ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/Copy of 9.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/4.png`),
             galleryImages: [67, 69, 70, 71].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET 1/DETAILS/4/jp_thumb/Copy of ${n}.png`),
             ),
@@ -607,7 +607,7 @@ export const brands: BrandContent[] = [
       {
         id: '2',
         label: 'TOKUPACK B',
-        cardImageUrl: u(`${BR}/9. Purito/combo2.png`),
+        cardImageUrl: u(`${BR}/9. Purito/combo2.png`) + '?v=2',
         // Copy from `TOKUPACK SET2/Tokupack set2/text (1).txt`.
         tokupack: {
           subtitle: {
@@ -615,7 +615,7 @@ export const brands: BrandContent[] = [
             en: 'A high-performance serum set matched to your skin concerns.',
             ko: '피부 고민에 맞춰 쓰는 고기능 세럼 세트.',
           },
-          imageUrl: u(`${BR}/9. Purito/combo2.png`),
+          imageUrl: u(`${BR}/9. Purito/combo2.png`) + '?v=2',
           items: [
             {
               ja: 'レチノール・レチナール2000 NAD+配合セラム 30ml',
@@ -644,8 +644,9 @@ export const brands: BrandContent[] = [
             { label: L_LIVE_PRICE, value: '¥6,500', highlight: true },
           ],
         },
-        // The delivered `TOKUPACK SET2/USP/` folder is empty.
-        usps: [],
+        usps: [
+          { imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/USP/Copy of 2.png`) },
+        ],
         // Copy from `TOKUPACK SET2/DETAILS/text2.txt`.
         productsHeadline: {
           ja: '肌悩みに合わせて使える高機能美容液セット。',
@@ -663,7 +664,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥4,500',
             volume: '30ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/Copy of 6.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/5.png`),
             galleryImages: [56, 75, 76, 78, 79].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/5/JP_THUMB/Copy of ${n}.png`),
             ),
@@ -681,7 +682,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥4,500',
             volume: '30ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/6/Copy of 7.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/6/6.png`),
             galleryImages: [
               'Copy of 60.png',
               'Copy of 61.png',
@@ -707,7 +708,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥4,500',
             volume: '30ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/Copy of 8.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/7.png`),
             galleryImages: [54, 66, 67, 69, 70, 71].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/7/JP_THUMB/Copy of ${n}.png`),
             ),
@@ -725,7 +726,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,250',
             volume: '20g',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/Copy of 10.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/8.png`),
             galleryImages: [72, 73, 75].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/jp_thumb/Copy of ${n}.png`),
             ),
@@ -736,7 +737,7 @@ export const brands: BrandContent[] = [
       {
         id: '3',
         label: 'TOKUPACK C',
-        cardImageUrl: u(`${BR}/9. Purito/combo3.png`),
+        cardImageUrl: u(`${BR}/9. Purito/combo3.png`) + '?v=2',
         // Copy from `TOKUPACK SET3/TOKUPACK SET3/text (1).txt`.
         tokupack: {
           subtitle: {
@@ -744,7 +745,7 @@ export const brands: BrandContent[] = [
             en: 'Gentle moisture care for sensitive skin.',
             ko: '민감성 피부를 위한 순한 보습 케어.',
           },
-          imageUrl: u(`${BR}/9. Purito/combo3.png`),
+          imageUrl: u(`${BR}/9. Purito/combo3.png`) + '?v=2',
           items: [
             {
               ja: 'ピールショットパッド 1箱（8枚）',
@@ -793,7 +794,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,250',
             volume: '150ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/Copy of 2.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/10.png`),
             galleryImages: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/9/jp_thumb/Copy of ${n}.png`),
             ),
@@ -824,7 +825,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥3,200',
             volume: '200ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/Copy of 3.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/11.png`),
             galleryImages: [43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53].map(
               (n) =>
                 u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/10/jp_thumb/Copy of ${n}.png`),
@@ -856,7 +857,7 @@ export const brands: BrandContent[] = [
             },
             listPrice: '¥2,900',
             volume: '100ml',
-            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/Copy of 4.png`),
+            imageUrl: u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/12.png`),
             galleryImages: [29, 30, 31, 32].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET3/DETAILS/11/jp_thumb/Copy of ${n}.png`),
             ),
@@ -1190,7 +1191,7 @@ export const brands: BrandContent[] = [
         listPrice: '¥2,380',
         volume: '160ml',
         imageUrl: u(
-          `${BR}/5. Beplain/DETAILS/1/Copy of 03. 緑豆弱酸性クレンジングフォーム_160ml.png의 사본.png`,
+          `${BR}/5. Beplain/DETAILS/1/1.png`,
         ),
         galleryImages: [
           'Copy of 연출컷_녹두 약산성 클렌징폼_FHS_05.jpg의 사본.jpg',
@@ -1216,7 +1217,7 @@ export const brands: BrandContent[] = [
         listPrice: '¥2,480',
         volume: '100ml',
         imageUrl: u(
-          `${BR}/5. Beplain/DETAILS/2/Copy of 03-11 녹두 모공 클렌징 밀크 밤 JP.png의 사본.png`,
+          `${BR}/5. Beplain/DETAILS/2/2.png`,
         ),
         galleryImages: seq(
           8,
@@ -1246,7 +1247,7 @@ export const brands: BrandContent[] = [
         listPrice: '¥2,380',
         volume: '120ml',
         imageUrl: u(
-          `${BR}/5. Beplain/DETAILS/3/Copy of 03-8_녹두모공클레이팩_120ml.png의 사본.png`,
+          `${BR}/5. Beplain/DETAILS/3/3.png`,
         ),
         galleryImages: [
           'Copy of 연출제형컷_녹두 모공 클레이팩_FHS_09.jpg의 사본.jpg',
@@ -1554,7 +1555,7 @@ export const brands: BrandContent[] = [
           ko: '하이퍼 루비스피샷',
         },
         listPrice: '¥6,600',
-        volume: '1,4g x 4ea',
+        volume: '3mg x 4ea',
         imageUrl: u(`${BR}/2. LubyLab/Details/3/Copy of 3.jpg`),
         galleryImages: [u(`${BR}/2. LubyLab/Details/3/JP_Thumb/Copy of 3.jpg`)],
         detailImages: [
@@ -1664,7 +1665,7 @@ export const brands: BrandContent[] = [
       },
       {
         id: '3',
-        // Name / pricing from `Details/3/text.txt`; JP_Detailed was delivered empty.
+        // Name / pricing from `Details/3/text.txt`.
         name: {
           ja: 'クーラスティング ウォーター ブロックバスター！ サンセラム',
           en: 'Coolasting Water Blockbuster! Sun Serum',
@@ -1673,6 +1674,11 @@ export const brands: BrandContent[] = [
         listPrice: '¥2,860',
         volume: '50ml',
         imageUrl: u(`${BR}/3. Daily Weekly/Details/3/Copy of 3.png`),
+        detailImages: seq(
+          5,
+          (i) =>
+            `${BR}/3. Daily Weekly/Details/3/JP_Detailed/Copy of sunserum.${i}.jpg`,
+        ),
       },
     ],
   },
@@ -1763,12 +1769,13 @@ export const brands: BrandContent[] = [
         listPrice: '¥4,235',
         volume: '50ml',
         imageUrl: u(`${BR}/6. Babaco/DETAILS/2/Copy of 톤업선크림_썸네일메인.jpg`),
+        // Gallery order per request: the loose shots first, then tu1–tu4.
         galleryImages: [
-          ...seq(4, (i) => `${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of tu${i}.png`),
           u(`${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of tuu.png`),
           u(`${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of 톤업선크림_썸네일메인서브1.jpg`),
           u(`${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of 톤업선크림_썸네일서브1_.jpg`),
           u(`${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of 톤업선크림_썸네일서브2.jpg`),
+          ...seq(4, (i) => `${BR}/6. Babaco/DETAILS/2/JP_Thumb/Copy of tu${i}.png`),
         ],
         // Pages 1–7 came out of a compressor with `_11zon` names; the
         // UUID-named file is the opening hero page (verified visually).
