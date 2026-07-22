@@ -64,7 +64,8 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
 
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [activeDate, setActiveDate] = useState<string>('');
-  const [brandByDate, setBrandByDate] = useState<Record<string, string>>({});
+  // Several brands can be active per day; picked hours apply to all of them.
+  const [brandsByDate, setBrandsByDate] = useState<Record<string, string[]>>({});
   const [slots, setSlots] = useState<Slot[]>([]);
 
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -100,7 +101,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
       const next = selectedDates.filter((d) => d !== iso);
       setSelectedDates(next);
       setSlots((s) => s.filter((x) => x.date !== iso));
-      setBrandByDate((b) => {
+      setBrandsByDate((b) => {
         const clone = { ...b };
         delete clone[iso];
         return clone;
@@ -122,24 +123,58 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
     setYear(y);
   };
 
-  const activeBrand = activeDate ? brandByDate[activeDate] ?? '' : '';
+  const activeBrands = activeDate ? brandsByDate[activeDate] ?? [] : [];
 
-  const setBrandForActive = (brand: string) => {
+  const toggleBrandForActive = (brand: string) => {
     if (!activeDate) return;
-    // Only affects hours picked from now on — slots keep their own brand, so
-    // one day can mix several brands (e.g. Purito 09:00, VT 13:00).
-    setBrandByDate((b) => ({ ...b, [activeDate]: brand }));
+    const isRemoving = (brandsByDate[activeDate] ?? []).includes(brand);
+    setBrandsByDate((b) => {
+      const cur = b[activeDate] ?? [];
+      return {
+        ...b,
+        [activeDate]: isRemoving
+          ? cur.filter((x) => x !== brand)
+          : [...cur, brand],
+      };
+    });
+    // Deselecting a brand also drops the hours it already took on this day.
+    if (isRemoving) {
+      setSlots((s) => s.filter((x) => !(x.date === activeDate && x.brand === brand)));
+    }
   };
 
-  const isHourSelected = (startTime: string) =>
-    slots.some((s) => s.date === activeDate && s.start === startTime);
+  // An hour is "selected" when every active brand already has it; "partial"
+  // when only some do (e.g. after removing one brand's hour in the summary).
+  const hourState = (startTime: string): 'none' | 'partial' | 'all' => {
+    if (activeBrands.length === 0) return 'none';
+    const have = activeBrands.filter((brand) =>
+      slots.some((s) => s.date === activeDate && s.brand === brand && s.start === startTime),
+    ).length;
+    if (have === 0) return 'none';
+    return have === activeBrands.length ? 'all' : 'partial';
+  };
 
   const toggleHour = (startTime: string, endTime: string) => {
-    if (!activeDate || !activeBrand) return;
-    if (isHourSelected(startTime)) {
-      setSlots((s) => s.filter((x) => !(x.date === activeDate && x.start === startTime)));
+    if (!activeDate || activeBrands.length === 0) return;
+    if (hourState(startTime) === 'all') {
+      // Deselect: drop this hour for all active brands.
+      setSlots((s) =>
+        s.filter(
+          (x) =>
+            !(x.date === activeDate && x.start === startTime && activeBrands.includes(x.brand)),
+        ),
+      );
     } else {
-      setSlots((s) => [...s, { date: activeDate, brand: activeBrand, start: startTime, end: endTime }]);
+      // Select: add this hour for every active brand that doesn't have it yet.
+      setSlots((s) => [
+        ...s,
+        ...activeBrands
+          .filter(
+            (brand) =>
+              !s.some((x) => x.date === activeDate && x.brand === brand && x.start === startTime),
+          )
+          .map((brand) => ({ date: activeDate, brand, start: startTime, end: endTime })),
+      ]);
     }
   };
 
@@ -148,8 +183,20 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
     setSlots((s) => s.filter((x) => x.date !== activeDate));
   };
 
-  const removeSlot = (date: string, startTime: string) =>
-    setSlots((s) => s.filter((x) => !(x.date === date && x.start === startTime)));
+  const removeSlot = (date: string, brand: string, startTime: string) =>
+    setSlots((s) =>
+      s.filter((x) => !(x.date === date && x.brand === brand && x.start === startTime)),
+    );
+
+  // Remove a whole summary card: all of one brand's hours on one day,
+  // and deselect that brand for the day.
+  const removeBrandDay = (date: string, brand: string) => {
+    setSlots((s) => s.filter((x) => !(x.date === date && x.brand === brand)));
+    setBrandsByDate((b) => ({
+      ...b,
+      [date]: (b[date] ?? []).filter((x) => x !== brand),
+    }));
+  };
 
   // One summary card per date+brand pair — a single-brand day looks exactly
   // like the classic card; a mixed day simply gets one card per brand.
@@ -196,7 +243,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
       setStatus('done');
       setSelectedDates([]);
       setActiveDate('');
-      setBrandByDate({});
+      setBrandsByDate({});
       setSlots([]);
     } catch {
       setStatus('error');
@@ -402,11 +449,11 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                 <p className="mt-4 text-sm font-semibold">{t('home.reserve.chooseBrand')}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {brands.map((b) => {
-                    const sel = activeBrand === b.name;
+                    const sel = activeBrands.includes(b.name);
                     return (
                       <button
                         key={b.slug}
-                        onClick={() => setBrandForActive(b.name)}
+                        onClick={() => toggleBrandForActive(b.name)}
                         className={[
                           'rounded-full border px-3.5 py-1.5 text-xs font-medium transition',
                           sel
@@ -435,7 +482,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                     )}
                   </div>
                 </div>
-                <div className={activeBrand ? '' : 'pointer-events-none opacity-40'}>
+                <div className={activeBrands.length > 0 ? '' : 'pointer-events-none opacity-40'}>
                   {HOUR_GROUPS.map((g) => (
                     <div key={g.key} className="mt-3">
                       <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
@@ -443,16 +490,18 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                       </p>
                       <div className="mt-1.5 grid grid-cols-4 gap-2 sm:grid-cols-6">
                         {g.hours.map((h) => {
-                          const sel = isHourSelected(h.start);
+                          const state = hourState(h.start);
                           return (
                             <button
                               key={h.start}
                               onClick={() => toggleHour(h.start, h.end)}
                               className={[
                                 'rounded-md py-2 text-xs font-medium transition',
-                                sel
+                                state === 'all'
                                   ? 'bg-brand text-white shadow-sm'
-                                  : 'bg-neutral-100 text-neutral-700 hover:bg-brand/10',
+                                  : state === 'partial'
+                                    ? 'bg-brand/40 text-white shadow-sm'
+                                    : 'bg-neutral-100 text-neutral-700 hover:bg-brand/10',
                               ].join(' ')}
                             >
                               {h.start}
@@ -463,7 +512,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                     </div>
                   ))}
                 </div>
-                {!activeBrand && (
+                {activeBrands.length === 0 && (
                   <p className="mt-2 text-[11px] text-neutral-400">
                     {t('home.reserve.chooseBrandFirst')}
                   </p>
@@ -483,7 +532,16 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                       <span className="font-semibold text-neutral-800">
                         {prettyDate(g.date)}
                       </span>
-                      <span className="text-xs font-medium text-brand">{g.brand}</span>
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-brand">{g.brand}</span>
+                        <button
+                          onClick={() => removeBrandDay(g.date, g.brand)}
+                          className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-200 text-[10px] leading-none text-neutral-500 transition hover:bg-brand hover:text-white"
+                          aria-label={t('home.reserve.removeSlot')}
+                        >
+                          ×
+                        </button>
+                      </span>
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {g.items.map((s) => (
@@ -493,7 +551,7 @@ export default function ReserveLivestream({ event }: { event: EventInfo }) {
                         >
                           {s.start}–{s.end}
                           <button
-                            onClick={() => removeSlot(s.date, s.start)}
+                            onClick={() => removeSlot(s.date, s.brand, s.start)}
                             className="text-neutral-400 transition hover:text-brand"
                             aria-label={t('home.reserve.removeSlot')}
                           >
