@@ -39,8 +39,8 @@ const slots: Slot[] = [
   { left: 52, top: 21.5, w: 9.5, h: 20.5, name: 'Beplain', src: black('Beplain.png') },
   { left: 62.8, top: 21.5, w: 10.7, h: 20.5, name: 'Celonia', src: black('Celonia.png') },
   { left: 52, top: 42.7, w: 10.8, h: 23.8, name: 'Lubylab', src: black('Lubylab.png') },
-  // Shared booth: Zipiel and ATIKE split one box ("zipiel | ATIKE").
-  { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'Zipiel | ATIKE', src: black('Zipiel.png'), src2: black('Atike.png') },
+  // Shared booth: Zipiel and ATENE split one box ("zipiel | ATENE").
+  { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'Zipiel | ATENE', src: black('Zipiel.png'), src2: black('Atene_Logo_Black (1).png') },
 
   // Right anchor
   { left: 75.8, top: 29.5, w: 19.2, h: 29, name: 'Purito Seoul', src: black('Purito.png') },
