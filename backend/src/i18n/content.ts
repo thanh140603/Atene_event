@@ -143,9 +143,9 @@ const brandTagline: Record<string, ByLang<string>> = {
     ko: '프리미엄 안티에이징 솔루션',
   },
   zipiel: {
-    ja: '物語をまとうスキンケア',
-    en: 'Skincare that wears a story',
-    ko: '이야기를 입은 스킨케어',
+    ja: 'あなたの肌を守る、物語',
+    en: "The Story of Your Skin's Defense",
+    ko: '당신의 피부를 지키는 이야기',
   },
 };
 
@@ -247,11 +247,7 @@ export function localizeBrand(brand: any, lang: Lang) {
   const tagline = brandTagline[brand.slug]?.[lang] ?? brand.tagline;
   const tokupacks = (brand.tokupacks ?? []).map((tp: any, i: number) => ({
     ...tp,
-    // Seeded placeholder names ("<Brand> TokuPack <n>") are localized via the
-    // template; real set titles (e.g. Zipiel's) pass through as stored.
-    name: tp.name?.startsWith(`${brand.name} TokuPack`)
-      ? tokupackName(brand.name, i + 1, lang)
-      : tp.name,
+    name: tokupackName(brand.name, i + 1, lang),
     description: tokupackDesc(brand.name, lang),
   }));
   return {

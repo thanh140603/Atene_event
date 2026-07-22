@@ -90,8 +90,6 @@ export class SeedService implements OnApplicationBootstrap {
       name: string;
       tagline: string;
       sets: number;
-      /** Real set titles; sets without one get "<Brand> TokuPack <n>". */
-      setNames?: string[];
     }> = [
       { slug: 'purito-seoul', name: 'Purito Seoul', tagline: 'From Soil to Seoul', sets: 3 },
       { slug: 'vt-cosmetics', name: 'VT Cosmetics', tagline: 'In - Vogue and Timeless', sets: 3 },
@@ -102,19 +100,13 @@ export class SeedService implements OnApplicationBootstrap {
       { slug: 'dailyweekly', name: 'DAILYWEEKLY', tagline: 'Daily Delight, Weekly Wonders', sets: 1 },
       { slug: 'torhop', name: 'Torhop', tagline: 'Sauna-Inspired Warming Care', sets: 1 },
       { slug: 'babaco', name: 'Babaco', tagline: 'Beauty begins with real care.', sets: 1 },
-      {
-        slug: 'zipiel',
-        name: 'Zipiel',
-        tagline: 'Skincare that wears a story',
-        sets: 1,
-        setNames: ["The Story of Your Skin's Defense"],
-      },
+      { slug: 'zipiel', name: 'Zipiel', tagline: "The Story of Your Skin's Defense", sets: 1 },
     ];
 
     for (let i = 0; i < data.length; i++) {
       const d = data[i];
       const tokupacks = Array.from({ length: d.sets }).map((_, k) => ({
-        name: d.setNames?.[k] ?? `${d.name} TokuPack ${k + 1}`,
+        name: `${d.name} TokuPack ${k + 1}`,
         description: `Curated ${d.name} set — Creator Sourcing Day exclusive.`,
         price: 0,
       }));

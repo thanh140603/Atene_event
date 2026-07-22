@@ -2010,12 +2010,7 @@ export const brands: BrandContent[] = [
     slug: 'zipiel',
     name: 'Zipiel',
     logoUrl: u(`${BR}/10. Zipiel/Copy of Zipiel.png`),
-    // From the first line of `10. Zipiel/text2.txt`.
-    tagline: {
-      ja: '物語をまとうスキンケア',
-      en: 'Skincare that wears a story',
-      ko: '이야기를 입은 스킨케어',
-    },
+    tagline: "The Story of Your Skin's Defense",
     // ja copy from `10. Zipiel/text2.txt` — line breaks preserved.
     story: {
       ja: 'ZIPIELは、物語をまとうスキンケアブランド。\n\n独自の世界観と高機能スキンケアが出会い、\n毎日のスキンケアを、心ときめく時間へと変えていきます。\n\n美しい肌を目指すだけではなく、\nその先にある体験まで届けたい。\n\nそんな想いを込めて、\nひとつひとつのプロダクトを生み出しています。\n\n肌が本来の輝きを取り戻す旅。\nその物語は、ZIPIELから始まります。',
