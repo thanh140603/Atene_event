@@ -730,7 +730,9 @@ export const brands: BrandContent[] = [
             galleryImages: [72, 73, 75].map((n) =>
               u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/jp_thumb/Copy of ${n}.png`),
             ),
-            // The delivered jp_detailed folder is empty — no DETAILS section.
+            detailImages: [1, 2, 3, 4, 5, 6, 7].map((n) =>
+              u(`${BR}/9. Purito/TOKUPACK SET2/DETAILS/8/jp_detailed/Copy of ${n}.jpg`),
+            ),
           },
         ],
       },
