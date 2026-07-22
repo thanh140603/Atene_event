@@ -196,13 +196,13 @@ export default function Sidebar() {
 
         {/* Horizontal scrolling nav row — homepage sections only */}
         {isHome && (
-          <nav className="flex h-12 items-center overflow-x-auto border-b border-neutral-200 bg-white">
+          <nav className="flex h-12 items-center overflow-x-auto border-b border-neutral-200 bg-white px-1.5">
             {sectionLinks.map((item) => (
               <a
                 key={item.key}
                 href={item.href}
                 onClick={closeAll}
-                className="whitespace-nowrap px-4 text-sm font-medium text-neutral-700 transition"
+                className="whitespace-nowrap px-2.5 text-sm font-medium text-neutral-700 transition"
               >
                 {t(item.key)}
               </a>

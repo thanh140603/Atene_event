@@ -24,23 +24,23 @@ interface Slot {
 }
 
 const slots: Slot[] = [
-  // Left anchor
-  { left: 7, top: 29.5, w: 17, h: 29, name: 'Purito Seoul', src: black('Purito.png') },
+  // Left anchor — slightly smaller logo so it doesn't spill out of its box.
+  { left: 7, top: 29.5, w: 17, h: 29, name: 'VT Cosmetics', src: black('VT.png'), shrink: true },
 
   // Left 2×2 block
-  { left: 26.6, top: 21.5, w: 10.6, h: 20.5, name: 'Dr.Deep', src: black('Dr.Deep.png') },
+  { left: 26.6, top: 21.5, w: 10.6, h: 20.5, name: 'Babaco', src: black('Babaco.png') },
   { left: 38.8, top: 21.5, w: 9.5, h: 20.5, name: 'Daily Weekly', src: black('DailyWeekly.png') },
   { left: 25, top: 42.7, w: 11.5, h: 23.8, name: 'Torhop', src: black('Torhop.png') },
-  { left: 37.3, top: 42.7, w: 11, h: 23.8, name: 'Lubylab', src: black('Lubylab.png') },
+  { left: 37.3, top: 42.7, w: 11, h: 23.8, name: 'Dr.Deep', src: black('Dr.Deep.png') },
 
   // Right 2×2 block
-  { left: 52, top: 21.5, w: 9.5, h: 20.5, name: 'Babaco', src: black('Babaco.png') },
+  { left: 52, top: 21.5, w: 9.5, h: 20.5, name: 'Beplain', src: black('Beplain.png') },
   { left: 62.8, top: 21.5, w: 10.7, h: 20.5, name: 'Celonia', src: black('Celonia.png') },
-  { left: 52, top: 42.7, w: 10.8, h: 23.8, name: 'Beplain', src: black('Beplain.png') },
+  { left: 52, top: 42.7, w: 10.8, h: 23.8, name: 'Lubylab', src: black('Lubylab.png') },
   { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'ATENE', src: black('Atene_Logo_Black (1).png') },
 
-  // Right anchor — slightly smaller logo so it doesn't spill out of its box.
-  { left: 75.8, top: 29.5, w: 19.2, h: 29, name: 'VT Cosmetics', src: black('VT.png'), shrink: true },
+  // Right anchor
+  { left: 75.8, top: 29.5, w: 19.2, h: 29, name: 'Purito Seoul', src: black('Purito.png') },
 ];
 
 function BoothLogo({ slot }: { slot: Slot }) {

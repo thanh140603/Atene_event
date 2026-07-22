@@ -36,7 +36,7 @@ function BrandCard({ brand }: { brand: Brand }) {
         </span>
         <a
           href={`#/brand/${brand.slug}`}
-          className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
+          className="inline-flex items-center gap-1 rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-80"
         >
           {t('home.brands.view')}
         </a>

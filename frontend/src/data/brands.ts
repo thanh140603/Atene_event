@@ -459,7 +459,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'purito-seoul',
     name: 'Purito Seoul',
-    logoUrl: u(`${BR}/9. Purito/Copy of Purito.png`),
+    logoUrl: u(`${BR}/9. Purito/Purito.png`),
     tagline: 'From Soil to Seoul',
     heroVideoUrl: '',
     heroImageUrl: '',
@@ -874,7 +874,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'vt-cosmetics',
     name: 'VT Cosmetics',
-    logoUrl: u(`${BR}/7. VT/Copy of VT.png`),
+    logoUrl: u(`${BR}/7. VT/VT.png`),
     tagline: 'In - Vogue and Timeless',
     heroVideoUrl: '',
     heroImageUrl: '',
@@ -1138,7 +1138,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'beplain',
     name: 'Beplain',
-    logoUrl: u(`${BR}/5. Beplain/Copy of Beplain.png`),
+    logoUrl: u(`${BR}/5. Beplain/Beplain.png`),
     tagline: 'Enjoy plain skin, beplain',
     // ja copy from `5. Beplain/text2.txt` — line breaks preserved.
     story: {
@@ -1268,7 +1268,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'dr-deep',
     name: 'Dr.Deep',
-    logoUrl: u(`${BR}/4. Dr.Deep/Copy of Dr.Deep.png`),
+    logoUrl: u(`${BR}/4. Dr.Deep/Dr.Deep.png`),
     tagline: "Designing today's depth for the skin's tomorrow",
     // ja copy from `4. Dr.Deep/text2.txt` — paragraph breaks preserved.
     story: {
@@ -1443,7 +1443,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'lubylab',
     name: 'LUBYLAB',
-    logoUrl: u(`${BR}/2. LubyLab/Copy of Lubylab.png`),
+    logoUrl: u(`${BR}/2. LubyLab/Lubylab.png`),
     tagline: 'The Home-Surgical Approach',
     // ja copy from `2. LubyLab/text2.txt`.
     story: {
@@ -1572,7 +1572,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'dailyweekly',
     name: 'Daily Weekly',
-    logoUrl: u(`${BR}/3. Daily Weekly/Copy of DailyWeekly.png`),
+    logoUrl: u(`${BR}/3. Daily Weekly/DailyWeekly.png`),
     tagline: 'Daily Delight, Weekly Wonders',
     heroVideoUrl: '',
     heroImageUrl: '',
@@ -1685,7 +1685,7 @@ export const brands: BrandContent[] = [
   {
     slug: 'babaco',
     name: 'Babaco',
-    logoUrl: u(`${BR}/6. Babaco/Copy of Babaco.png`),
+    logoUrl: u(`${BR}/6. Babaco/Babaco.png`),
     tagline: 'Beauty begins with real care.',
     heroVideoUrl: '',
     heroImageUrl: '',
