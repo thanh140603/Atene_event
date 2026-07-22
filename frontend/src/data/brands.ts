@@ -2006,6 +2006,117 @@ export const brands: BrandContent[] = [
       },
     ],
   },
+  {
+    slug: 'zipiel',
+    name: 'Zipiel',
+    logoUrl: u(`${BR}/10. Zipiel/Copy of Zipiel.png`),
+    // From the first line of `10. Zipiel/text2.txt`.
+    tagline: {
+      ja: '物語をまとうスキンケア',
+      en: 'Skincare that wears a story',
+      ko: '이야기를 입은 스킨케어',
+    },
+    // ja copy from `10. Zipiel/text2.txt` — line breaks preserved.
+    story: {
+      ja: 'ZIPIELは、物語をまとうスキンケアブランド。\n\n独自の世界観と高機能スキンケアが出会い、\n毎日のスキンケアを、心ときめく時間へと変えていきます。\n\n美しい肌を目指すだけではなく、\nその先にある体験まで届けたい。\n\nそんな想いを込めて、\nひとつひとつのプロダクトを生み出しています。\n\n肌が本来の輝きを取り戻す旅。\nその物語は、ZIPIELから始まります。',
+      en: 'ZIPIEL is a skincare brand that wears a story.\n\nWhere a unique worldview meets high-performance skincare,\neveryday skincare becomes a moment that makes your heart flutter.\n\nWe aim not only for beautiful skin,\nbut for the experience that lies beyond it.\n\nWith that wish,\nwe craft each and every product.\n\nA journey where skin regains its original glow.\nThat story begins with ZIPIEL.',
+      ko: 'ZIPIEL은 이야기를 입은 스킨케어 브랜드.\n\n고유한 세계관과 고기능 스킨케어가 만나\n매일의 스킨케어를 설레는 시간으로 바꿔 갑니다.\n\n아름다운 피부만을 목표로 하는 것이 아니라\n그 너머에 있는 경험까지 전하고 싶습니다.\n\n그런 마음을 담아\n하나하나의 제품을 만들어 갑니다.\n\n피부가 본래의 빛을 되찾는 여정.\n그 이야기는 ZIPIEL에서 시작됩니다.',
+    },
+    // ja copy from `TOKUPACK SET/text (1).txt`.
+    tokupack: {
+      subtitle: {
+        ja: 'もちもち豆腐プランピング トリプルウォーターバリアクリーム ＋ ブルースピルリナ メルトモデリングクリームクレイマスク',
+        en: 'Bouncy Tofu Plumping Triple Water Barrier Cream + Blue Spirulina Melt Modeling Cream Clay Mask',
+        ko: '말랑두부 플럼핑 트리플 워터장벽크림 + 블루 스피루리나 멜트 모델링 크림 클레이 마스크',
+      },
+      imageUrl: u(`${BR}/10. Zipiel/TOKUPACK SET/Japan.png`),
+      items: [
+        {
+          ja: 'トーフ ウィンクルシールド シェイプメモリー トリプルバリアクリーム 50ml',
+          en: 'Tofu Wrinkle Shield Shape Memory Triple Barrier Cream 50ml',
+          ko: '말랑두부 플럼핑 트리플 워터장벽크림 50ml',
+        },
+        {
+          ja: 'ブルースピルリナ メルトモデリング クリームクレイマスク 100ml',
+          en: 'Blue Spirulina Melt Modeling Cream Clay Mask 100ml',
+          ko: '블루 스피루리나 멜트 모델링 크림 클레이 마스크 100ml',
+        },
+      ],
+      pricing: [
+        { label: L_REGULAR_PRICE, value: '¥8,000' },
+        { label: L_LIVE_DISCOUNT, value: '46.5%OFF' },
+        { label: L_LIVE_PRICE, value: '¥4,280', highlight: true },
+      ],
+    },
+    // ja copy from `DETAILS/text (1).txt`.
+    productsHeadline: {
+      ja: '乾燥・毛穴悩みを集中ケア。うるおいバリアを整え、なめらかで透明感のある肌へ導く限定セット',
+      en: 'Intensive care for dryness and pore concerns — a limited set that restores the moisture barrier and guides skin to smooth, translucent clarity.',
+      ko: '건조·모공 고민을 집중 케어. 수분 장벽을 정돈해 매끈하고 투명한 피부로 이끄는 한정 세트',
+    },
+    usps: [{ imageUrl: u(`${BR}/10. Zipiel/USP/A4.png`) }],
+    products: [
+      {
+        id: '1',
+        // Name / pricing from `DETAILS/1/text.txt`.
+        name: {
+          ja: 'トーフ ウィンクルシールド シェイプメモリー トリプルバリアクリーム 50ml',
+          en: 'Tofu Wrinkle Shield Shape Memory Triple Barrier Cream 50ml',
+          ko: '말랑두부 플럼핑 트리플 워터장벽크림 50ml',
+        },
+        listPrice: '¥4,800',
+        volume: '50ml',
+        imageUrl: u(`${BR}/10. Zipiel/DETAILS/1/Copy of 260416_크림 제품 누끼.png`),
+        galleryImages: [
+          'Copy of 260416_크림 제품.jpg',
+          'Copy of 260416_크림 제품, 단상자.png',
+          'Copy of 260416_크림 제품 누끼.png',
+          'Copy of 260416_크림 제형 썸네일.jpg',
+          'Copy of 260416_3종 제품, 단상자.jpg',
+        ].map((f) => u(`${BR}/10. Zipiel/DETAILS/1/JP_Thumb/${f}`)),
+        // Pages 16–18 were not delivered; page 3 ships as a PNG. The single
+        // combined `크림(일본어).jpg` mega-page duplicates these and is skipped.
+        detailImages: [
+          ...seq(
+            15,
+            (i) =>
+              `${BR}/10. Zipiel/DETAILS/1/JP_Detailed/Copy of 지피엘(크림)-최종_${pad2(i)}${i === 3 ? '(gif x).png' : '.jpg'}`,
+          ),
+          u(`${BR}/10. Zipiel/DETAILS/1/JP_Detailed/Copy of 지피엘(크림)-최종_19.jpg`),
+          u(`${BR}/10. Zipiel/DETAILS/1/JP_Detailed/Copy of 크림_전성분.jpg`),
+        ],
+      },
+      {
+        id: '2',
+        // Name / pricing from `DETAILS/2/text.txt`.
+        name: {
+          ja: 'ブルースピルリナ メルトモデリング クリームクレイマスク 100ml',
+          en: 'Blue Spirulina Melt Modeling Cream Clay Mask 100ml',
+          ko: '블루 스피루리나 멜트 모델링 크림 클레이 마스크 100ml',
+        },
+        listPrice: '¥3,200',
+        volume: '100ml',
+        imageUrl: u(
+          `${BR}/10. Zipiel/DETAILS/2/Copy of 260416_클레이 마스크 제품 누끼.png`,
+        ),
+        galleryImages: [
+          'Copy of 260416_클레이 마스크 제품, 단상자.png',
+          'Copy of 260416_클레이 마스크 제품 누끼.png',
+          'Copy of 260416_클레이 마스크 제형 썸네일.jpg',
+        ].map((f) => u(`${BR}/10. Zipiel/DETAILS/2/JP_Thumb/${f}`)),
+        // The combined `지피엘-클레이(일본어)_01.jpg` mega-page duplicates
+        // the numbered pages and is skipped.
+        detailImages: [
+          ...seq(
+            11,
+            (i) =>
+              `${BR}/10. Zipiel/DETAILS/2/JP_Detailed/Copy of 지피엘(클레이)-최종_${pad2(i)}.jpg`,
+          ),
+          u(`${BR}/10. Zipiel/DETAILS/2/JP_Detailed/Copy of 클레이_전성분.jpg`),
+        ],
+      },
+    ],
+  },
 ];
 
 export function getBrand(slug: string): BrandContent | undefined {

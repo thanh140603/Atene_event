@@ -15,6 +15,8 @@ interface Slot {
   name: string;
   /** Logo image; when absent, `name` is rendered as a text logo. */
   src?: string;
+  /** Second logo for shared booths — rendered as "logo | logo2". */
+  src2?: string;
   /** Dark tiles are filled black with a white logo, like the reference. */
   dark?: boolean;
   /** Serif text logo (e.g. Celonia). */
@@ -37,7 +39,8 @@ const slots: Slot[] = [
   { left: 52, top: 21.5, w: 9.5, h: 20.5, name: 'Beplain', src: black('Beplain.png') },
   { left: 62.8, top: 21.5, w: 10.7, h: 20.5, name: 'Celonia', src: black('Celonia.png') },
   { left: 52, top: 42.7, w: 10.8, h: 23.8, name: 'Lubylab', src: black('Lubylab.png') },
-  { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'ATENE', src: black('Atene_Logo_Black (1).png') },
+  // Shared booth: Zipiel and ATIKE split one box ("zipiel | ATIKE").
+  { left: 64.5, top: 42.7, w: 10.8, h: 23.8, name: 'Zipiel | ATIKE', src: black('Zipiel.png'), src2: black('Atike.png') },
 
   // Right anchor
   { left: 75.8, top: 29.5, w: 19.2, h: 29, name: 'Purito Seoul', src: black('Purito.png') },
@@ -56,7 +59,23 @@ function BoothLogo({ slot }: { slot: Slot }) {
         height: `${slot.h}%`,
       }}
     >
-      {slot.src ? (
+      {slot.src && slot.src2 ? (
+        <div className="flex h-full w-full items-center justify-center gap-[6%] px-[6%]">
+          <img
+            src={slot.src}
+            alt={slot.name}
+            className="min-w-0 max-h-[38%] max-w-[42%] object-contain"
+            loading="lazy"
+          />
+          <div className="h-[32%] w-px shrink-0 bg-neutral-900" />
+          <img
+            src={slot.src2}
+            alt=""
+            className="min-w-0 max-h-[34%] max-w-[42%] object-contain"
+            loading="lazy"
+          />
+        </div>
+      ) : slot.src ? (
         <img
           src={slot.src}
           alt={slot.name}

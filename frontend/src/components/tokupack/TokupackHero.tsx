@@ -10,6 +10,7 @@ const BRANDS = [
   'Dr.DEEP',
   'BABACO',
   'Daily Weekly',
+  'Zipiel',
 ];
 
 /**

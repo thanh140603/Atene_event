@@ -11,6 +11,8 @@ const BRANDS = [
   'Dr.DEEP',
   'BABACO',
   'Daily Weekly',
+  'Celonia',
+  'Zipiel',
 ];
 
 // Stable option values sent to the API. Brand names are kept verbatim; the

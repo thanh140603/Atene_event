@@ -36,6 +36,7 @@ export const brandVideos: Record<string, string> = {
   dailyweekly: u(`${V}/Daily Weekly 최종본.mp4`),
   babaco: u(`${V}/Babaco_브랜드 광고 홍보영상(1280x840).mp4`),
   celonia: u(`${V}/Celonia_Ampoule.mp4`),
+  zipiel: u(`${V}/Zipiel.mov`),
 };
 
 /** Brand product shots keyed by the API brand slug. */
@@ -49,4 +50,5 @@ export const brandImages: Record<string, string> = {
   torhop: u(`${B}/03_Participating Brands_Asset/Torhop.png`),
   babaco: u(`${B}/03_Participating Brands_Asset/Babaco.png`),
   celonia: u(`${B}/03_Participating Brands_Asset/Celonia.png`),
+  zipiel: u(`${B}/03_Participating Brands_Asset/zipiel.png`),
 };

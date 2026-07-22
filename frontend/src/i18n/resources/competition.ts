@@ -9,7 +9,7 @@ export const competition: ResourcePack = {
       hero: {
         eyebrow: '〈ATENE〉',
         title: 'Korea Invitation Challenge - Best Tokupack Seller',
-        lead: 'Creator Sourcing Dayで出会ったトクパックを、TikTok Liveで販売しよう。GMVランキング上位5名には、韓国5日間の招待旅行と、K-Beautyブランドとの直接対談チャンスが待っています。',
+        lead: 'Creator Sourcing Dayで出会ったトクパックを、TikTok Liveで販売しよう。GMVランキング上位5名には、韓国3日間の招待旅行と、K-Beautyブランドとの直接対談チャンスが待っています。',
         entryStart: 'Entry Period Start',
         entryEnd: 'Entry Period End',
       },
@@ -29,14 +29,14 @@ export const competition: ResourcePack = {
         tracking: 'Tracking',
         evaluation: 'Evaluation',
         evaluationHeading: {
-          pre: '¥5,000,000のGMVに最も早く到達した',
+          pre: '7月27日から8月26日までの期間中、GMVが最も高い',
           post: '上位5名が勝者です。',
         },
-        c1: '¥5,000,000は、期間中に行ったすべてのライブ配信の累計GMVで計算されます。',
+        c1: 'GMVは、キャンペーン期間中に行ったすべてのライブ配信の累計GMVで計算されます。',
         c2: 'GMVは、イベント参加ブランドのTokupackのみ対象です。',
-        c3: '同じタイミングで達成した場合は、ライブ配信の効果（視聴数・転換率）を基に順位を決定します。',
+        c3: 'GMVが同点の場合は、ライブ配信の効果（視聴数・転換率）を基に順位を決定します。',
         topWinners: 'Top 5 Winners',
-        topWinnersBody: '韓国5日間招待へ',
+        topWinnersBody: '韓国3日間招待へ',
       },
       rewards: {
         kicker: '03 / Rewards',
@@ -47,7 +47,7 @@ export const competition: ResourcePack = {
           kicker: 'Boarding Pass — Creator Invitation',
           planeAlt: 'TOKYOからSEOULへ',
           durationLabel: 'Duration',
-          durationValue: '5 Days',
+          durationValue: '3 Days',
           coverageLabel: 'Flight & Stay',
           coverageValue: 'Fully Covered',
           passengersLabel: 'Passengers',
@@ -57,7 +57,7 @@ export const competition: ResourcePack = {
           stubRank: 'GMV Rank',
         },
         r1: {
-          title: '韓国5日間招待旅行',
+          title: '韓国3日間招待旅行',
           body: 'フライト・宿泊すべてATENEが負担。上位5名を限定招待し、K-Beautyの本場ソウルを巡ります。',
         },
         r2: {
@@ -94,7 +94,7 @@ export const competition: ResourcePack = {
       hero: {
         eyebrow: '〈ATENE〉',
         title: 'Korea Invitation Challenge - Best Tokupack Seller',
-        lead: 'Sell the TokuPacks you discovered at Creator Sourcing Day on TikTok Live. The top 5 on the GMV ranking win a 5-day invitation trip to Korea and the chance to meet K-Beauty brands face to face.',
+        lead: 'Sell the TokuPacks you discovered at Creator Sourcing Day on TikTok Live. The top 5 on the GMV ranking win a 3-day invitation trip to Korea and the chance to meet K-Beauty brands face to face.',
         entryStart: 'Entry Period Start',
         entryEnd: 'Entry Period End',
       },
@@ -114,14 +114,14 @@ export const competition: ResourcePack = {
         tracking: 'Tracking',
         evaluation: 'Evaluation',
         evaluationHeading: {
-          pre: 'The 5 creators who reach ¥5,000,000 in GMV the fastest',
-          post: 'are the winners.',
+          pre: 'The Top 5 creators with the highest GMV during the period from July 27 to August 26',
+          post: 'will be the winners.',
         },
-        c1: 'The ¥5,000,000 target is calculated from the cumulative GMV of all livestreams held during the period.',
+        c1: 'GMV is calculated based on the total accumulated GMV generated from all livestream sessions conducted during the campaign period.',
         c2: 'Only TokuPacks from brands participating in the event count toward GMV.',
-        c3: 'If the target is reached at the same time, the ranking is decided by livestream performance (views and conversion rate).',
+        c3: 'If there is a tie in GMV, the ranking will be determined based on livestream performance (views and conversion).',
         topWinners: 'Top 5 Winners',
-        topWinnersBody: 'Invited to Korea for 5 days',
+        topWinnersBody: 'Invited to Korea for 3 days',
       },
       rewards: {
         kicker: '03 / Rewards',
@@ -132,7 +132,7 @@ export const competition: ResourcePack = {
           kicker: 'Boarding Pass — Creator Invitation',
           planeAlt: 'From TOKYO to SEOUL',
           durationLabel: 'Duration',
-          durationValue: '5 Days',
+          durationValue: '3 Days',
           coverageLabel: 'Flight & Stay',
           coverageValue: 'Fully Covered',
           passengersLabel: 'Passengers',
@@ -142,7 +142,7 @@ export const competition: ResourcePack = {
           stubRank: 'GMV Rank',
         },
         r1: {
-          title: '5-Day Invitation Trip to Korea',
+          title: '3-Day Invitation Trip to Korea',
           body: 'Flight and stay fully covered by ATENE. The top 5 get an exclusive invitation to explore Seoul, the home of K-Beauty.',
         },
         r2: {
@@ -179,7 +179,7 @@ export const competition: ResourcePack = {
       hero: {
         eyebrow: '〈ATENE〉',
         title: 'Korea Invitation Challenge - Best Tokupack Seller',
-        lead: 'Creator Sourcing Day에서 만난 톡팩을 TikTok 라이브 방송으로 판매하세요. GMV 랭킹 상위 5명에게는 한국 5일 초청 여행과 K-Beauty 브랜드와의 직접 대담 기회가 기다리고 있습니다.',
+        lead: 'Creator Sourcing Day에서 만난 톡팩을 TikTok 라이브 방송으로 판매하세요. GMV 랭킹 상위 5명에게는 한국 3일 초청 여행과 K-Beauty 브랜드와의 직접 대담 기회가 기다리고 있습니다.',
         entryStart: 'Entry Period Start',
         entryEnd: 'Entry Period End',
       },
@@ -199,14 +199,14 @@ export const competition: ResourcePack = {
         tracking: 'Tracking',
         evaluation: 'Evaluation',
         evaluationHeading: {
-          pre: '¥5,000,000의 GMV에 가장 빨리 도달한',
+          pre: '7월 27일부터 8월 26일까지 기간 중 GMV가 가장 높은',
           post: '상위 5명이 수상자입니다.',
         },
-        c1: '¥5,000,000은 기간 중 진행한 모든 라이브 방송의 누적 GMV로 계산됩니다.',
+        c1: 'GMV는 캠페인 기간 중 진행한 모든 라이브 방송의 누적 GMV로 계산됩니다.',
         c2: 'GMV는 이벤트 참가 브랜드의 톡팩만 대상입니다.',
-        c3: '동시에 달성한 경우 라이브 방송 효과(시청 수·전환율)를 기준으로 순위를 결정합니다.',
+        c3: 'GMV가 동점일 경우 라이브 방송 효과(시청 수·전환율)를 기준으로 순위를 결정합니다.',
         topWinners: 'Top 5 Winners',
-        topWinnersBody: '한국 5일 초청으로',
+        topWinnersBody: '한국 3일 초청으로',
       },
       rewards: {
         kicker: '03 / Rewards',
@@ -217,7 +217,7 @@ export const competition: ResourcePack = {
           kicker: 'Boarding Pass — Creator Invitation',
           planeAlt: 'TOKYO에서 SEOUL로',
           durationLabel: 'Duration',
-          durationValue: '5 Days',
+          durationValue: '3 Days',
           coverageLabel: 'Flight & Stay',
           coverageValue: 'Fully Covered',
           passengersLabel: 'Passengers',
@@ -227,7 +227,7 @@ export const competition: ResourcePack = {
           stubRank: 'GMV Rank',
         },
         r1: {
-          title: '한국 5일 초청 여행',
+          title: '한국 3일 초청 여행',
           body: '항공·숙박 전액을 ATENE가 부담. 상위 5명을 한정 초청해 K-Beauty의 본고장 서울을 둘러봅니다.',
         },
         r2: {
