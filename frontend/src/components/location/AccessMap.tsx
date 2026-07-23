@@ -3,10 +3,7 @@ import { useT } from '../../i18n/LanguageProvider';
 export const GMAP_URL =
   'https://www.google.com/maps/place/InterContinental+the+Strings+Tokyo+by+IHG/@35.6282365,139.7402153,18.53z/data=!3m1!5s0x60188a5ae14f9aab:0x198694fc506fd2a1!4m9!3m8!1s0x60188a5ae105f69f:0xca89ff0033f2e939!5m2!4m1!1i2!8m2!3d35.6278741!4d139.74077!16s%2Fg%2F1213ttz_?entry=tts';
 
-// The updated access map (InterContinental the Strings Tokyo + R26 marker)
-// lives in 05_Location; `?v=2` busts caches from the old same-name image.
-const MAP_IMAGE =
-  encodeURI('/homepage/05_Location/Untitled (3040 x 1000 px) (1).png') + '?v=2';
+const MAP_IMAGE = encodeURI('/homepage/05_Location/Map.png');
 
 export default function AccessMap() {
   const t = useT();
